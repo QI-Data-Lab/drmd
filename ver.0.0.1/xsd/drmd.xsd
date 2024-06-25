@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="0.0.1"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:drmd="https://example.org/drmd"
+    xmlns:dcc="https://ptb.de/dcc"
+    xmlns:si="https://ptb.de/si"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+
+    <!-- Output method as HTML -->
+    <xsl:output method="html" indent="yes" />
+
+    <!-- Root template -->
+    <xsl:template match="/">
+        <html>
+            <head>
+                <title><xsl:value-of select="//drmd:titleOfTheDocument" /></title>
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    th, td { border: 1px solid #ddd; padding: 8px; }
+                    th { background-color: #f2f2f2; text-align: left; }
+                    h1, h2, h3 { color: #333; }
+                </style>
+            </head>
+            <body>
+                <h1><xsl:value-of select="//drmd:titleOfTheDocument" /></h1>
+                <xsl:apply-templates select="drmd:digitalReferenceMaterialDocument" />
+            </body>
+        </html>
+    </xsl:template>
+
+    <!-- Template for the root element -->
+    <xsl:template match="drmd:digitalReferenceMaterialDocument">
+        <h2>Administrative Data</h2>
+        <xsl:apply-templates select="drmd:administrativeData" />
+        <h2>Measurement Results</h2>
+        <xsl:apply-templates select="drmd:measurementResults" />
+        <h2>Responsible Persons</h2>
+        <xsl:apply-templates select="drmd:administrativeData/drmd:respPersons" />
+    </xsl:template>
+
+    <!-- Template for administrative data -->
+    <xsl:template match="drmd:administrativeData">
+        <h3>Core Data</h3>
+        <table>
+            <tr><th>Title</th><td><xsl:value-of select="drmd:coreData/drmd:titleOfTheDocument" /></td></tr>
+            <tr><th>Unique Identifier</th><td><xsl:value-of select="drmd:coreData/drmd:uniqueIdentifier" /></td></tr>
+            <tr><th>Period of Validity</th><td><xsl:value-of select="drmd:coreData/drmd:periodOfValidity" /></td></tr>
+            <tr><th>Date of Issue</th><td><xsl:value-of select="drmd:coreData/drmd:dataOfIssue" /></td></tr>
+        </table>
+
+        <h3>Reference Material Producer</h3>
+        <table>
+            <tr><th>Name</th><td><xsl:value-of select="drmd:referenceMaterialProducer/drmd:name/dcc:content" /></td></tr>
+            <tr><th>Contact</th>
+                <td>
+                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:street" />, 
+                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:streetNo" /><br />
+                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:postCode" />
+                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:city" />
+                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:countryCode" /><br />
+                    Phone: <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:phone" /><br />
+                    Fax: <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:fax" /><br />
+                    Email: <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:eMail" /><br />
+                </td>
+            </tr>
+        </table>
+
+        <h3>Items</h3>
+        <xsl:apply-templates select="drmd:items/drmd:item" />
+
+        <h3>Statements</h3>
+        <xsl:apply-templates select="drmd:statements/*" />
+    </xsl:template>
+
+    <!-- Template for items -->
+    <xsl:template match="drmd:item">
+        <table>
+            <tr><th>Name</th><td><xsl:value-of select="drmd:name/dcc:content" /></td></tr>
+            <tr><th>Description</th>
+                <td>
+                    <xsl:for-each select="drmd:description/dcc:content">
+                        <xsl:value-of select="." /><br />
+                    </xsl:for-each>
+                </td>
+            </tr>
+            <tr><th>Minimum Sample Size</th>
+                <td>
+                    <xsl:for-each select="drmd:minimumSampleSize/dcc:itemQuantity/si:realListXMLList">
+                        <xsl:value-of select="si:valueXMLList" /><xsl:text> </xsl:text><xsl:value-of select="si:unitXMLList" /><br />
+                    </xsl:for-each>
+                </td>
+            </tr>
+        </table>
+    </xsl:template>
+
+    <!-- Template for statements -->
+    <xsl:template match="drmd:statements/*">
+        <h3><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></h3>
+        <p><xsl:value-of select="dcc:description/dcc:content[@lang='en']" /></p>
+    </xsl:template>
+
+    <!-- Template for responsible persons -->
+    <xsl:template match="drmd:respPersons">
+        <table>
+            <tr><th>Name</th><th>Role</th></tr>
+            <xsl:for-each select="dcc:respPerson">
+                <tr>
+                    <td><xsl:value-of select="dcc:person/dcc:name/dcc:content" /></td>
+                    <td><xsl:value-of select="dcc:person/dcc:role" /></td>
+                </tr>
+            </xsl:for-each>
+        </table>
+    </xsl:template>
+
+    <!-- Template for measurement results -->
+    <xsl:template match="drmd:measurementResults">
+        <xsl:apply-templates select="dcc:measurementResult" />
+    </xsl:template>
+
+    <!-- Template for measurement results -->
+    <xsl:template match="dcc:measurementResult">
+        <table>
+            <tr><th colspan="2"><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></th></tr>
+            <tr><td colspan="2"><xsl:value-of select="dcc:description/dcc:content[@lang='en']" /></td></tr>
+            <xsl:apply-templates select="dcc:results/dcc:result" />
+        </table>
+    </xsl:template>
+
+    <!-- Template for results -->
+    <xsl:template match="dcc:result">
+        <tr><th colspan="2"><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></th></tr>
+        <xsl:apply-templates select="dcc:data/dcc:quantity" />
+    </xsl:template>
+
+    <!-- Template for quantities in list -->
+    <xsl:template match="dcc:quantity">
+        <tr>
+            <th><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></th>
+            <td>
+                <xsl:for-each select="si:realListXMLList">
+                    <xsl:value-of select="si:valueXMLList" /><xsl:text> </xsl:text><xsl:value-of select="si:unitXMLList" /><br />
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+
+</xsl:stylesheet>
