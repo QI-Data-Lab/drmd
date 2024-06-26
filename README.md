@@ -1,4 +1,4 @@
-# Digital Reference Material (DRM) Project
+# Digital Reference Material Document (DRMD) Project
 
 The Digital Reference Material Document (DRMD) project aims to create a standardized digital format for reference material certificates. This project is developed by the Bundesanstalt für Materialforschung und -prüfung (BAM) and is partially funded by the QI-Digital project from BMWK. The DRMD schema is based on the existing Digital Calibration Certificate (DCC) schema and complies with the requirements of the ISO 33401 standard for reference material certificates
 
