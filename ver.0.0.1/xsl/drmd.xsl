@@ -122,8 +122,6 @@
             </xsl:for-each>
         </table>
 -->
-
-    <h3>Statements</h3>
     <xsl:for-each select="*">
         <h4><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></h4>
         <p>
@@ -137,6 +135,7 @@
 
 <!-- Template for measurement results -->
 <xsl:template match="drmd:measurementResults">
+    <h2>Measurement Results</h2>
     <xsl:apply-templates select="dcc:results/dcc:result" />
 </xsl:template>
 
@@ -147,20 +146,32 @@
     <table>
         <tr>
             <th>Property</th>
-            <th>Value</th>
-            <th>Uncertainty</th>
+            <th>Property Value</th>
+            <th>Property Unit</th>
+            <th>Uncertainty Value</th>
+            <th>Uncertainty Unit</th>
         </tr>
         <xsl:for-each select="dcc:data/dcc:list">
             <tr>
                 <td><xsl:value-of select="dcc:description/dcc:content[@lang='en']" /></td>
                 <td>
-                    <xsl:for-each select="dcc:quantity[@refType='basic_measuredValue']/si:realListXMLList">
-                        <xsl:value-of select="si:valueXMLList" /> <xsl:value-of select="si:unitXMLList" /><br />
+                    <xsl:for-each select="dcc:quantity[@refType='basic_measuredValue']/si:realListXMLList/si:valueXMLList">
+                        <xsl:value-of select="." /><br />
                     </xsl:for-each>
                 </td>
                 <td>
-                    <xsl:for-each select="dcc:quantity[@refType='basic_measurementError']/si:realListXMLList">
-                        <xsl:value-of select="si:valueXMLList" /> <xsl:value-of select="si:unitXMLList" /><br />
+                    <xsl:for-each select="dcc:quantity[@refType='basic_measuredValue']/si:realListXMLList/si:unitXMLList">
+                        <xsl:value-of select="." /><br />
+                    </xsl:for-each>
+                </td>
+                <td>
+                    <xsl:for-each select="dcc:quantity[@refType='basic_measurementError']/si:realListXMLList/si:valueXMLList">
+                        <xsl:value-of select="." /><br />
+                    </xsl:for-each>
+                </td>
+                <td>
+                    <xsl:for-each select="dcc:quantity[@refType='basic_measurementError']/si:realListXMLList/si:unitXMLList">
+                        <xsl:value-of select="." /><br />
                     </xsl:for-each>
                 </td>
             </tr>

@@ -71,10 +71,6 @@ dcrm-project/
 └── LICENSE
 ```
 
-
-
-## Digital Reference Material Document (DRMD) Structure
-
 ## Digital Reference Material Document (DRMD) Structure
 
 The `drmd` (Digital Reference Material Document) structure is defined using an XSD schema and includes the following key components:
@@ -138,13 +134,31 @@ To validate the XML file against the XSD schema, use the `validate-schema.py` sc
 python scripts/validate-schema.py xml/dcrm-003.xml xsd/drmd.xsd
 ```
 
-### Applying XSLT Transformation
+### Transforming XML to HTML using XSLT file
 
-To apply the XSLT transformation and generate HTML output:
+To transform the XML file to HTML, use the `xml2html.py` script:
 
-```sh
-xsltproc xsl/drmd.xslt xml/dcrm-003.xml > html/dcrm-003.html
-```
+You can call the script with either positional or optional arguments:
+
+1. **Using Positional Arguments**:
+   ```bash
+   python xml2html.py example.xml example.xsl example.html --verbose
+   ```
+
+2. **Using Optional Arguments**:
+   ```bash
+   python xml2html.py example.xml -x example.xsl -o example.html --verbose
+   ```
+
+
+python transform_xml.py example.xml example.xsl example.html --verbose
+""""
+Using Optional Arguments:
+
+bash
+Code kopieren
+python transform_xml.py example.xml -x example.xsl -o example.html --verbose
+
 
 ## Contributing
 
