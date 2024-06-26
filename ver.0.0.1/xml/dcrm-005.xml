@@ -66,7 +66,7 @@
             <dcc:respPerson>
                 <dcc:person>
                     <dcc:name>
-                        <dcc:content lang="en">Dr. S. Richter</dcc:content>
+                        <dcc:content lang="en">Dr. Mustermann</dcc:content>
                     </dcc:name>
                     <dcc:role>Committee for Certification</dcc:role>
                 </dcc:person>
@@ -74,7 +74,7 @@
             <dcc:respPerson>
                 <dcc:person>
                     <dcc:name>
-                        <dcc:content lang="en">Dr. S. Recknagel</dcc:content>
+                        <dcc:content lang="en">Dr. John Doe</dcc:content>
                     </dcc:name>
                     <dcc:role>Project Coordinator, Division 1.6</dcc:role>
                 </dcc:person>

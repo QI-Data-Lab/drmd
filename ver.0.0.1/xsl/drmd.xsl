@@ -135,7 +135,6 @@
 
 <!-- Template for measurement results -->
 <xsl:template match="drmd:measurementResults">
-    <h2>Measurement Results</h2>
     <xsl:apply-templates select="dcc:results/dcc:result" />
 </xsl:template>
 
