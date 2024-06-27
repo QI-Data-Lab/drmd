@@ -1,148 +1,278 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="0.0.1"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:drmd="https://example.org/drmd"
-    xmlns:dcc="https://ptb.de/dcc"
-    xmlns:si="https://ptb.de/si"
-    xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<xs:schema version="0.0.1"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:drmd="https://example.org/drmd"
+           xmlns:dcc="https://ptb.de/dcc"
+           xmlns:si="https://ptb.de/si"
+           xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+           targetNamespace="https://example.org/drmd"
+           elementFormDefault="qualified">
+	<xs:import namespace="https://ptb.de/dcc"
+	           schemaLocation="https://www.ptb.de/dcc/dcc.xsd"/>
+	<xs:import namespace="https://ptb.de/si"
+	           schemaLocation="https://ptb.de/si/v2.2.0/SI_Format.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+	           schemaLocation="https://www.ptb.de/dcc/d-sig/xmldsig-core-schema.xsd"/>
+	<xs:annotation>
+		<xs:documentation>
+            DRMD - Digital Reference Material Document
+            Copyright (c) 2024 Bundesanstalt für Materialforschung und -prüfung (BAM)
 
-    <!-- Output method as HTML -->
-    <xsl:output method="html" indent="yes" />
+            This XML Schema Definition (XSD) is free software: you can redistribute it and/or modify
+            it under the terms of the GNU Lesser General Public License as published by
+            the Free Software Foundation, version 3 of the License.
 
-    <!-- Root template -->
-    <xsl:template match="/">
-        <html>
-            <head>
-                <title><xsl:value-of select="//drmd:titleOfTheDocument" /></title>
-                <style>
-                    body { font-family: Arial, sans-serif; }
-                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                    th, td { border: 1px solid #ddd; padding: 8px; }
-                    th { background-color: #f2f2f2; text-align: left; }
-                    h1, h2, h3 { color: #333; }
-                </style>
-            </head>
-            <body>
-                <h1><xsl:value-of select="//drmd:titleOfTheDocument" /></h1>
-                <xsl:apply-templates select="drmd:digitalReferenceMaterialDocument" />
-            </body>
-        </html>
-    </xsl:template>
+            This XSD is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+            GNU Lesser General Public License for more details.
 
-    <!-- Template for the root element -->
-    <xsl:template match="drmd:digitalReferenceMaterialDocument">
-        <h2>Administrative Data</h2>
-        <xsl:apply-templates select="drmd:administrativeData" />
-        <h2>Measurement Results</h2>
-        <xsl:apply-templates select="drmd:measurementResults" />
-        <h2>Responsible Persons</h2>
-        <xsl:apply-templates select="drmd:administrativeData/drmd:respPersons" />
-    </xsl:template>
+            The development of the Digital Reference Material Document (DRMD) is partially funded and
+            supported by the QI-Digital project.
 
-    <!-- Template for administrative data -->
-    <xsl:template match="drmd:administrativeData">
-        <h3>Core Data</h3>
-        <table>
-            <tr><th>Title</th><td><xsl:value-of select="drmd:coreData/drmd:titleOfTheDocument" /></td></tr>
-            <tr><th>Unique Identifier</th><td><xsl:value-of select="drmd:coreData/drmd:uniqueIdentifier" /></td></tr>
-            <tr><th>Period of Validity</th><td><xsl:value-of select="drmd:coreData/drmd:periodOfValidity" /></td></tr>
-            <tr><th>Date of Issue</th><td><xsl:value-of select="drmd:coreData/drmd:dataOfIssue" /></td></tr>
-        </table>
+        </xs:documentation>
+	</xs:annotation>
+	<xs:element name="digitalReferenceMaterialDocument"
+	            type="drmd:digitalReferenceMaterialDocumentType"/>
+	<xs:complexType name="digitalReferenceMaterialDocumentType">
+		<xs:annotation>
+			<xs:documentation>
+                The root element that contains the administrative data and measurement results of the DRMD.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="administrativeData"
+			            type="drmd:administrativeDataType"/>
+			<xs:element name="measurementResults"
+			            type="drmd:measurementResultListType"/>
+			<xs:element name="comment"
+			            minOccurs="0"
+			            type="xs:string"/>
+			<xs:element name="document"
+			            type="dcc:byteDataType"
+			            minOccurs="0"/>
+			<xs:element ref="ds:Signature"
+			            minOccurs="0"
+			            maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="schemaVersion"
+		              use="required"
+		              type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="administrativeDataType">
+		<xs:annotation>
+			<xs:documentation>
+                Contains core data, items, producer information, responsible persons, and statements related to the DRMD.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="coreData"
+			            type="drmd:coreDataType"/>
+			<xs:element name="items"
+			            type="drmd:itemListType"/>
+			<xs:element name="referenceMaterialProducer"
+			            type="drmd:referenceMaterialProducerType"/>
+			<xs:element name="respPersons"
+			            type="dcc:respPersonListType"/>
+			<xs:element name="statements"
+			            type="drmd:statementListType"
+			            minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="coreDataType">
+		<xs:annotation>
+			<xs:documentation>
+                Contains the core information about the document, such as title, unique identifier, and issue date.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="titleOfTheDocument">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Product Information Sheet"/>
+						<xs:enumeration value="Reference Material Certificate"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="uniqueIdentifier"
+			            type="dcc:notEmptyStringType"/>
+			<xs:element name="identifications"
+			            type="drmd:identificationListType"
+			            minOccurs="0"/>
+			<xs:element name="periodOfValidity"
+			            type="xs:string"/>
+			<xs:element name="dateOfDispatch"
+			            type="xs:date"
+			            minOccurs="0"/>
+			<xs:element name="dataOfIssue"
+			            type="xs:date"
+			            minOccurs="0"/>
+			<xs:element name="dateOfValidity"
+			            type="xs:date"
+			            minOccurs="0"/>
+			<xs:element name="dateOfCertificateApproval"
+			            type="xs:date"
+			            minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="identificationListType">
+		<xs:annotation>
+			<xs:documentation>
+                List of additional identifications.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="identification"
+			            type="drmd:identificationType"
+			            maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="identificationType">
+		<xs:annotation>
+			<xs:documentation>
+                An additional identification (eg. reference no., serial number, etc.).
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="issuer">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="manufacturer"/>
+						<xs:enumeration value="referenceMaterialProducer"/>
+						<xs:enumeration value="customer"/>
+						<xs:enumeration value="owner"/>
+						<xs:enumeration value="other"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="value"
+			            type="dcc:notEmptyStringType"/>
+			<xs:element name="name"
+			            type="dcc:textType"
+			            minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="id"
+		              type="xs:ID"
+		              use="optional"/>
+		<xs:attribute name="refType"
+		              type="dcc:refTypesType"
+		              use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="referenceMaterialProducerType">
+		<xs:annotation>
+			<xs:documentation>
+                Contains information about the producer of the reference material, including contact details.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name"
+			            type="dcc:textType"/>
+			<xs:element name="contact"
+			            type="dcc:contactType"/>
+			<xs:element name="cryptElectronicSeal"
+			            type="xs:boolean"
+			            minOccurs="0"/>
+			<xs:element name="cryptElectronicSignature"
+			            type="xs:boolean"
+			            minOccurs="0"/>
+			<xs:element name="cryptElectronicTimeStamp"
+			            type="xs:boolean"
+			            minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="itemListType">
+		<xs:annotation>
+			<xs:documentation>
+                A list of items included in the DRMD, each with specific details.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="item"
+			            type="drmd:itemType"
+			            maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="itemType">
+		<xs:annotation>
+			<xs:documentation>
+                Details about an individual item in the DRMD, including name, description, and sample size.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name"
+			            type="dcc:textType"/>
+			<xs:element name="description"
+			            type="dcc:richContentType"
+			            minOccurs="0"/>
+			<xs:element name="minimumSampleSize"
+			            type="dcc:itemQuantityListType"/>
+			<xs:element name="itemQuantities"
+			            type="dcc:itemQuantityListType"
+			            minOccurs="0"/>
+			<xs:element name="identifications"
+			            type="drmd:identificationListType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="statementListType">
+		<xs:annotation>
+			<xs:documentation>
+                A list of statements related to the DRMD, including intended use, handling instructions, and storage information.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="intendedUse"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="1"/>
+			<xs:element name="commutability"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="0"/>
+			<xs:element name="storageInformation"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="1"/>
+			<xs:element name="instructionsForHandlingAndUse"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="1"/>
+			<xs:element name="metrologicalTraceability"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="0"/>
+			<xs:element name="healthAndSafetyInformation"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="0"/>
+			<xs:element name="subcontractors"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="0"/>
+			<xs:element name="legalNotice"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="0"/>
+			<xs:element name="referenceToCertificationReport"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="0"/>
+			<xs:element name="statement"
+			            type="dcc:statementMetaDataType"
+			            minOccurs="0"
+			            maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 
-        <h3>Reference Material Producer</h3>
-        <table>
-            <tr><th>Name</th><td><xsl:value-of select="drmd:referenceMaterialProducer/drmd:name/dcc:content" /></td></tr>
-            <tr><th>Contact</th>
-                <td>
-                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:street" />, 
-                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:streetNo" /><br />
-                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:postCode" />
-                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:city" />
-                    <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:location/dcc:countryCode" /><br />
-                    Phone: <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:phone" /><br />
-                    Fax: <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:fax" /><br />
-                    Email: <xsl:value-of select="drmd:referenceMaterialProducer/drmd:contact/dcc:eMail" /><br />
-                </td>
-            </tr>
-        </table>
-
-        <h3>Items</h3>
-        <xsl:apply-templates select="drmd:items/drmd:item" />
-
-        <h3>Statements</h3>
-        <xsl:apply-templates select="drmd:statements/*" />
-    </xsl:template>
-
-    <!-- Template for items -->
-    <xsl:template match="drmd:item">
-        <table>
-            <tr><th>Name</th><td><xsl:value-of select="drmd:name/dcc:content" /></td></tr>
-            <tr><th>Description</th>
-                <td>
-                    <xsl:for-each select="drmd:description/dcc:content">
-                        <xsl:value-of select="." /><br />
-                    </xsl:for-each>
-                </td>
-            </tr>
-            <tr><th>Minimum Sample Size</th>
-                <td>
-                    <xsl:for-each select="drmd:minimumSampleSize/dcc:itemQuantity/si:realListXMLList">
-                        <xsl:value-of select="si:valueXMLList" /><xsl:text> </xsl:text><xsl:value-of select="si:unitXMLList" /><br />
-                    </xsl:for-each>
-                </td>
-            </tr>
-        </table>
-    </xsl:template>
-
-    <!-- Template for statements -->
-    <xsl:template match="drmd:statements/*">
-        <h3><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></h3>
-        <p><xsl:value-of select="dcc:description/dcc:content[@lang='en']" /></p>
-    </xsl:template>
-
-    <!-- Template for responsible persons -->
-    <xsl:template match="drmd:respPersons">
-        <table>
-            <tr><th>Name</th><th>Role</th></tr>
-            <xsl:for-each select="dcc:respPerson">
-                <tr>
-                    <td><xsl:value-of select="dcc:person/dcc:name/dcc:content" /></td>
-                    <td><xsl:value-of select="dcc:person/dcc:role" /></td>
-                </tr>
-            </xsl:for-each>
-        </table>
-    </xsl:template>
-
-    <!-- Template for measurement results -->
-    <xsl:template match="drmd:measurementResults">
-        <xsl:apply-templates select="dcc:measurementResult" />
-    </xsl:template>
-
-    <!-- Template for measurement results -->
-    <xsl:template match="dcc:measurementResult">
-        <table>
-            <tr><th colspan="2"><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></th></tr>
-            <tr><td colspan="2"><xsl:value-of select="dcc:description/dcc:content[@lang='en']" /></td></tr>
-            <xsl:apply-templates select="dcc:results/dcc:result" />
-        </table>
-    </xsl:template>
-
-    <!-- Template for results -->
-    <xsl:template match="dcc:result">
-        <tr><th colspan="2"><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></th></tr>
-        <xsl:apply-templates select="dcc:data/dcc:quantity" />
-    </xsl:template>
-
-    <!-- Template for quantities in list -->
-    <xsl:template match="dcc:quantity">
-        <tr>
-            <th><xsl:value-of select="dcc:name/dcc:content[@lang='en']" /></th>
-            <td>
-                <xsl:for-each select="si:realListXMLList">
-                    <xsl:value-of select="si:valueXMLList" /><xsl:text> </xsl:text><xsl:value-of select="si:unitXMLList" /><br />
-                </xsl:for-each>
-            </td>
-        </tr>
-    </xsl:template>
-
-</xsl:stylesheet>
+    <xs:complexType name="measurementResultListType">
+        <xs:annotation>
+            <xs:documentation>
+                List of measurement results that are part of a DCC.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="measurementResult" type="drmd:measurementResultType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+	
+	
+	<xs:complexType name="measurementResultType">
+		<xs:complexContent>
+			<xs:extension base="dcc:measurementResultType">
+				<xs:attribute name="isCertified"
+				              type="xs:boolean"
+				              use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
