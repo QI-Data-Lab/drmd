@@ -182,14 +182,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>57.68</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
+                            <si:unitXMLList>\percent</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>0.14</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>0.14</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Zinc (Zn) -->
@@ -200,14 +200,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>38.2</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
+                            <si:unitXMLList>\percent</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>0.4</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>0.4</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Lead (Pb) -->
@@ -218,14 +218,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>3.07</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
+                            <si:unitXMLList>\percent</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>0.06</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>0.06</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Iron (Fe) -->
@@ -236,14 +236,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>0.175</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
+                            <si:unitXMLList>\percent</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>0.005</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>0.005</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Tin (Sn) -->
@@ -254,14 +254,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>0.158</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
+                            <si:unitXMLList>\percent</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>0.004</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>0.004</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Nickel (Ni) -->
@@ -272,14 +272,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>0.1174</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
+                            <si:unitXMLList>\percent</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>0.0020</si:valueXMLList>
-                            <si:unitXMLList>%</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>0.0020</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Manganese (Mn) -->
@@ -290,14 +290,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>139.5</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>1.7</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>1.7</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Silver (Ag) -->
@@ -308,14 +308,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>50.6</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>1.4</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>1.4</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Aluminium (Al) -->
@@ -326,14 +326,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>107</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>4</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>4</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Arsenic (As) -->
@@ -344,14 +344,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>178</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>5</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>5</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Bismuth (Bi) -->
@@ -362,14 +362,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>58.9</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>1.8</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>1.8</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Cadmium (Cd) -->
@@ -380,14 +380,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>62.4</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>1.5</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>1.5</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Cobalt (Co) -->
@@ -398,14 +398,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>71.2</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>1.5</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>1.5</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Chromium (Cr) -->
@@ -413,11 +413,11 @@
                     <dcc:description>
                         <dcc:content lang="en">Chromium (Cr)</dcc:content>
                     </dcc:description>
-                    <dcc:quantity refType="basic_measuredValue">
+                    <dcc:quantity refType="basic_measuredValue basic_lessThen">
                         <si:realListXMLList>
-                            <si:valueXMLList>&lt;1</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                            <si:valueXMLList>1</si:valueXMLList> <!--refType instead of <si:valueXMLList>&lt;1</si:valueXMLList>-->
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
+                        </si:realListXMLList> <!--How to deal with certified values that have no uncertainty associated?-->
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Indium (In) -->
@@ -428,14 +428,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>109.1</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>1.9</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>1.9</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Phosphorus (P) -->
@@ -446,14 +446,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>83</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>4</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>4</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Antimony (Sb) -->
@@ -464,14 +464,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>120</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>4</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>4</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Tellurium (Te) -->
@@ -482,14 +482,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>42.9</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>1.4</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>1.4</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
             </dcc:data>
@@ -512,14 +512,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>103</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>12</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>12</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
                 <!-- Germanium (Ge) -->
@@ -530,14 +530,14 @@
                     <dcc:quantity refType="basic_measuredValue">
                         <si:realListXMLList>
                             <si:valueXMLList>15</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
+                            <si:unitXMLList>\milli\gram\kilogram\tothe{-1}</si:unitXMLList>
                         </si:realListXMLList>
-                    </dcc:quantity>
-                    <dcc:quantity refType="basic_measurementError">
-                        <si:realListXMLList>
-                            <si:valueXMLList>4</si:valueXMLList>
-                            <si:unitXMLList>mg/kg</si:unitXMLList>
-                        </si:realListXMLList>
+                        <si:expandedUncXMLList>
+							<si:uncertaintyXMLList>4</si:uncertaintyXMLList>
+							<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+							<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+							<si:distributionXMLList>normal</si:distributionXMLList>
+						</si:expandedUncXMLList>
                     </dcc:quantity>
                 </dcc:list>
             </dcc:data>
