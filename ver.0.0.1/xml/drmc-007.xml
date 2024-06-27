@@ -451,7 +451,7 @@
 								</dcc:name>
 								<si:real>
 									<si:label>Cr</si:label>
-									<si:value>&lt;1</si:value>
+									<si:value>1</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
 								</si:real>
 							</dcc:quantity>
