@@ -216,15 +216,18 @@
 									<dcc:content lang="en">Copper (Cu)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Cu</si:label>
 									<si:value>57.68</si:value>
 									<si:unit>\percent</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>0.14</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>0.14</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
