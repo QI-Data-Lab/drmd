@@ -37,9 +37,13 @@
 					</drmd:itemQuantity>
 				</drmd:minimumSampleSize>
 				<drmd:identifications>
-					<drmd:identification>
+					<drmd:identification refType="basic_orderNumber">
 						<drmd:issuer>manufacturer</drmd:issuer>
-						<drmd:value>some value</drmd:value>
+						<drmd:value>BAM-M375a</drmd:value>
+						<dcc:name>
+							<dcc:content lang="de">Bestellnummer im BAM Webshop</dcc:content>
+							<dcc:content lang="en">Order number at BAM Webshop</dcc:content>
+						</dcc:name>
 					</drmd:identification>
 				</drmd:identifications>
 			</drmd:item>
@@ -164,15 +168,22 @@
 					<drmd:content lang="en">Links or references to certification reports.</drmd:content>
 				</drmd:description>
 			</drmd:referenceToCertificationReport>
-			<drmd:statement>
-				<drmd:name>
-					<drmd:content lang="en">Accreditation Statement</drmd:content>
-				</drmd:name>
+			<drmd:statement id="accredited" refType="basic_isInCMC">
 				<drmd:description>
-					<drmd:content lang="en">Details of accreditation relevant to the reference
-						material.</drmd:content>
+					<drmd:name>
+						<drmd:content lang="en">Accreditation code</drmd:content>
+					</drmd:name>
+					<drmd:content>D-RM-11075-01-00</drmd:content>
 				</drmd:description>
-			</drmd:statement>
+				<drmd:convention>DAkkS-ILAC</dcc:convention>
+				<drmd:link>https://www.dakks.de/de/akkreditierte-stelle.html?id=D-RM-11075-01-00</dcc:link>
+				<drmd:declaration>
+					<drmd:content lang="en">BAM holds an accreditation as a reference material producer according to 
+											ISO 17034. This accreditation is valid only for the scope as specified in the certificate D-RM-11075-01-00.
+											DAkkS is a signatory of the multilateral agreement (MLA) between EA, ILAC and IAF for mutual acceptance.
+					</dcc:content>
+				</drmd:declaration>
+			</dcc:statement>
 			<drmd:statement>
 				<drmd:name>
 					<drmd:content lang="en">Literature</drmd:content>
