@@ -237,15 +237,18 @@
 									<dcc:content lang="en">Zinc (Zn)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Zn</si:label>
 									<si:value>38.2</si:value>
 									<si:unit>\percent</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>0.4</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>0.4</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -255,15 +258,18 @@
 									<dcc:content lang="en">Lead (Pb)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Pb</si:label>
 									<si:value>3.07</si:value>
 									<si:unit>\percent</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>0.06</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>0.06</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
