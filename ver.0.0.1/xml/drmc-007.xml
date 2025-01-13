@@ -279,15 +279,18 @@
 									<dcc:content lang="en">Iron (Fe)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Fe</si:label>
 									<si:value>0.175</si:value>
 									<si:unit>\percent</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>0.005</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>0.005</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -297,15 +300,18 @@
 									<dcc:content lang="en">Tin (Sn)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Sn</si:label>
 									<si:value>0.158</si:value>
 									<si:unit>\percent</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>0.004</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>0.004</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -315,15 +321,18 @@
 									<dcc:content lang="en">Nickel (Ni)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Ni</si:label>
 									<si:value>0.1174</si:value>
 									<si:unit>\percent</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>0.0020</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>0.0020</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -333,15 +342,18 @@
 									<dcc:content lang="en">Manganese (Mn)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Mn</si:label>
 									<si:value>139.5</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>1.7</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>1.7</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -351,15 +363,18 @@
 									<dcc:content lang="en">Silver (Ag)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Ag</si:label>
 									<si:value>50.6</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>1.4</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>1.4</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -369,15 +384,18 @@
 									<dcc:content lang="en">Aluminum (Al)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Al</si:label>
 									<si:value>107</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>4</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>4</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -387,15 +405,18 @@
 									<dcc:content lang="en">Arsenic (As)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>As</si:label>
 									<si:value>178</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>5</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>5</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -405,15 +426,18 @@
 									<dcc:content lang="en">Bismuth (Bi)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Bi</si:label>
 									<si:value>58.9</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>1.8</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>1.8</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -423,15 +447,18 @@
 									<dcc:content lang="en">Cadmium (Cd)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Cd</si:label>
 									<si:value>62.4</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>1.5</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>1.5</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -441,15 +468,18 @@
 									<dcc:content lang="en">Cobalt (Co)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Co</si:label>
 									<si:value>71.2</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>1.5</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>1.5</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -459,6 +489,7 @@
 									<dcc:content lang="en">Chromium (Cr)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Cr</si:label>
 									<si:value>1</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
@@ -471,15 +502,18 @@
 									<dcc:content lang="en">Indium (In)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>In</si:label>
 									<si:value>109.1</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>1.9</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>1.9</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -489,15 +523,18 @@
 									<dcc:content lang="en">Phosphorus (P)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>P</si:label>
 									<si:value>83</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>4</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>4</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -507,15 +544,18 @@
 									<dcc:content lang="en">Antimony (Sb)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Sb</si:label>
 									<si:value>120</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>4</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>4</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 
@@ -525,15 +565,18 @@
 									<dcc:content lang="en">Tellurium (Te)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Te</si:label>
 									<si:value>42.9</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>1.4</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>1.4</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 						</dcc:list>
@@ -569,15 +612,18 @@
 									<dcc:content lang="en">Silicon (Si)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Si</si:label>
 									<si:value>103</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>12</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>12</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 							<!-- Germanium (Ge) -->
@@ -586,15 +632,18 @@
 									<dcc:content lang="en">Germanium (Ge)</dcc:content>
 								</dcc:name>
 								<si:real>
+									<si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
 									<si:label>Ge</si:label>
 									<si:value>15</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
-									<si:expandedUnc>
-										<si:uncertainty>4</si:uncertainty>
-										<si:coverageFactor>2</si:coverageFactor>
-										<si:coverageProbability>0.95</si:coverageProbability>
-										<si:distribution>normal</si:distribution>
-									</si:expandedUnc>
+									<si:measurementUncertaintyUnivariate>
+										<si:expandedMU>
+											<si:uncertainty>4</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+											<si:distribution>normal</si:distribution>
+										</si:expandedMU>
+									</si:measurementUncertaintyUnivariate>
 								</si:real>
 							</dcc:quantity>
 						</dcc:list>
