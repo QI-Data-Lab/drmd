@@ -253,19 +253,18 @@
 			            maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-
-    <xs:complexType name="measurementResultListType">
-        <xs:annotation>
-            <xs:documentation>
+	<xs:complexType name="measurementResultListType">
+		<xs:annotation>
+			<xs:documentation>
                 List of measurement results that are part of a DCC.
             </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="measurementResult" type="drmd:measurementResultType" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-	
-	
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="measurementResult"
+			            type="drmd:measurementResultType"
+			            maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="measurementResultType">
 		<xs:complexContent>
 			<xs:extension base="dcc:measurementResultType">
