@@ -95,7 +95,7 @@
 			            type="drmd:identificationListType"
 			            minOccurs="0"/>
         	<xs:element name="validity" 
-						type="ValidityType"
+						type="drmd:ValidityType"
 						 minOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
@@ -106,14 +106,19 @@
             <xs:element name="timeAfterDispatch">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="dispatchDate" type="xs:date" />
-                        <xs:element name="period" type="xs:duration" />
+                        <xs:element name="dispatchDate" type="xs:date" minOccurs="0" />
+                        <xs:element name="period" type="xs:duration" minOccurs="1" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="specificTime" type="xs:date" />
         </xs:choice>
     </xs:complexType>
+
+	<!-- <xs:assert test="not(validity/timeAfterDispatch) or validity/timeAfterDispatch/dispatchDate = //digitalSignature/date">
+    Dispatch date in validity must match the signature date.
+	</xs:assert> -->
+
 
     <xs:complexType name="materialClassType">
         <xs:sequence>
@@ -125,6 +130,13 @@
         <xs:attribute name="refId" type="xs:IDREFS" use="optional" />
         <xs:attribute name="refType" type="dcc:refTypesType" use="optional" />
     </xs:complexType>
+
+
+	<!-- <materialClass>
+	<reference>
+	</materialClass> -->
+
+
 
 	<xs:complexType name="identificationListType">
 		<xs:annotation>
@@ -220,6 +232,7 @@
 			            type="drmd:identificationListType"/>
 		</xs:sequence>
 	</xs:complexType>
+
 	<xs:complexType name="statementListType">
 		<xs:annotation>
 			<xs:documentation> A list of statements related to the DRMD, including intended use,
@@ -227,38 +240,39 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="intendedUse"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="1"/>
 			<xs:element name="commutability"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="0"/>
 			<xs:element name="storageInformation"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="1"/>
 			<xs:element name="instructionsForHandlingAndUse"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="1"/>
 			<xs:element name="metrologicalTraceability"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="0"/>
 			<xs:element name="healthAndSafetyInformation"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="0"/>
 			<xs:element name="subcontractors"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="0"/>
 			<xs:element name="legalNotice"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="0"/>
 			<xs:element name="referenceToCertificationReport"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="0"/>
 			<xs:element name="statement"
-			            type="dcc:statementMetaDataType"
+			            type="dcc:richContentType"
 			            minOccurs="0"
 			            maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
+
 	<xs:complexType name="measurementResultListType">
 		<xs:annotation>
 			<xs:documentation> List of measurement results that are part of a DRMD. </xs:documentation>
@@ -269,13 +283,29 @@
 			            maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="measurementResultType">
-		<xs:complexContent>
-			<xs:extension base="dcc:measurementResultType">
-				<xs:attribute name="isCertified"
-				              type="xs:boolean"
-				              use="optional"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+
+
+
+    <xs:complexType name="measurementResultType">
+        <xs:annotation>
+            <xs:documentation> Container for used methods, used software, influence conditions,
+                measuring equipment used for the calibration, metadata and calibration results. </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="name" type="dcc:textType" />
+            <xs:element name="description" type="dcc:richContentType" minOccurs="0" />
+            <xs:element name="usedMethods" type="dcc:usedMethodListType" minOccurs="0" />
+            <xs:element name="results" type="dcc:resultListType" />
+            <xs:element name="measurementMetaData" type="dcc:measurementMetaDataListType"
+                minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="optional" />
+        <xs:attribute name="refId" type="xs:IDREFS" use="optional" />
+        <xs:attribute name="refType" type="dcc:refTypesType" use="optional" />
+		<xs:attribute name="isCertified" type="xs:boolean" use="optional"/>
+
+    </xs:complexType>
+
+
+
 </xs:schema>
