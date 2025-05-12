@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema version="0.1.1"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:drmd="https://example.org/drmd"
+           xmlns:dcc="https://ptb.de/dcc"
+           xmlns:si="https://ptb.de/si"
+           xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+           targetNamespace="https://example.org/drmd"
+           elementFormDefault="qualified">
+
+    <xs:import namespace="https://ptb.de/dcc" schemaLocation="https://www.ptb.de/dcc/dcc.xsd"/>
+    <xs:import namespace="https://ptb.de/si" schemaLocation="https://ptb.de/si/v2.2.0/SI_Format.xsd"/>
+    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="https://www.ptb.de/dcc/d-sig/xmldsig-core-schema.xsd"/>
+
+    <xs:element name="digitalReferenceMaterialDocument" type="drmd:digitalReferenceMaterialDocumentType"/>
+
+    <xs:complexType name="digitalReferenceMaterialDocumentType">
+        <xs:sequence>
+            <xs:element name="administrativeData" type="drmd:administrativeDataType"/>
+            <xs:element name="materialClassList" type="drmd:materialClassListType"/>
+            <xs:element name="materialPropertiesList" type="drmd:materialPropertiesListType"/>
+            <xs:element name="statements" type="drmd:statementListType"/>
+            <xs:element name="comment" type="xs:string" minOccurs="0"/>
+            <xs:element name="document" type="dcc:byteDataType" minOccurs="0"/>
+            <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="schemaVersion" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="administrativeDataType">
+        <xs:all>
+            <xs:element name="coreData" type="drmd:coreDataType"/>
+            <xs:element name="materials" type="drmd:materialListType"/>
+            <xs:element name="referenceMaterialProducer" type="drmd:referenceMaterialProducerType"/>
+            <xs:element name="respPersons" type="dcc:respPersonListType"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="coreDataType">
+        <xs:sequence>
+            <xs:element name="titleOfTheDocument">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="productInformationSheet"/>
+                        <xs:enumeration value="referenceMaterialCertificate"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="uniqueIdentifier" type="dcc:notEmptyStringType"/>
+            <xs:element name="identifications" type="drmd:identificationListType" minOccurs="0"/>
+            <xs:element name="validity" type="drmd:ValidityType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="materialClassListType">
+        <xs:sequence>
+            <xs:element name="materialClass" type="drmd:materialClassType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="materialClassType">
+        <xs:sequence>
+            <xs:element name="reference" type="dcc:notEmptyStringType"/>
+            <xs:element name="classID" type="dcc:notEmptyStringType"/>
+            <xs:element name="link" type="xs:anyURI" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="optional"/>
+        <xs:attribute name="refId" type="xs:IDREFS" use="optional"/>
+        <xs:attribute name="refType" type="dcc:refTypesType" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="materialPropertiesListType">
+        <xs:sequence>
+            <xs:element name="materialProperties" type="drmd:materialPropertiesType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="materialPropertiesType">
+        <xs:sequence>
+            <xs:element name="name" type="dcc:textType"/>
+            <xs:element name="description" type="dcc:richContentType" minOccurs="0"/>
+            <xs:element name="procedures" type="dcc:usedMethodListType" minOccurs="0"/>
+            <xs:element name="results" type="dcc:resultListType"/>
+            <xs:element name="measurementMetaData" type="dcc:measurementMetaDataListType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="optional"/>
+        <xs:attribute name="refId" type="xs:IDREFS" use="optional"/>
+        <xs:attribute name="refType" type="dcc:refTypesType" use="optional"/>
+        <xs:attribute name="isCertified" type="xs:boolean" use="optional"/>
+    </xs:complexType>
+
+    <!-- Reusing the existing statementListType as is -->
+    <!-- You can optionally move it outside to cleanly reflect root separation -->
+</xs:schema>
