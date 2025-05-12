@@ -52,6 +52,8 @@
                         type="drmd:materialListType"/>
             <xs:element name="materialPropertiesList"
                         type="drmd:materialPropertiesListType"/>
+            <xs:element name="statements"
+                        type="drmd:statementListType"/>
             <xs:element name="comment"
                         type="xs:string" minOccurs="0"/>
             <xs:element name="document"
@@ -79,9 +81,6 @@
                         type="drmd:referenceMaterialProducerType"/>
             <xs:element name="respPersons"
                         type="dcc:respPersonListType"/>
-            <xs:element name="statements"
-                        type="drmd:statementListType"
-                        minOccurs="0"/>
         </xs:all>
     </xs:complexType>
 
