@@ -1,8 +1,4 @@
-Here’s a **clean, professional `README.md` template** for your **DRMD v0.2.0** reflecting the new structure and explaining the update:
 
----
-
-```markdown
 # Digital Reference Material Document (DRMD) - Version 0.2.0
 
 ## Overview
@@ -33,7 +29,7 @@ This version introduces **breaking changes** compared to `v0.1.0`:
 
 ## Folder Structure
 
-```
+
 
 v0.2.0/
 ├── xsd/            # DRMD XML Schema Definition (XSD)
@@ -102,11 +98,3 @@ This schema is published under the **GNU Lesser General Public License (LGPL) v3
 * [QI-Digital Project](https://www.bam.de/qi-digital)
 * [ISO 17034:2016](https://www.iso.org/standard/29357.html)
 * [ISO Guide 31:2015](https://www.iso.org/standard/59573.html)
-
-```
-
----
-
-Would you also like me to **generate a minimal working example DRMD XML file matching the new `v0.2.0` schema?**  
-If yes, just say `"YES SAMPLE XML"`.
-```
