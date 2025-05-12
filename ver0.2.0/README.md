@@ -15,11 +15,10 @@ The schema is developed by **Bundesanstalt für Materialforschung und -prüfung 
 This version introduces **breaking changes** compared to `v0.1.0`:
 
 - 📦 **Separation of core document elements for clarity and reuse:**
-  - `materialClassList` is now a standalone root element.
+  - `materials` is now a standalone root element.
   - `materialPropertiesList` is now a standalone root element.
   - `statements` are now separated from `administrativeData` and placed at root level.
-- ❌ Removed the nested `materialPropertiesList` inside `materialClass`.
-- 🛠 Clean modularization enables clearer referencing between materials, properties, and classes.
+- 🛠 Clean modularization enables clearer referencing between materials, properties
 - ✅ The changes enhance:
   - **Reusability of classes and properties**
   - **Clean separation of certificate-wide statements**
@@ -30,29 +29,19 @@ This version introduces **breaking changes** compared to `v0.1.0`:
 ## Schema structure
 
 ````
-
 digitalReferenceMaterialDocument
 ├── administrativeData
 │   ├── coreData
-│   ├── materials
 │   ├── referenceMaterialProducer
-│   └── respPersons
-├── materialClassList
-│   └── materialClass
-│       ├── reference
-│       ├── classID
-│       └── link (optional)
-├── materialPropertiesList
-│   └── materialProperties
+│   ├── respPersons
+│   └── statements
+├── materials
+│   └── material
 │       ├── name
 │       ├── description
-│       ├── procedures
-│       ├── results
-│       └── measurementMetaData
-├── statements
-│   ├── intendedUse
-│   ├── storageInformation
-│   └── other statements...
+│       ├── materialClass
+├── materialPropertiesList
+│   └── materialProperties
 ├── comment (optional)
 ├── document (optional)
 └── Signature (0..n)
