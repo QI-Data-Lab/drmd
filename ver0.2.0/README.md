@@ -27,6 +27,38 @@ This version introduces **breaking changes** compared to `v0.1.0`:
 
 ---
 
+## Schema structure
+
+````
+
+digitalReferenceMaterialDocument
+├── administrativeData
+│   ├── coreData
+│   ├── materials
+│   ├── referenceMaterialProducer
+│   └── respPersons
+├── materialClassList
+│   └── materialClass
+│       ├── reference
+│       ├── classID
+│       └── link (optional)
+├── materialPropertiesList
+│   └── materialProperties
+│       ├── name
+│       ├── description
+│       ├── procedures
+│       ├── results
+│       └── measurementMetaData
+├── statements
+│   ├── intendedUse
+│   ├── storageInformation
+│   └── other statements...
+├── comment (optional)
+├── document (optional)
+└── Signature (0..n)
+````
+
+
 ## Folder Structure
 
 ````
