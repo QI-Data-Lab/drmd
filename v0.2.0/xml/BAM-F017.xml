@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:digitalReferenceMaterialDocument xmlns:ns0="https://example.org/drmd" xmlns:ns1="https://ptb.de/dcc" xmlns:ns2="https://ptb.de/si" schemaVersion="0.2.0">
+  <ns0:administrativeData>
+    <ns0:coreData>
+      <ns0:titleOfTheDocument>Zertifikat BAM-F017</ns0:titleOfTheDocument>
+      <ns0:uniqueIdentifier>BAM-F017</ns0:uniqueIdentifier>
+      <ns0:validity>
+        <ns0:timeAfterDispatch>
+          <ns0:period>2 years</ns0:period>
+        </ns0:timeAfterDispatch>
+        <ns0:dateOfCertificateApproval>2020-07-01</ns0:dateOfCertificateApproval>
+      </ns0:validity>
+      <ns0:identifications>
+        <ns0:identification refType="basic_certificateIdentification">
+          <ns0:issuer>Bundesanstalt für Materialforschung und -prüfung (BAM)</ns0:issuer>
+          <ns0:value>BAM-F017</ns0:value>
+          <ns0:name>
+            <ns1:content lang="en">Internal certificate ID</ns1:content>
+          </ns0:name>
+        </ns0:identification>
+      </ns0:identifications>
+    </ns0:coreData>
+    <ns0:referenceMaterialProducer>
+      <ns0:name>
+        <ns1:content lang="en">Bundesanstalt für Materialforschung und -prüfung (BAM)</ns1:content>
+      </ns0:name>
+      <ns0:contact>
+        <ns1:name>
+          <ns1:content lang="en">BAM Contact</ns1:content>
+        </ns1:name>
+        <ns1:location>
+          <ns1:street>Richard-Willstätter-Str.</ns1:street>
+          <ns1:streetNo>11</ns1:streetNo>
+          <ns1:postCode>D-12489</ns1:postCode>
+          <ns1:city>Berlin</ns1:city>
+          <ns1:countryCode>DE</ns1:countryCode>
+        </ns1:location>
+        <ns1:phone>+49 30 8104 2061</ns1:phone>
+        <ns1:fax>+49 30 8104 72061</ns1:fax>
+        <ns1:eMail>sales.crm@bam.de</ns1:eMail>
+      </ns0:contact>
+    </ns0:referenceMaterialProducer>
+    <ns0:respPersons>
+      <ns1:respPerson>
+        <ns1:person>
+          <ns1:name>
+            <ns1:content lang="en">Dr. S. Richter</ns1:content>
+          </ns1:name>
+        </ns1:person>
+        <ns1:role>Committee for Certification</ns1:role>
+      </ns1:respPerson>
+      <ns1:respPerson>
+        <ns1:person>
+          <ns1:name>
+            <ns1:content lang="en">Dr. J. Pauli / Dr. U. Resch-Genger</ns1:content>
+          </ns1:name>
+        </ns1:person>
+        <ns1:role>Project Coordinators</ns1:role>
+      </ns1:respPerson>
+    </ns0:respPersons>
+    </ns0:administrativeData>
+  <ns0:materials>
+      <ns0:material>
+        <ns0:name>
+          <ns1:content lang="en">Fluorescence Quantum Yield Standard</ns1:content>
+        </ns0:name>
+        <ns0:description>
+          <ns1:content lang="en">
+            The fluorescence quantum yield standard BAM-F017 is supplied as a solid in a tightly closed glass bottle.
+            The Standard Operation Procedure (SOP) based on the publication by C. Wuerth et al. is included.
+          </ns1:content>
+        </ns0:description>
+      </ns0:material>
+    </ns0:materials>
+    <ns0:materialPropertiesList>
+    <ns0:materialProperties isCertified="true">
+      <ns0:name>
+        <ns1:content lang="en">
+          Certified fluorescence quantum yield and its associated uncertainty.
+        </ns1:content>
+      </ns0:name>
+      <ns0:results>
+        <ns1:result>
+          <ns1:name>
+            <ns1:content lang="en">Certified Value</ns1:content>
+          </ns1:name>
+          <ns1:description>
+            <ns1:content lang="en">
+              a) Ethanolic dye solution of BAM-F017 with an absorbance at the excitation wavelength between 0.09 and 0.11.
+            </ns1:content>
+          </ns1:description>
+          <ns1:data>
+            <ns1:list>
+              <ns1:quantity refType="basic_measuredValue">
+                <ns1:name>
+                  <ns1:content lang="en">Fluorescence Quantum Yield (Φf)</ns1:content>
+                </ns1:name>
+                <ns2:real>
+                  <ns2:value>0.61</ns2:value>
+                  <ns2:unit>unitless</ns2:unit>
+                  <ns2:measurementUncertaintyUnivariate>
+                    <ns2:expandedMU>
+                      <ns2:valueExpandedMU>0.03</ns2:valueExpandedMU>
+                      <ns2:coverageFactor>2</ns2:coverageFactor>
+                      <ns2:coverageProbability>0.95</ns2:coverageProbability>
+                      <ns2:distribution>normal</ns2:distribution>
+                    </ns2:expandedMU>
+                  </ns2:measurementUncertaintyUnivariate>
+                </ns2:real>
+              </ns1:quantity>
+            </ns1:list>
+          </ns1:data>
+        </ns1:result>
+      </ns0:results>
+    </ns0:materialProperties>
+  </ns0:materialPropertiesList>
+<ns0:statements>
+      <ns0:intendedUse>
+        <ns1:name>
+          <ns1:content lang="en">Intended Use</ns1:content>
+        </ns1:name>
+        <ns1:content lang="en">
+          BAM-F017 dissolved in absolute ethanol is certified for use as a fluorescence quantum yield standard for the relative determination of fluorescence quantum yields of transparent luminophore solutions.
+        </ns1:content>
+      </ns0:intendedUse>
+      <ns0:storageInformation>
+        <ns1:name>
+          <ns1:content lang="en">Storage Information</ns1:content>
+        </ns1:name>
+        <ns1:content lang="en">
+          This certificate is valid for 2 years after dispatch, if the solid CRM is stored at 2 - 8 °C in the dark.
+          BAM-F017 can be shipped at room temperature.
+        </ns1:content>
+      </ns0:storageInformation>
+      <ns0:instructionsForHandlingAndUse>
+        <ns1:name>
+          <ns1:content lang="en">Handling Instructions</ns1:content>
+        </ns1:name>
+        <ns1:content lang="en">
+          Please follow the Standard Operation Procedure (SOP) provided with the material.
+        </ns1:content>
+      </ns0:instructionsForHandlingAndUse>
+      <ns0:metrologicalTraceability>
+        <ns1:name>
+          <ns1:content lang="en">Metrological Traceability</ns1:content>
+        </ns1:name>
+        <ns1:content lang="en">
+          The certified fluorescence quantum yield value was determined with a calibrated custom-built integrating sphere setup.
+        </ns1:content>
+      </ns0:metrologicalTraceability>
+      <ns0:legalNotice>
+        <ns1:name>
+          <ns1:content lang="en">Legal Notice</ns1:content>
+        </ns1:name>
+        <ns1:content lang="en">
+          Neither BAM, its contractors, nor any person acting on their behalf make any warranty or representation regarding intellectual property rights or assume any liability for damages.
+        </ns1:content>
+      </ns0:legalNotice>
+      <ns0:referenceToCertificationReport>
+        <ns1:name>
+          <ns1:content lang="en">Reference to Certification Report</ns1:content>
+        </ns1:name>
+        <ns1:content lang="en">
+          A detailed technical report describing the analysis procedures and the treatment of the analytical data used to certify BAM-F017 is available upon request.
+        </ns1:content>
+      </ns0:referenceToCertificationReport>
+    </ns0:statements>
+  </ns0:digitalReferenceMaterialDocument>

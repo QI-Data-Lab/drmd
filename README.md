@@ -51,7 +51,7 @@ The `drmc_visualization.xsl` file is an XSLT stylesheet that can be used to tran
 
 ```
 dcrm-project/
-├── ver.0.0.1/
+├── v0.0.1/
 │   ├── xml/
 │   │   ├── dcrm-001.xml
 │   │   └── other-data-files.xml
