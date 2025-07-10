@@ -1,0 +1,648 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:digitalReferenceMaterialDocument xmlns:ns0="https://example.org/drmd" xmlns:ns1="https://ptb.de/dcc" xmlns:ns2="https://ptb.de/si" schemaVersion="0.2.0">
+	<ns0:administrativeData>
+		<ns0:coreData>
+			<ns0:titleOfTheDocument>referenceMaterialCertificate</ns0:titleOfTheDocument>
+			<ns0:uniqueIdentifier>7d7e1a89-bad4-4fc7-bd8a-4b7c5d5d224a</ns0:uniqueIdentifier>
+			<ns0:identifications>
+				<ns0:identification refType="basic_certificateIdentification">
+					<ns0:issuer>referenceMaterialProducer</ns0:issuer>
+					<ns0:value>BAM-M375a</ns0:value>
+					<ns0:name>
+						<ns1:content lang="en">Internal certificate ID</ns1:content>
+					</ns0:name>
+				</ns0:identification>
+			</ns0:identifications>
+<ns0:validity>
+    <ns0:untilRevoked>true</ns0:untilRevoked>
+</ns0:validity>
+		</ns0:coreData>
+		<ns0:referenceMaterialProducer>
+			<ns0:name>
+				<ns1:content lang="en">Reference Material Producer</ns1:content>
+			</ns0:name>
+			<ns0:contact>
+				<ns1:name>
+					<ns1:content lang="en">Contact Name</ns1:content>
+				</ns1:name>
+				<ns1:eMail>sales.crm@bam.de</ns1:eMail>
+				<ns1:phone>+49 30 8104 2061</ns1:phone>
+				<ns1:fax>+49 30 8104 72061</ns1:fax>
+				<ns1:location>
+					<ns1:street>Richard-Willstätter-Str.</ns1:street>
+					<ns1:streetNo>11</ns1:streetNo>
+					<ns1:postCode>D-12489</ns1:postCode>
+					<ns1:city>Berlin</ns1:city>
+					<ns1:countryCode>DE</ns1:countryCode>
+				</ns1:location>
+			</ns0:contact>
+		</ns0:referenceMaterialProducer>
+		<ns0:respPersons>
+			<ns1:respPerson>
+				<ns1:person>
+					<ns1:name>
+						<ns1:content lang="en">Dr. Mustermann</ns1:content>
+					</ns1:name>
+				</ns1:person>
+				<ns1:role>Committee for Certification</ns1:role>
+			</ns1:respPerson>
+			<ns1:respPerson>
+				<ns1:person>
+					<ns1:name>
+						<ns1:content lang="en">Dr. John Doe</ns1:content>
+					</ns1:name>
+				</ns1:person>
+				<ns1:role>Project Coordinator, Division 1.6</ns1:role>
+			</ns1:respPerson>
+		</ns0:respPersons>
+		</ns0:administrativeData>
+	<ns0:materials>
+			<ns0:material>
+				<ns0:name>
+					<ns1:content lang="en">CuZn39Pb3</ns1:content>
+				</ns0:name>
+				<ns0:description>
+					<ns1:content lang="en">The Reference Material is available in the form of discs
+						(approx. 38 mm diameter and 30 mm height).</ns1:content>
+				</ns0:description>
+				<ns0:minimumSampleSize>
+					<ns1:itemQuantity>
+						<ns2:realListXMLList>
+							<ns2:valueXMLList>0.2</ns2:valueXMLList>
+							<ns2:unitXMLList>g</ns2:unitXMLList>
+						</ns2:realListXMLList>
+					</ns1:itemQuantity>
+				</ns0:minimumSampleSize>
+				<ns0:identifications>
+					<ns0:identification>
+						<ns0:issuer>referenceMaterialProducer</ns0:issuer>
+						<ns0:value>some value</ns0:value>
+					</ns0:identification>
+				</ns0:identifications>
+			</ns0:material>
+		</ns0:materials>
+		<ns0:materialPropertiesList>
+		
+		<ns0:materialProperties isCertified="true">
+			<ns0:name>
+				<ns1:content lang="en">Certified mass fractions and their associated uncertainties.</ns1:content>
+			</ns0:name>
+			<ns0:results>
+				<ns1:result>
+					<ns1:name>
+						<ns1:content lang="en">Certified Values</ns1:content>
+					</ns1:name>
+					<ns1:description>
+						<ns1:content lang="en">1) Unweighted mean value of the means of accepted
+							sets of data (consisting of at least 3 single results), each set being
+							obtained by a different laboratory and/or a different method of
+							measurement.
+							2) Estimated expanded uncertainty U with a coverage factor of k = 2,
+							corresponding to a level of confidence of approx. 95 %, as defined in
+							the Guide to the Expression of Uncertainty in Measurement, (GUM, ISO/IEC
+							Guide 98-3:2008).
+							uncertainties.</ns1:content>
+					</ns1:description>
+					<ns1:data>
+						<ns1:list>
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Copper (Cu)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                    <ns2:label>Cu</ns2:label>
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>57.68</ns2:value>
+									<ns2:unit>\percent</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>0.14</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Zinc (Zn)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                    <ns2:label>Zn</ns2:label>
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>38.2</ns2:value>
+									<ns2:unit>\percent</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>0.4</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Lead (Pb)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+									<ns2:label>Pb</ns2:label>
+                                    <ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>3.07</ns2:value>
+									<ns2:unit>\percent</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>0.06</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Iron (Fe)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                    <ns2:label>Fe</ns2:label>
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>0.175</ns2:value>
+									<ns2:unit>\percent</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>0.005</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Tin (Sn)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                	<ns2:label>Sn</ns2:label>
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>0.158</ns2:value>
+									<ns2:unit>\percent</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>0.004</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Nickel (Ni)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                	<ns2:label>Ni</ns2:label>
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>0.1174</ns2:value>
+									<ns2:unit>\percent</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>0.0020</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Manganese (Mn)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Mn</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>139.5</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>1.7</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Silver (Ag)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Ag</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>50.6</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>1.4</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Aluminum (Al)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Al</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>107</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>4</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Arsenic (As)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>As</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>178</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>5</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Bismuth (Bi)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Bi</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>58.9</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>1.8</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Cadmium (Cd)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Cd</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>62.4</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>1.5</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Cobalt (Co)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Co</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>71.2</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>1.5</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Chromium (Cr)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Cr</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>1</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Indium (In)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>In</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>109.1</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>1.9</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Phosphorus (P)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>P</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>83</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>4</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Antimony (Sb)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Sb</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>120</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>4</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Tellurium (Te)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Te</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>42.9</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>1.4</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+						</ns1:list>
+					</ns1:data>
+				</ns1:result>
+			</ns0:results>
+
+		</ns0:materialProperties>
+		<ns0:materialProperties isCertified="false">
+			<ns0:name>
+				<ns1:content lang="en">Certified mass fractions and their associated uncertainties.</ns1:content>
+			</ns0:name>
+			<ns0:results>
+				
+				<ns1:result>
+					<ns1:name>
+						<ns1:content lang="en">Informative Values</ns1:content>
+					</ns1:name>
+					<ns1:description>
+						<ns1:content lang="en">Values were not certified, but given for information,
+							because the spread of results was considered to be too high.
+
+							Estimated expanded uncertainty U with a coverage factor of k = 2,
+							corresponding to a level of confidence of approx. 95 %, as defined in
+							the Guide to the expression of uncertainty in measurement, (GUM, ISO/IEC
+							Guide 98-3:2008).
+</ns1:content>
+					</ns1:description>
+					<ns1:data>
+						<ns1:list>
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Silicon (Si)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Si</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>103</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>12</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+							
+							<ns1:quantity refType="basic_measuredValue">
+								<ns1:name>
+									<ns1:content lang="en">Germanium (Ge)</ns1:content>
+								</ns1:name>
+								<ns2:real>
+                                									<ns2:label>Ge</ns2:label>
+
+									<ns2:quantityTypeQUDT>MassFraction</ns2:quantityTypeQUDT>
+									<ns2:value>15</ns2:value>
+									<ns2:unit>\milli\gram\kilogram\tothe{-1}</ns2:unit>
+									<ns2:measurementUncertaintyUnivariate>
+										<ns2:expandedMU>
+											<ns2:valueExpandedMU>4</ns2:valueExpandedMU>
+											<ns2:coverageFactor>2</ns2:coverageFactor>
+											<ns2:coverageProbability>0.95</ns2:coverageProbability>
+											<ns2:distribution>normal</ns2:distribution>
+										</ns2:expandedMU>
+									</ns2:measurementUncertaintyUnivariate>
+								</ns2:real>
+							</ns1:quantity>
+						</ns1:list>
+					</ns1:data>
+				</ns1:result>
+			</ns0:results>
+		</ns0:materialProperties>
+	</ns0:materialPropertiesList>
+<ns0:statements>
+			<ns0:intendedUse>
+				<ns1:name>
+					<ns1:content lang="en">Intended Use</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">The CRM is intended for establishing or checking the
+						calibration of spark optical emission and X-ray fluorescence spectrometers
+						for the analysis of samples of similar matrix composition.</ns1:content>
+			</ns0:intendedUse>
+			<ns0:storageInformation>
+				<ns1:name>
+					<ns1:content lang="en">Storage Information</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">The material should be stored in a dry and clean
+						environment at room temperature. Transport can be done under normal ambient
+						conditions.</ns1:content>
+			</ns0:storageInformation>
+			<ns0:instructionsForHandlingAndUse>
+				<ns1:name>
+					<ns1:content lang="en">Handling Instructions</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">Before use the surface of the material must be prepared
+						by milling or turning on a lathe. For wet chemical analysis chips must be
+						prepared by turning or milling of the sample surface.</ns1:content>
+			</ns0:instructionsForHandlingAndUse>
+			<ns0:metrologicalTraceability>
+				<ns1:name>
+					<ns1:content lang="en">Metrological Traceability</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">To ensure traceability of the certified mass fractions to
+						the SI (Système International d’Unités) calibration was performed using
+						standard solutions prepared from pure metals or stoichiometric compounds or
+						with traceable commercial calibration solutions.</ns1:content>
+			</ns0:metrologicalTraceability>
+			<ns0:healthAndSafetyInformation>
+				<ns1:name>
+					<ns1:content lang="en">Health and Safety Information</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">Health and safety information relevant to the reference
+						material.</ns1:content>
+			</ns0:healthAndSafetyInformation>
+			<ns0:subcontractors>
+				<ns1:name>
+					<ns1:content lang="en">Subcontractors</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">Aurubis AG Pirdop Bulgaria, Bundesanstalt für
+						Materialforschung und -prüfung (BAM) Berlin Germany, Diehl Brass Solutions
+						Stiftung &amp; Co KG Röthenbach Germany, Forschungsinstitut Edelmetalle +
+						Metallchemie Schwäbisch Gmünd Germany, Institut für Materialprüfung Glörfeld
+						GmbH Willich Germany, KME Germany GmbH Osnabrück Germany, Łukasiewicz
+						Research Network – Institute of Non-Ferrous Metals Gliwice Poland,
+						Montanwerke Brixlegg Brixlegg Austria, Raghavendra Spectro Metallurgical
+						Laboratory Bangalore India, Wieland-Werke AG Vöhringen Germany</ns1:content>
+			</ns0:subcontractors>
+			<ns0:legalNotice>
+				<ns1:name>
+					<ns1:content lang="en">Legal Notice</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">Legal information and disclaimers.</ns1:content>
+			</ns0:legalNotice>
+			<ns0:referenceToCertificationReport>
+				<ns1:name>
+					<ns1:content lang="en">Reference to Certification Report</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">Links or references to certification reports.</ns1:content>
+			</ns0:referenceToCertificationReport>
+			<ns0:statement>
+				<ns1:name>
+					<ns1:content lang="en">Accreditation Statement</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">Details of accreditation relevant to the reference
+						material.</ns1:content>
+			</ns0:statement>
+			<ns0:statement>
+				<ns1:name>
+					<ns1:content lang="en">Literature</ns1:content>
+				</ns1:name>
+					<ns1:content lang="en">A detailed technical report describing the analysis
+						procedures and the treatment of the analytical data used to certify
+						BAM-M375a is available on request or can be downloaded from BAM website
+						(https://rrr.bam.de).</ns1:content>
+			</ns0:statement>
+		</ns0:statements>
+	</ns0:digitalReferenceMaterialDocument>
