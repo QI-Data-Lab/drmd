@@ -36,7 +36,7 @@ The `dcrm-0001.xml` file is a sample XML document that adheres to the `drmd.xsd`
 
 ### XSLT Stylesheet
 
-The `drmc_visualization.xsl` file is an XSLT stylesheet that can be used to transform DRMD XML documents into human-readable HTML format. To use this stylesheet, reference it in your XML document as follows:
+The `drmd.xsl` file is an XSLT stylesheet that can be used to transform DRMD XML documents into human-readable HTML format. To use this stylesheet, reference it in your XML document as follows:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -58,9 +58,9 @@ dcrm-project/
 │   ├── xsd/
 │   │   ├── drmd.xsd
 │   │   └── other-data-files.xml
-│   ├── xslt/
-│   │   ├── drmd.xslt
-│   │   └── other-xslt-files.xslt
+│   ├── xsl/
+│   │   ├── drmd.xsl
+│   │   └── other-xsl-files.xsl
 │   ├── html-output/
 │   │   ├── dcrm-001.html
 │   │   └── other-html-files.html
@@ -96,19 +96,19 @@ The `drmd` (Digital Reference Material Document) structure is defined using an X
                 - minimumSampleSize
                 - identifications
 
-        - **statements**
-            - intendedUse
-            - commutability
-            - storageInformation
-            - instructionsForHandlingAndUse
-            - metrologicalTraceability
-            - healthAndSafetyInformation
-            - subcontractors
-            - legalNotice
-            - referenceToCertificationReport
-            - statement
         - **respPersons**
             - respPerson
+    - **statements**
+        - intendedUse
+        - commutability
+        - storageInformation
+        - instructionsForHandlingAndUse
+        - metrologicalTraceability
+        - healthAndSafetyInformation
+        - subcontractors
+        - legalNotice
+        - referenceToCertificationReport
+        - statement
 
     - **measurementResults**
         - results
