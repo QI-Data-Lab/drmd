@@ -3,7 +3,6 @@
 
 ## Overview
 
-The **Digital Reference Material Document (DRMD)** is a standardized XML schema for the digital representation of reference material certificates.  
 This version (`v0.2.0`) introduces a **refactored and modular structure**, improving clarity, scalability, and alignment with best practices for machine-readable certificates.
 
 The schema is developed by **Bundesanstalt für Materialforschung und -prüfung (BAM)** and aligns with the QI-Digital initiative.
@@ -14,12 +13,12 @@ The schema is developed by **Bundesanstalt für Materialforschung und -prüfung 
 
 This version introduces **breaking changes** compared to `v0.1.0`:
 
-- 📦 **Separation of core document elements for clarity and reuse:**
+ - **Separation of core document elements for clarity and reuse:**
   - `materials` is now a standalone root element.
   - `materialPropertiesList` is now a standalone root element.
   - `statements` are now separated from `administrativeData` and placed at root level.
-- 🛠 Clean modularization enables clearer referencing between materials, properties
-- ✅ The changes enhance:
+ - Clean modularization enables clearer referencing between materials, properties
+ - The changes enhance:
   - **Reusability of classes and properties**
   - **Clean separation of certificate-wide statements**
   - **Simplified integration in digital infrastructures, data spaces, and linked data scenarios**
@@ -33,8 +32,8 @@ digitalReferenceMaterialDocument
 ├── administrativeData
 │   ├── coreData
 │   ├── referenceMaterialProducer
-│   ├── respPersons
-│   └── statements
+│   └── respPersons
+├── statements
 ├── materials
 │   └── material
 │       ├── name
@@ -56,7 +55,7 @@ v0.2.0/
 ├── xsd/            # DRMD XML Schema Definition (XSD)
 │   └── drmd.xsd
 ├── xsl/            # XSLT stylesheets for transforming DRMD XML to HTML
-│   └── drmd\_visualization.xslt
+│   └── drmd.xsl
 ├── xml/            # Example DRMD XML files (converted from PDF)
 │   └── drmd-sample-v0.2.0.xml
 ├── html/           # Example human-readable HTML (generated from XML + XSL)
@@ -77,7 +76,7 @@ Use xsd/drmd.xsd to validate your DRMD XML documents.
 ### 2. Transform to human-readable HTML
 
 ```bash
-Apply the stylesheet in xsl/drmd_visualization.xslt to your XML file.
+Apply the stylesheet in xsl/drmd.xsl to your XML file.
 ```
 
 ### 3. Examples
@@ -89,11 +88,11 @@ Apply the stylesheet in xsl/drmd_visualization.xslt to your XML file.
 
 ## Compatibility
 
-| Field                    | Value                                                |
-| ------------------------ | ---------------------------------------------------- |
+| Field                    | Value |
+| ------------------------ | ------------------------------------------- |
 | Namespace                | [https://example.org/drmd](https://example.org/drmd) |
-| Schema Version Attribute | schemaVersion="0.2.0"                                |
-| Backward Compatibility   | ❌ No (breaking changes)                              |
+| Schema Version Attribute | schemaVersion="0.2.0" |
+| Backward Compatibility   | No (breaking changes) |
 
 ---
 
