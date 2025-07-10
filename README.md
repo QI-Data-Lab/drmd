@@ -1,6 +1,6 @@
 # Digital Reference Material Document (DRMD) Project
 
-The Digital Reference Material Document (DRMD) project aims to create a standardized digital format for reference material certificates. This project is developed by the Bundesanstalt für Materialforschung und -prüfung (BAM) and is partially funded by the QI-Digital project from BMWK. The DRMD schema is based on the existing Digital Calibration Certificate (DCC) schema and complies with the requirements of the ISO 33401 standard for reference material certificates
+The Digital Reference Material Document (DRMD) project aims to create a standardized digital format for reference material certificates. This project is developed by the Bundesanstalt für Materialforschung und -prüfung (BAM) and is partially funded by the QI-Digital project from BMWK. The DRMD schema is based on the existing Digital Calibration Certificate (DCC) schema and complies with the requirements of the ISO 17034 standard for reference material certificates
 
 
 ## Schema Information
@@ -22,7 +22,7 @@ The DRMD schema builds upon the existing DCC schema. You can find the DCC schema
 
 ### External Standards:
 
-- **ISO 33401**: The DRMD schema is designed to meet the requirements of the ISO 33401 standard for reference material certificates.
+- **ISO 17034**: The DRMD schema is designed to meet the requirements of the ISO 17034 standard for reference material certificates.
 
 ## Usage
 
@@ -61,12 +61,14 @@ dcrm-project/
 │   ├── xsl/
 │   │   ├── drmd.xsl
 │   │   └── other-xsl-files.xsl
-│   ├── html-output/
+│   ├── html/
 │   │   ├── dcrm-001.html
 │   │   └── other-html-files.html
 ├── scripts/
-│   ├── validate-schema.py
-│   └── other-scripts.py
+│   ├── convert_v0_1_to_v0_2.py
+│   ├── validate_v0_2.py
+│   ├── xml2html.py
+│   └── validate-schema.py
 ├── README.md
 └── LICENSE
 ```
@@ -88,16 +90,22 @@ The `drmd` (Digital Reference Material Document) structure is defined using an X
         - **referenceMaterialProducer**
             - name
             - contact
-
-        - **items**
-            - item
-                - name
-                - description
-                - minimumSampleSize
-                - identifications
-
         - **respPersons**
             - respPerson
+
+    - **materials**
+        - **material**
+            - name
+            - description
+            - minimumSampleSize
+            - identifications
+
+    - **materialPropertiesList**
+        - **materialProperties**
+            - name
+            - description
+            - results
+
     - **statements**
         - intendedUse
         - commutability
@@ -110,13 +118,11 @@ The `drmd` (Digital Reference Material Document) structure is defined using an X
         - referenceToCertificationReport
         - statement
 
-    - **measurementResults**
-        - results
-            - result
+    - **comment**
+
+    - **document**
 
     - **digitalSignature**
-
-    - **comments**
 
 
 ## Getting Started
@@ -128,28 +134,28 @@ The `drmd` (Digital Reference Material Document) structure is defined using an X
 
 ### Utilities
 
-Several helper scripts are provided in `scripts/utility`.
+Several helper scripts are provided in `scripts`.
 
 - **convert_v0_1_to_v0_2.py** – convert an XML file from the `v0.1.x` format
   to the `v0.2.0` layout.
 
   ```bash
-  python scripts/utility/convert_v0_1_to_v0_2.py v0.1.1/xml/BAM-F017.xml \
+  python scripts/convert_v0_1_to_v0_2.py v0.1.1/xml/BAM-F017.xml \
       v0.2.0/xml/BAM-F017.xml
   ```
 
 - **validate_v0_2.py** – validate a `v0.2.0` XML document against the schema.
 
   ```bash
-  python scripts/utility/validate_v0_2.py v0.2.0/xml/BAM-F017.xml \
+  python scripts/validate_v0_2.py v0.2.0/xml/BAM-F017.xml \
       v0.2.0/xsd/drmd.xsd
   ```
 
-- **xml_to_html.py** – transform a DRMD XML document into HTML using the
+- **xml2html.py** – transform a DRMD XML document into HTML using the
   project XSLT stylesheet.
 
   ```bash
-  python scripts/utility/xml_to_html.py v0.2.0/xml/BAM-F017.xml \
+  python scripts/xml2html.py v0.2.0/xml/BAM-F017.xml \
       v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
   ```
 
