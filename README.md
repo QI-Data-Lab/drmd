@@ -128,28 +128,28 @@ The `drmd` (Digital Reference Material Document) structure is defined using an X
 
 ### Utilities
 
-Several helper scripts are provided in `scripts/utility`.
+Several helper scripts are provided in `scripts`.
 
 - **convert_v0_1_to_v0_2.py** – convert an XML file from the `v0.1.x` format
   to the `v0.2.0` layout.
 
   ```bash
-  python scripts/utility/convert_v0_1_to_v0_2.py v0.1.1/xml/BAM-F017.xml \
+  python scripts/convert_v0_1_to_v0_2.py v0.1.1/xml/BAM-F017.xml \
       v0.2.0/xml/BAM-F017.xml
   ```
 
 - **validate_v0_2.py** – validate a `v0.2.0` XML document against the schema.
 
   ```bash
-  python scripts/utility/validate_v0_2.py v0.2.0/xml/BAM-F017.xml \
+  python scripts/validate_v0_2.py v0.2.0/xml/BAM-F017.xml \
       v0.2.0/xsd/drmd.xsd
   ```
 
-- **xml_to_html.py** – transform a DRMD XML document into HTML using the
+- **xml2html.py** – transform a DRMD XML document into HTML using the
   project XSLT stylesheet.
 
   ```bash
-  python scripts/utility/xml_to_html.py v0.2.0/xml/BAM-F017.xml \
+  python scripts/xml2html.py v0.2.0/xml/BAM-F017.xml \
       v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
   ```
 
