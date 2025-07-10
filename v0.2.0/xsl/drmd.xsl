@@ -17,12 +17,14 @@
             <xsl:value-of select="drmd:digitalReferenceMaterialDocument/drmd:administrativeData/drmd:coreData/drmd:titleOfTheDocument" />
           </title>
           <style>
-            body { font-family: Arial, sans-serif; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; margin: 0; padding: 20px; line-height: 1.6; color: #333; }
+            h1 { color: #1a4570; border-bottom: 2px solid #1a4570; padding-bottom: 10px; }
+            h2 { color: #1a4570; margin-top: 30px; }
+            h3 { margin-top: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
             th, td { border: 1px solid #ddd; padding: 8px; }
-            th { background-color: #f2f2f2; text-align: left; }
-            h1, h2, h3, h4 { color: #333; }
-            .divider { margin: 20px 0; border-top: 1px solid #ddd; }
+            th { background-color: #e8f1ff; text-align: left; }
+            .divider { margin: 40px 0; border-top: 2px solid #ccc; }
           </style>
         </head>
         <body>
@@ -106,6 +108,24 @@
             </tr>
           </table>
           
+          <h3>Responsible Persons</h3>
+          <table>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+            </tr>
+            <xsl:for-each select="drmd:digitalReferenceMaterialDocument/drmd:administrativeData/drmd:respPersons/dcc:respPerson">
+              <tr>
+                <td>
+                  <xsl:value-of select="dcc:person/dcc:name/dcc:content[@lang='en']" />
+                </td>
+                <td>
+                  <xsl:value-of select="dcc:role" />
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+          <div class="divider"></div>
           <h3>Materials</h3>
           <!-- Loop through each material (formerly "item") -->
           <xsl:for-each select="drmd:digitalReferenceMaterialDocument/drmd:materials/drmd:material">
@@ -139,36 +159,6 @@
             </table>
           </xsl:for-each>
           
-          <h3>Statements</h3>
-          <!-- Process each statement -->
-          <xsl:for-each select="drmd:digitalReferenceMaterialDocument/drmd:statements/*">
-            <h4>
-              <xsl:value-of select="dcc:name/dcc:content[@lang='en']" />
-            </h4>
-            <p>
-              <xsl:for-each select="dcc:content[@lang='en']">
-                <xsl:value-of select="."/><br/>
-              </xsl:for-each>
-            </p>
-          </xsl:for-each>
-          
-          <h3>Responsible Persons</h3>
-          <table>
-            <tr>
-              <th>Name</th>
-              <th>Role</th>
-            </tr>
-            <xsl:for-each select="drmd:digitalReferenceMaterialDocument/drmd:administrativeData/drmd:respPersons/dcc:respPerson">
-              <tr>
-                <td>
-                  <xsl:value-of select="dcc:person/dcc:name/dcc:content[@lang='en']" />
-                </td>
-                <td>
-                  <xsl:value-of select="dcc:role" />
-                </td>
-              </tr>
-            </xsl:for-each>
-          </table>
           
           <div class="divider"></div>
           <!-- New section for Materials Properties (formerly measurementResults) -->
@@ -222,6 +212,19 @@
               </xsl:when>
             </xsl:choose>
           </xsl:for-each>
+          <h3>Statements</h3>
+          <!-- Process each statement -->
+          <xsl:for-each select="drmd:digitalReferenceMaterialDocument/drmd:statements/*">
+            <h4>
+              <xsl:value-of select="dcc:name/dcc:content[@lang='en']" />
+            </h4>
+            <p>
+              <xsl:for-each select="dcc:content[@lang='en']">
+                <xsl:value-of select="."/><br/>
+              </xsl:for-each>
+            </p>
+          </xsl:for-each>
+          
         </body>
       </html>
     </xsl:template>
