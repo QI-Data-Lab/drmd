@@ -126,38 +126,32 @@ The `drmd` (Digital Reference Material Document) structure is defined using an X
 - Python 3.x
 - lxml library (`pip install lxml`)
 
-### Running the Schema Validation
+### Utilities
 
-To validate the XML file against the XSD schema, use the `validate-schema.py` script:
+Several helper scripts are provided in `scripts/utility`.
 
-```sh
-python scripts/validate-schema.py xml/dcrm-003.xml xsd/drmd.xsd
-```
+- **convert_v0_1_to_v0_2.py** – convert an XML file from the `v0.1.x` format
+  to the `v0.2.0` layout.
 
-### Transforming XML to HTML using XSLT file
+  ```bash
+  python scripts/utility/convert_v0_1_to_v0_2.py v0.1.1/xml/BAM-F017.xml \
+      v0.2.0/xml/BAM-F017.xml
+  ```
 
-To transform the XML file to HTML, use the `xml2html.py` script:
+- **validate_v0_2.py** – validate a `v0.2.0` XML document against the schema.
 
-You can call the script with either positional or optional arguments:
+  ```bash
+  python scripts/utility/validate_v0_2.py v0.2.0/xml/BAM-F017.xml \
+      v0.2.0/xsd/drmd.xsd
+  ```
 
-1. **Using Positional Arguments**:
-   ```bash
-   python xml2html.py example.xml example.xsl example.html --verbose
-   ```
+- **xml_to_html.py** – transform a DRMD XML document into HTML using the
+  project XSLT stylesheet.
 
-2. **Using Optional Arguments**:
-   ```bash
-   python xml2html.py example.xml -x example.xsl -o example.html --verbose
-   ```
-
-
-python transform_xml.py example.xml example.xsl example.html --verbose
-""""
-Using Optional Arguments:
-
-bash
-Code kopieren
-python transform_xml.py example.xml -x example.xsl -o example.html --verbose
+  ```bash
+  python scripts/utility/xml_to_html.py v0.2.0/xml/BAM-F017.xml \
+      v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
+  ```
 
 
 ## Contributing

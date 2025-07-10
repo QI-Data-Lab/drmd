@@ -1,7 +1,16 @@
 import xml.etree.ElementTree as ET
 import argparse
 
-NS = {'drmd': 'https://example.org/drmd'}
+NS = {
+    'drmd': 'https://example.org/drmd',
+    'dcc': 'https://ptb.de/dcc',
+    'si': 'https://ptb.de/si'
+}
+
+# ensure ElementTree preserves the preferred namespace prefixes when writing
+ET.register_namespace('drmd', NS['drmd'])
+ET.register_namespace('dcc', NS['dcc'])
+ET.register_namespace('si', NS['si'])
 
 
 def convert(xml_in, xml_out):
