@@ -505,12 +505,11 @@
 					<dcc:description>
 						<dcc:content lang="en">Values were not certified, but given for information,
 							because the spread of results was considered to be too high.
-
 							Estimated expanded uncertainty U with a coverage factor of k = 2,
 							corresponding to a level of confidence of approx. 95 %, as defined in
 							the Guide to the expression of uncertainty in measurement, (GUM, ISO/IEC
 							Guide 98-3:2008).
-</dcc:content>
+            </dcc:content>
 					</dcc:description>
 					<dcc:data>
 						<dcc:list>
