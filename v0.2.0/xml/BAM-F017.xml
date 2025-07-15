@@ -4,15 +4,13 @@
     <drmd:coreData>
       <drmd:titleOfTheDocument>referenceMaterialCertificate</drmd:titleOfTheDocument>
       <drmd:uniqueIdentifier>BAM-F017</drmd:uniqueIdentifier>
-      <drmd:identifications>
-        <drmd:identification refType="basic_certificateIdentification">
-          <drmd:issuer>referenceMaterialProducer</drmd:issuer>
+      <drmd:documentIdentifiers>
+        <drmd:documentIdentifier>
+          <drmd:scheme>BAM-CERT</drmd:scheme>
           <drmd:value>BAM-F017</drmd:value>
-          <drmd:name>
-            <dcc:content lang="en">Internal certificate ID</dcc:content>
-          </drmd:name>
-        </drmd:identification>
-      </drmd:identifications>
+          <drmd:link>https://bam.de/crm/BAM-F017</drmd:link>
+        </drmd:documentIdentifier>
+      </drmd:documentIdentifiers>
       <drmd:validity>
         <drmd:timeAfterDispatch>
           <drmd:period>P2Y</drmd:period>
@@ -38,6 +36,13 @@
           <dcc:countryCode>DE</dcc:countryCode>
         </dcc:location>
       </drmd:contact>
+      <drmd:organizationIdentifiers>
+        <drmd:organizationIdentifier>
+          <drmd:scheme>ROR</drmd:scheme>
+          <drmd:value>b03x516a66</drmd:value>
+          <drmd:link>https://ror.org/b03x516a66</drmd:link>
+        </drmd:organizationIdentifier>
+      </drmd:organizationIdentifiers>
     </drmd:referenceMaterialProducer>
     <drmd:respPersons>
       <dcc:respPerson>
@@ -77,12 +82,13 @@
 						</si:realListXMLList>
 					</dcc:itemQuantity>
 				</drmd:minimumSampleSize>
-				<drmd:identifications>
-					<drmd:identification>
-						<drmd:issuer>referenceMaterialProducer</drmd:issuer>
-						<drmd:value>BAM-F017</drmd:value>
-					</drmd:identification>
-				</drmd:identifications>
+                                <drmd:materialIdentifiers>
+                                        <drmd:materialIdentifier>
+                                                <drmd:scheme>BAM-RM</drmd:scheme>
+                                                <drmd:value>BAM-F017</drmd:value>
+                                                <drmd:link>https://bam.de/crm/BAM-F017</drmd:link>
+                                        </drmd:materialIdentifier>
+                                </drmd:materialIdentifiers>
       </drmd:material>
     </drmd:materials>
     <drmd:materialPropertiesList>
@@ -103,8 +109,8 @@
             </dcc:content>
           </dcc:description>
           <dcc:data>
-            <dcc:list>
-              <dcc:quantity refType="basic_measuredValue">
+            <drmd:list>
+              <drmd:quantity refType="basic_measuredValue">
                 <dcc:name>
                   <dcc:content lang="en">Fluorescence Quantum Yield (Φf)</dcc:content>
                 </dcc:name>
@@ -120,8 +126,15 @@
                     </si:expandedMU>
                   </si:measurementUncertaintyUnivariate>
                 </si:real>
-              </dcc:quantity>
-            </dcc:list>
+                <drmd:propertyIdentifiers>
+                  <drmd:propertyIdentifier>
+                    <drmd:scheme>CAS</drmd:scheme>
+                    <drmd:value>7440-66-6</drmd:value>
+                    <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
+                  </drmd:propertyIdentifier>
+                </drmd:propertyIdentifiers>
+              </drmd:quantity>
+            </drmd:list>
           </dcc:data>
         </dcc:result>
       </drmd:results>

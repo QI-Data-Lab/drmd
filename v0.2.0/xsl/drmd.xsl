@@ -185,7 +185,7 @@
                     <th>Property Unit</th>
                     <th>Uncertainty Value</th>
                   </tr>
-                  <xsl:apply-templates select="drmd:results/dcc:result/dcc:data/dcc:list/dcc:quantity" />
+                  <xsl:apply-templates select="drmd:results/dcc:result/dcc:data/drmd:list/drmd:quantity" />
                 </table>
                 <hr/>
               </xsl:when>
@@ -206,7 +206,7 @@
                     <th>Property Unit</th>
                     <th>Uncertainty Value</th>
                   </tr>
-                  <xsl:apply-templates select="drmd:results/dcc:result/dcc:data/dcc:list/dcc:quantity" />
+                  <xsl:apply-templates select="drmd:results/dcc:result/dcc:data/drmd:list/drmd:quantity" />
                 </table>
                 <hr/>
               </xsl:when>
@@ -230,7 +230,7 @@
     </xsl:template>
     
     <!-- Template for quantities (used in materials properties table) -->
-    <xsl:template match="dcc:quantity">
+    <xsl:template match="drmd:quantity">
       <tr>
         <td>
           <xsl:value-of select="dcc:name/dcc:content[@lang='en']" />
