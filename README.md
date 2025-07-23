@@ -1,5 +1,7 @@
 # Digital Reference Material Document (DRMD) Project
 
+**Current Release:** `v0.2.0`  – see the `v0.2.0/` folder for the latest schema files and documentation.
+
 The Digital Reference Material Document (DRMD) project aims to create a standardized digital format for reference material certificates. This project is developed by the Bundesanstalt für Materialforschung und -prüfung (BAM) and is partially funded by the QI-Digital project from BMWK. The DRMD schema is based on the existing Digital Calibration Certificate (DCC) schema and complies with the requirements of the ISO 17034 standard for reference material certificates
 
 
@@ -32,7 +34,7 @@ The `drmd.xsd` file defines the structure of the DRMD. This file is essential fo
 
 ### Sample XML Document
 
-The `dcrm-0001.xml` file is a sample XML document that adheres to the `drmd.xsd` schema. Use this as a reference for creating your own DRMD XML documents.
+Sample XML documents for the current version can be found in `v0.2.0/xml/` (e.g. `BAM-F017.xml`). Use these as references when creating your own DRMD XML files.
 
 ### XSLT Stylesheet
 
@@ -51,12 +53,19 @@ The `drmd.xsl` file is an XSLT stylesheet that can be used to transform DRMD XML
 
 ```
 dcrm-project/
-├── v0.2.0/   # latest schema version
+├── v0.2.0/
+│   ├── xml/
+│   ├── xsd/
+│   ├── xsl/
+│   └── html/
 ├── scripts/
-│   ├── convert_v0_1_to_v0_2.py
-│   ├── validate_v0_2.py
+│   ├── utility/
+│   │   ├── convert_v0_1_to_v0_2.py
+│   │   ├── validate_v0_2.py
+│   │   └── xml_to_html.py
 │   ├── xml2html.py
 │   └── validate-schema.py
+├── drmc-BAM-M375a.xml
 ├── README.md
 └── LICENSE
 ```
@@ -128,15 +137,13 @@ Several helper scripts are provided in `scripts`.
   to the `v0.2.0` layout.
 
   ```bash
-  python scripts/convert_v0_1_to_v0_2.py v0.1.1/xml/BAM-F017.xml \
-      v0.2.0/xml/BAM-F017.xml
+  python scripts/utility/convert_v0_1_to_v0_2.py old.xml new.xml
   ```
 
 - **validate_v0_2.py** – validate a `v0.2.0` XML document against the schema.
 
   ```bash
-  python scripts/validate_v0_2.py v0.2.0/xml/BAM-F017.xml \
-      v0.2.0/xsd/drmd.xsd
+  python scripts/utility/validate_v0_2.py your.xml v0.2.0/xsd/drmd.xsd
   ```
 
 - **xml2html.py** – transform a DRMD XML document into HTML using the

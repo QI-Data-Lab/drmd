@@ -1,5 +1,6 @@
-
 # Digital Reference Material Document (DRMD) - Version 0.2.0
+
+This folder contains the **current stable release** of the DRMD schema.
 
 ## Overview
 
@@ -57,9 +58,11 @@ v0.2.0/
 ├── xsl/            # XSLT stylesheets for transforming DRMD XML to HTML
 │   └── drmd.xsl
 ├── xml/            # Example DRMD XML files (converted from PDF)
-│   └── drmd-sample-v0.2.0.xml
+│   ├── BAM-F017.xml
+│   └── BAM-M375a.xml
 ├── html/           # Example human-readable HTML (generated from XML + XSL)
-│   └── drmd-sample-v0.2.0.html
+│   ├── BAM-F017.html
+│   └── BAM-M375a.html
 └── README.md       # Documentation for this version
 
 ````
@@ -81,8 +84,8 @@ Apply the stylesheet in xsl/drmd.xsl to your XML file.
 
 ### 3. Examples
 
-* See `xml/drmd-sample-v0.2.0.xml` as a valid document following the new structure.
-* Check `html/drmd-sample-v0.2.0.html` for the rendered certificate.
+* See `xml/BAM-F017.xml` for a valid document following the new structure.
+* Check `html/BAM-F017.html` for the rendered certificate.
 
 ---
 
