@@ -51,19 +51,7 @@ The `drmd.xsl` file is an XSLT stylesheet that can be used to transform DRMD XML
 
 ```
 dcrm-project/
-├── v0.0.1/
-│   ├── xml/
-│   │   ├── dcrm-001.xml
-│   │   └── other-data-files.xml
-│   ├── xsd/
-│   │   ├── drmd.xsd
-│   │   └── other-data-files.xml
-│   ├── xsl/
-│   │   ├── drmd.xsl
-│   │   └── other-xsl-files.xsl
-│   ├── html/
-│   │   ├── dcrm-001.html
-│   │   └── other-html-files.html
+├── v0.2.0/   # latest schema version
 ├── scripts/
 │   ├── convert_v0_1_to_v0_2.py
 │   ├── validate_v0_2.py
