@@ -51,24 +51,19 @@ The `drmd.xsl` file is an XSLT stylesheet that can be used to transform DRMD XML
 
 ```
 dcrm-project/
-├── v0.0.1/
+├── v0.2.0/
 │   ├── xml/
-│   │   ├── dcrm-001.xml
-│   │   └── other-data-files.xml
 │   ├── xsd/
-│   │   ├── drmd.xsd
-│   │   └── other-data-files.xml
 │   ├── xsl/
-│   │   ├── drmd.xsl
-│   │   └── other-xsl-files.xsl
-│   ├── html/
-│   │   ├── dcrm-001.html
-│   │   └── other-html-files.html
+│   └── html/
 ├── scripts/
-│   ├── convert_v0_1_to_v0_2.py
-│   ├── validate_v0_2.py
+│   ├── utility/
+│   │   ├── convert_v0_1_to_v0_2.py
+│   │   ├── validate_v0_2.py
+│   │   └── xml_to_html.py
 │   ├── xml2html.py
 │   └── validate-schema.py
+├── drmc-BAM-M375a.xml
 ├── README.md
 └── LICENSE
 ```
@@ -140,15 +135,13 @@ Several helper scripts are provided in `scripts`.
   to the `v0.2.0` layout.
 
   ```bash
-  python scripts/convert_v0_1_to_v0_2.py v0.1.1/xml/BAM-F017.xml \
-      v0.2.0/xml/BAM-F017.xml
+  python scripts/utility/convert_v0_1_to_v0_2.py old.xml new.xml
   ```
 
 - **validate_v0_2.py** – validate a `v0.2.0` XML document against the schema.
 
   ```bash
-  python scripts/validate_v0_2.py v0.2.0/xml/BAM-F017.xml \
-      v0.2.0/xsd/drmd.xsd
+  python scripts/utility/validate_v0_2.py your.xml v0.2.0/xsd/drmd.xsd
   ```
 
 - **xml2html.py** – transform a DRMD XML document into HTML using the
