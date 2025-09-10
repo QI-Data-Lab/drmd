@@ -72,9 +72,13 @@ v0.2.0/
 ## Usage
 
 ### 1. Validate your DRMD documents
+Use the versioned schema for v0.2.0:
+
 ```bash
-Use xsd/drmd.xsd to validate your DRMD XML documents.
-````
+python scripts/validate_v0_2.py v0.2.0/xml/BAM-F017.xml v0.2.0/xsd/drmd.xsd
+```
+
+For offline tooling, an alias with local imports is also available at `xsd/drmd.xsd`.
 
 ### 2. Transform to human-readable HTML
 
