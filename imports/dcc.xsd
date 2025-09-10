@@ -8,11 +8,11 @@
 
     <xs:import
             namespace="https://ptb.de/si"
-            schemaLocation="si/SI_Format.xsd"/>
+            schemaLocation="SI_Format.xsd"/>
 
     <xs:import
         namespace="http://www.w3.org/2000/09/xmldsig#"
-        schemaLocation="d-sig/xmldsig-core-schema.xsd"/>
+        schemaLocation="xmldsig-core-schema.xsd"/>
 
     <xs:annotation>
         <xs:documentation>

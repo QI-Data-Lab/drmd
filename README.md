@@ -1,6 +1,6 @@
 # Digital Reference Material Document (DRMD) Project
 
-**Current Release:** `v0.2.0`  – see the `v0.2.0/` folder for the latest schema files and documentation.
+**Current Release:** `v0.2.0`  – all schema, examples (XML), stylesheets (XSL), and generated HTML live under `v0.2.0/`. Root-level `imports/` contains local copies of external schemas for offline validation.
 
 The Digital Reference Material Document (DRMD) project aims to create a standardized digital format for reference material certificates. This project is developed by the Bundesanstalt für Materialforschung und -prüfung (BAM) and is partially funded by the QI-Digital project from BMWK. The DRMD schema is based on the existing Digital Calibration Certificate (DCC) schema and complies with the requirements of the ISO 17034 standard for reference material certificates
 
@@ -52,22 +52,29 @@ The `drmd.xsl` file is an XSLT stylesheet that can be used to transform DRMD XML
 ## Project Structure
 
 ```
-dcrm-project/
+drmd/
 ├── v0.2.0/
-│   ├── xml/
-│   ├── xsd/
-│   ├── xsl/
-│   └── html/
+│   ├── xsd/            # DRMD XML Schema (canonical)
+│   │   └── drmd.xsd
+│   ├── xsl/            # XSLT stylesheets
+│   │   └── drmd.xsl
+│   ├── xml/            # Example XMLs
+│   └── html/           # Generated HTML examples
+├── imports/            # Local copies of external schemas (for offline validation)
+│   ├── dcc.xsd
+│   ├── SI_Format.xsd
+│   └── xmldsig-core-schema.xsd
 ├── scripts/
-│   ├── utility/
-│   │   ├── convert_v0_1_to_v0_2.py
-│   │   ├── validate_v0_2.py
-│   │   └── xml_to_html.py
 │   ├── xml2html.py
-│   └── validate-schema.py
-├── drmc-BAM-M375a.xml
-├── README.md
-└── LICENSE
+│   ├── validate_v0_2.py
+│   └── utility/
+│       └── normalize_v0_2_examples.py
+├── tests/
+│   └── test_v0_2_0.py
+├── webapp/
+│   ├── app.py          # Uses v0.2.0 schema/xsl
+│   └── requirements.txt
+└── README.md
 ```
 
 ## Digital Reference Material Document (DRMD) Structure
@@ -147,11 +154,19 @@ Several helper scripts are provided in `scripts`.
   ```
 
 - **xml2html.py** – transform a DRMD XML document into HTML using the
-  project XSLT stylesheet.
+  versioned XSLT stylesheet.
 
   ```bash
   python scripts/xml2html.py v0.2.0/xml/BAM-F017.xml \
       v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
+```
+
+### Tests
+
+Run automated checks for schema validity, example XML validation, and XSLT transforms:
+
+```
+python -m unittest tests/test_v0_2_0.py -v
   ```
 
 

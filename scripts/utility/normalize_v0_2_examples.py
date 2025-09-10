@@ -16,7 +16,7 @@ def normalize(path: str) -> None:
     tree = ET.parse(path, parser)
     root = tree.getroot()
 
-    # Ensure order: administrativeData, statements, materials, materialPropertiesList
+    # Ensure order: administrativeData, materials, materialPropertiesList, statements (per v0.2.0)
     adm = root.find('drmd:administrativeData', namespaces=NS)
     stm = root.find('drmd:statements', namespaces=NS)
     mats = root.find('drmd:materials', namespaces=NS)
@@ -28,7 +28,7 @@ def normalize(path: str) -> None:
     # Ensure statements exists
     if stm is None:
         stm = ET.Element(q('drmd', 'statements'))
-    # Reinsert in correct order
+    # Reinsert in correct order (adm already present)
     insert_at = 0
     if adm is not None:
         # Find index of adm in current children
@@ -39,71 +39,76 @@ def normalize(path: str) -> None:
             # If adm got detached for some reason, add it first
             root.insert(0, adm)
             insert_at = 1
-    root.insert(insert_at, stm)
+    # materials
     if mats is not None:
-        root.insert(insert_at + 1, mats)
+        root.insert(insert_at, mats)
+        insert_at += 1
+    # materialPropertiesList
     if mplist is not None:
-        root.insert(insert_at + 2, mplist)
+        root.insert(insert_at, mplist)
+        insert_at += 1
+    # statements last
+    root.insert(insert_at, stm)
 
-    # Fix minimumSampleSize itemQuantity element name
+    # Fix minimumSampleSize itemQuantity element name (use dcc:itemQuantity per v0.2.0)
     for ms in root.findall('.//drmd:minimumSampleSize', namespaces=NS):
-        for dq in ms.findall('dcc:itemQuantity', namespaces=NS):
-            dq.tag = q('drmd', 'itemQuantity')
+        # convert any drmd:itemQuantity back to dcc:itemQuantity
+        for dq in ms.findall('drmd:itemQuantity', namespaces=NS):
+            dq.tag = q('dcc', 'itemQuantity')
 
-    # Normalize results block under materialPropertiesList
+    # Normalize results block under materialPropertiesList to DRMD result/data/list/quantity
     for mp in root.findall('.//drmd:materialProperties', namespaces=NS):
         results = mp.find('drmd:results', namespaces=NS)
         if results is None:
             continue
-        # result elements should be dcc:result
+        # result elements should be drmd:result
         for res in list(results):
-            if res.tag == q('drmd', 'result'):
-                res.tag = q('dcc', 'result')
-            # children name/description/data
+            if res.tag == q('dcc', 'result'):
+                res.tag = q('drmd', 'result')
+            # children name/description/data elements are in drmd namespace but typed with dcc types
             for ch in list(res):
-                if ch.tag == q('drmd', 'name'):
-                    ch.tag = q('dcc', 'name')
-                elif ch.tag == q('drmd', 'description'):
-                    ch.tag = q('dcc', 'description')
-                elif ch.tag == q('drmd', 'data'):
-                    ch.tag = q('dcc', 'data')
-                # within data, ensure list/quantity are dcc
-                if ch.tag == q('dcc', 'data'):
+                if ch.tag == q('dcc', 'name'):
+                    ch.tag = q('drmd', 'name')
+                elif ch.tag == q('dcc', 'description'):
+                    ch.tag = q('drmd', 'description')
+                elif ch.tag == q('dcc', 'data'):
+                    ch.tag = q('drmd', 'data')
+                # within data, ensure list/quantity are drmd
+                if ch.tag == q('drmd', 'data'):
                     for node in list(ch):
-                        if node.tag == q('drmd', 'list'):
-                            node.tag = q('dcc', 'list')
-                        # Convert quantities at any depth under data
-                        for qty in ch.findall('.//drmd:quantity', namespaces=NS):
-                            qty.tag = q('dcc', 'quantity')
-                            for pi in qty.findall('drmd:propertyIdentifiers', namespaces=NS):
-                                qty.remove(pi)
-    # Global cleanup: remove any remaining drmd:propertyIdentifiers blocks
-    for pi in root.findall('.//drmd:propertyIdentifiers', namespaces=NS):
-        parent = pi.getparent()
-        if parent is not None:
-            parent.remove(pi)
+                        if node.tag == q('dcc', 'list'):
+                            node.tag = q('drmd', 'list')
+                        if node.tag == q('dcc', 'quantity'):
+                            node.tag = q('drmd', 'quantity')
+                    # also convert any nested quantities
+                    for qty in ch.findall('.//dcc:quantity', namespaces=NS):
+                        qty.tag = q('drmd', 'quantity')
 
-    # Normalize statements children: ensure drmd:name and drmd:content wrappers
+    # Normalize statements children: use DCC richContentType (dcc:name optional + dcc:content)
     stm = root.find('drmd:statements', namespaces=NS)
     if stm is not None:
         for st in list(stm):
-            # Convert dcc:name element to drmd:name
-            for dn in st.findall('dcc:name', namespaces=NS):
-                dn.tag = q('drmd', 'name')
-            # Wrap any direct dcc:content nodes into drmd:content
-            direct_dcc_content = [c for c in list(st) if c.tag == q('dcc', 'content')]
-            if direct_dcc_content:
-                dc = ET.Element(q('drmd', 'content'))
-                for c in direct_dcc_content:
-                    st.remove(c)
-                    dc.append(c)
-                # Insert after name if present, else at start
-                name_el = st.find('drmd:name', namespaces=NS)
-                if name_el is not None:
-                    idx = list(st).index(name_el) + 1
-                    st.insert(idx, dc)
-                else:
-                    st.insert(0, dc)
+            # Convert any mistaken drmd:name/content back to dcc:name/content
+            for rn in st.findall('drmd:name', namespaces=NS):
+                rn.tag = q('dcc', 'name')
+            for rc in st.findall('drmd:content', namespaces=NS):
+                # unwrap drmd:content by hoisting its children (dcc:content expected)
+                idx = list(st).index(rc)
+                for child in list(rc):
+                    st.insert(idx, child)
+                    idx += 1
+                st.remove(rc)
+            # flatten any dcc:content wrappers that incorrectly nest dcc:content
+            for dc in list(st):
+                if dc.tag == q('dcc', 'content'):
+                    # If this dcc:content contains nested dcc:content elements, hoist them
+                    nested = [c for c in list(dc) if c.tag == q('dcc', 'content')]
+                    if nested:
+                        idx = list(st).index(dc)
+                        for child in nested:
+                            st.insert(idx, child)
+                            idx += 1
+                        st.remove(dc)
 
     tree.write(path, pretty_print=True, encoding='utf-8', xml_declaration=True)
 

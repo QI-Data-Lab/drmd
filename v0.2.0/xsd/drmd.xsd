@@ -9,12 +9,13 @@
            elementFormDefault="qualified">
 
     <!-- Remote canonical dependencies (preferred for full validation) -->
+    <!-- Local imports (offline validation); canonical remote URLs can be used alternatively -->
     <xs:import namespace="https://ptb.de/dcc"
-               schemaLocation="https://www.ptb.de/dcc/dcc.xsd"/>
+               schemaLocation="../../imports/dcc.xsd"/>
     <xs:import namespace="https://ptb.de/si"
-               schemaLocation="https://ptb.de/si/v2.2.0/SI_Format.xsd"/>
+               schemaLocation="../../imports/SI_Format.xsd"/>
     <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
-               schemaLocation="https://www.ptb.de/dcc/d-sig/xmldsig-core-schema.xsd"/>
+               schemaLocation="../../imports/xmldsig-core-schema.xsd"/>
 
         <!-- ========================================================= -->
         <!--  Simple Types (global for reuse & validation)             -->

@@ -54,10 +54,10 @@ digitalReferenceMaterialDocument
 
 v0.2.0/
 ├── xsd/            # DRMD XML Schema Definition (XSD)
-│   └── drmd.xsd
+│   └── drmd.xsd    # Imports ../../imports/{dcc.xsd, SI_Format.xsd, xmldsig-core-schema.xsd}
 ├── xsl/            # XSLT stylesheets for transforming DRMD XML to HTML
 │   └── drmd.xsl
-├── xml/            # Example DRMD XML files (converted from PDF)
+├── xml/            # Example DRMD XML files
 │   ├── BAM-F017.xml
 │   └── BAM-M375a.xml
 ├── html/           # Example human-readable HTML (generated from XML + XSL)
