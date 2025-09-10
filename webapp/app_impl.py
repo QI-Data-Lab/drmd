@@ -8,7 +8,11 @@ import xml.etree.ElementTree as ET
 
 import pandas as pd
 import streamlit as st
-import xmlschema
+# Optional dependency: xmlschema (used for deep validation & diagnostics). Gracefully degrade if absent.
+try:
+    import xmlschema  # type: ignore
+except ImportError:  # pragma: no cover - allows lightweight tests without xmlschema installed
+    xmlschema = None  # sentinel
 from rdflib import Graph, Namespace
 from pathlib import Path as _Path
 import os as _os
@@ -635,31 +639,26 @@ for k, v in SESSION_DEFAULTS.items():
         st.session_state[k] = v
 
 # -----------------------------------------------------------------------------
-# Sidebar utilities (minimal – header/status removed per request)
+# Sidebar utilities (minimal – with schema validation feedback)
 xml_template = st.sidebar.file_uploader("Load XML file", type=["xml"])
 if xml_template:
     xml_bytes = xml_template.getvalue()
-    # Load into state only once per upload
     if not st.session_state.template_loaded:
         load_xml_into_state(xml_bytes)
-    # Validate against schema and report status
+    # Schema validation feedback (debounced by content hash)
     try:
         import hashlib, lxml.etree as _etree
-        current_hash = hashlib.md5(xml_bytes).hexdigest()
-        prev_hash = st.session_state.get("_last_validated_xml_hash")
-        # Always validate new content (hash differs or never validated)
-        if current_hash != prev_hash:
+        cur_hash = hashlib.md5(xml_bytes).hexdigest()
+        if cur_hash != st.session_state.get('_last_validated_xml_hash'):
             schema_doc = _etree.parse(DEFAULT_XSD_PATH)
-            schema = _etree.XMLSchema(schema_doc)
-            schema.assertValid(_etree.parse(io.BytesIO(xml_bytes)))
-            st.sidebar.success("XML schema validation: OK")
-            st.session_state._last_validated_xml_hash = current_hash
+            _etree.XMLSchema(schema_doc).assertValid(_etree.parse(io.BytesIO(xml_bytes)))
+            st.sidebar.success('XML schema validation: OK')
+            st.session_state._last_validated_xml_hash = cur_hash
         else:
-            st.sidebar.info("XML already validated against schema.")
-    except Exception as e:
-        # Show concise error (first line)
-        first_line = str(e).splitlines()[0]
-        st.sidebar.error(f"Schema validation failed: {first_line}")
+            st.sidebar.info('XML already validated.')
+    except Exception as _e:
+        first_line = str(_e).splitlines()[0]
+        st.sidebar.error(f'Schema validation failed: {first_line}')
 
 if st.sidebar.button("Reset All"):
     st.session_state.clear(); st.rerun()
