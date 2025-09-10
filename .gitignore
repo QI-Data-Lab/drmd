@@ -1,1 +1,21 @@
 debug.txt
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Virtual envs
+.venv/
+venv/
+.tox/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Node / web (future)
+node_modules/
+dist/
+build/

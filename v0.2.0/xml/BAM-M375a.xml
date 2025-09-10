@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <drmd:digitalReferenceMaterialDocument xmlns:dcc="https://ptb.de/dcc" xmlns:drmd="https://example.org/drmd" xmlns:si="https://ptb.de/si" schemaVersion="0.2.0">
 	<drmd:administrativeData>
 		<drmd:coreData>
@@ -61,6 +61,89 @@
 			</dcc:respPerson>
 		</drmd:respPersons>
 		</drmd:administrativeData>
+	<drmd:statements>
+			<drmd:intendedUse>
+				<drmd:name>
+					<dcc:content lang="en">Intended Use</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">The CRM is intended for establishing or checking the
+						calibration of spark optical emission and X-ray fluorescence spectrometers
+						for the analysis of samples of similar matrix composition.</dcc:content>
+			</drmd:content></drmd:intendedUse>
+			<drmd:storageInformation>
+				<drmd:name>
+					<dcc:content lang="en">Storage Information</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">The material should be stored in a dry and clean
+						environment at room temperature. Transport can be done under normal ambient
+						conditions.</dcc:content>
+			</drmd:content></drmd:storageInformation>
+			<drmd:instructionsForHandlingAndUse>
+				<drmd:name>
+					<dcc:content lang="en">Handling Instructions</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">Before use the surface of the material must be prepared
+						by milling or turning on a lathe. For wet chemical analysis chips must be
+						prepared by turning or milling of the sample surface.</dcc:content>
+			</drmd:content></drmd:instructionsForHandlingAndUse>
+			<drmd:metrologicalTraceability>
+				<drmd:name>
+					<dcc:content lang="en">Metrological Traceability</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">To ensure traceability of the certified mass fractions to
+						the SI (Système International d’Unités) calibration was performed using
+						standard solutions prepared from pure metals or stoichiometric compounds or
+						with traceable commercial calibration solutions.</dcc:content>
+			</drmd:content></drmd:metrologicalTraceability>
+			<drmd:healthAndSafetyInformation>
+				<drmd:name>
+					<dcc:content lang="en">Health and Safety Information</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">Health and safety information relevant to the reference
+						material.</dcc:content>
+			</drmd:content></drmd:healthAndSafetyInformation>
+			<drmd:subcontractors>
+				<drmd:name>
+					<dcc:content lang="en">Subcontractors</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">Aurubis AG Pirdop Bulgaria, Bundesanstalt für
+						Materialforschung und -prüfung (BAM) Berlin Germany, Diehl Brass Solutions
+						Stiftung &amp; Co KG Röthenbach Germany, Forschungsinstitut Edelmetalle +
+						Metallchemie Schwäbisch Gmünd Germany, Institut für Materialprüfung Glörfeld
+						GmbH Willich Germany, KME Germany GmbH Osnabrück Germany, Łukasiewicz
+						Research Network – Institute of Non-Ferrous Metals Gliwice Poland,
+						Montanwerke Brixlegg Brixlegg Austria, Raghavendra Spectro Metallurgical
+						Laboratory Bangalore India, Wieland-Werke AG Vöhringen Germany</dcc:content>
+			</drmd:content></drmd:subcontractors>
+			<drmd:legalNotice>
+				<drmd:name>
+					<dcc:content lang="en">Legal Notice</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">Legal information and disclaimers.</dcc:content>
+			</drmd:content></drmd:legalNotice>
+			<drmd:referenceToCertificationReport>
+				<drmd:name>
+					<dcc:content lang="en">Reference to Certification Report</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">Links or references to certification reports.</dcc:content>
+			</drmd:content></drmd:referenceToCertificationReport>
+			<drmd:statement>
+				<drmd:name>
+					<dcc:content lang="en">Accreditation Statement</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">Details of accreditation relevant to the reference
+						material.</dcc:content>
+			</drmd:content></drmd:statement>
+			<drmd:statement>
+				<drmd:name>
+					<dcc:content lang="en">Literature</dcc:content>
+				</drmd:name>
+					<drmd:content><dcc:content lang="en">A detailed technical report describing the analysis
+						procedures and the treatment of the analytical data used to certify
+						BAM-M375a is available on request or can be downloaded from BAM website
+						(https://rrr.bam.de).</dcc:content>
+			</drmd:content></drmd:statement>
+		</drmd:statements>
 	<drmd:materials>
 			<drmd:material>
 				<drmd:name>
@@ -71,12 +154,12 @@
 						(approx. 38 mm diameter and 30 mm height).</dcc:content>
 				</drmd:description>
 				<drmd:minimumSampleSize>
-					<dcc:itemQuantity>
+					<drmd:itemQuantity>
 						<si:realListXMLList>
 							<si:valueXMLList>0.2</si:valueXMLList>
 							<si:unitXMLList>g</si:unitXMLList>
 						</si:realListXMLList>
-					</dcc:itemQuantity>
+					</drmd:itemQuantity>
 				</drmd:minimumSampleSize>
                                 <drmd:materialIdentifiers>
                                         <drmd:materialIdentifier>
@@ -94,11 +177,11 @@
 				<dcc:content lang="en">Certified mass fractions and their associated uncertainties.</dcc:content>
 			</drmd:name>
 			<drmd:results>
-				<drmd:result>
-					<drmd:name>
+				<dcc:result>
+					<dcc:name>
 						<dcc:content lang="en">Certified Values</dcc:content>
-					</drmd:name>
-					<drmd:description>
+					</dcc:name>
+					<dcc:description>
 						<dcc:content lang="en">1) Unweighted mean value of the means of accepted
 							sets of data (consisting of at least 3 single results), each set being
 							obtained by a different laboratory and/or a different method of
@@ -108,11 +191,11 @@
 							the Guide to the Expression of Uncertainty in Measurement, (GUM, ISO/IEC
 							Guide 98-3:2008).
 							uncertainties.</dcc:content>
-					</drmd:description>
-					<drmd:data>
-						<drmd:list>
+					</dcc:description>
+					<dcc:data>
+						<dcc:list>
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Copper (Cu)</dcc:content>
 								</dcc:name>
@@ -130,17 +213,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Zinc (Zn)</dcc:content>
 								</dcc:name>
@@ -158,17 +234,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Lead (Pb)</dcc:content>
 								</dcc:name>
@@ -186,17 +255,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Iron (Fe)</dcc:content>
 								</dcc:name>
@@ -214,17 +276,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Tin (Sn)</dcc:content>
 								</dcc:name>
@@ -242,17 +297,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Nickel (Ni)</dcc:content>
 								</dcc:name>
@@ -270,17 +318,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Manganese (Mn)</dcc:content>
 								</dcc:name>
@@ -299,17 +340,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Silver (Ag)</dcc:content>
 								</dcc:name>
@@ -328,17 +362,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Aluminum (Al)</dcc:content>
 								</dcc:name>
@@ -357,17 +384,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Arsenic (As)</dcc:content>
 								</dcc:name>
@@ -386,17 +406,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Bismuth (Bi)</dcc:content>
 								</dcc:name>
@@ -415,17 +428,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Cadmium (Cd)</dcc:content>
 								</dcc:name>
@@ -444,17 +450,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Cobalt (Co)</dcc:content>
 								</dcc:name>
@@ -473,17 +472,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Chromium (Cr)</dcc:content>
 								</dcc:name>
@@ -494,17 +486,10 @@
 									<si:value>1</si:value>
 									<si:unit>\milli\gram\kilogram\tothe{-1}</si:unit>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Indium (In)</dcc:content>
 								</dcc:name>
@@ -523,17 +508,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Phosphorus (P)</dcc:content>
 								</dcc:name>
@@ -552,17 +530,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Antimony (Sb)</dcc:content>
 								</dcc:name>
@@ -581,17 +552,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Tellurium (Te)</dcc:content>
 								</dcc:name>
@@ -610,17 +574,10 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
-						</drmd:list>
-					</drmd:data>
-				</drmd:result>
+            </dcc:quantity>
+						</dcc:list>
+					</dcc:data>
+				</dcc:result>
 			</drmd:results>
 
 		</drmd:materialProperties>
@@ -630,11 +587,11 @@
 			</drmd:name>
 			<drmd:results>
 				
-				<drmd:result>
-					<drmd:name>
+				<dcc:result>
+					<dcc:name>
 						<dcc:content lang="en">Informative Values</dcc:content>
-					</drmd:name>
-					<drmd:description>
+					</dcc:name>
+					<dcc:description>
 						<dcc:content lang="en">Values were not certified, but given for information,
 							because the spread of results was considered to be too high.
 							Estimated expanded uncertainty U with a coverage factor of k = 2,
@@ -642,11 +599,11 @@
 							the Guide to the expression of uncertainty in measurement, (GUM, ISO/IEC
 							Guide 98-3:2008).
             </dcc:content>
-					</drmd:description>
-					<drmd:data>
-						<drmd:list>
+					</dcc:description>
+					<dcc:data>
+						<dcc:list>
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Silicon (Si)</dcc:content>
 								</dcc:name>
@@ -665,16 +622,9 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
+            </dcc:quantity>
 							
-							<drmd:quantity refType="basic_measuredValue">
+							<dcc:quantity refType="basic_measuredValue">
 								<dcc:name>
 									<dcc:content lang="en">Germanium (Ge)</dcc:content>
 								</dcc:name>
@@ -693,101 +643,11 @@
 										</si:expandedMU>
 									</si:measurementUncertaintyUnivariate>
 								</si:real>
-            <drmd:propertyIdentifiers>
-              <drmd:propertyIdentifier>
-                <drmd:scheme>CAS</drmd:scheme>
-                <drmd:value>7440-66-6</drmd:value>
-                <drmd:link>https://commonchemistry.cas.org/detail?cas_rn=7440-66-6</drmd:link>
-              </drmd:propertyIdentifier>
-            </drmd:propertyIdentifiers>
-							</drmd:quantity>
-						</drmd:list>
-					</drmd:data>
-				</drmd:result>
+            </dcc:quantity>
+						</dcc:list>
+					</dcc:data>
+				</dcc:result>
 			</drmd:results>
 		</drmd:materialProperties>
 	</drmd:materialPropertiesList>
-<drmd:statements>
-			<drmd:intendedUse>
-				<dcc:name>
-					<dcc:content lang="en">Intended Use</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">The CRM is intended for establishing or checking the
-						calibration of spark optical emission and X-ray fluorescence spectrometers
-						for the analysis of samples of similar matrix composition.</dcc:content>
-			</drmd:intendedUse>
-			<drmd:storageInformation>
-				<dcc:name>
-					<dcc:content lang="en">Storage Information</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">The material should be stored in a dry and clean
-						environment at room temperature. Transport can be done under normal ambient
-						conditions.</dcc:content>
-			</drmd:storageInformation>
-			<drmd:instructionsForHandlingAndUse>
-				<dcc:name>
-					<dcc:content lang="en">Handling Instructions</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">Before use the surface of the material must be prepared
-						by milling or turning on a lathe. For wet chemical analysis chips must be
-						prepared by turning or milling of the sample surface.</dcc:content>
-			</drmd:instructionsForHandlingAndUse>
-			<drmd:metrologicalTraceability>
-				<dcc:name>
-					<dcc:content lang="en">Metrological Traceability</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">To ensure traceability of the certified mass fractions to
-						the SI (Système International d’Unités) calibration was performed using
-						standard solutions prepared from pure metals or stoichiometric compounds or
-						with traceable commercial calibration solutions.</dcc:content>
-			</drmd:metrologicalTraceability>
-			<drmd:healthAndSafetyInformation>
-				<dcc:name>
-					<dcc:content lang="en">Health and Safety Information</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">Health and safety information relevant to the reference
-						material.</dcc:content>
-			</drmd:healthAndSafetyInformation>
-			<drmd:subcontractors>
-				<dcc:name>
-					<dcc:content lang="en">Subcontractors</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">Aurubis AG Pirdop Bulgaria, Bundesanstalt für
-						Materialforschung und -prüfung (BAM) Berlin Germany, Diehl Brass Solutions
-						Stiftung &amp; Co KG Röthenbach Germany, Forschungsinstitut Edelmetalle +
-						Metallchemie Schwäbisch Gmünd Germany, Institut für Materialprüfung Glörfeld
-						GmbH Willich Germany, KME Germany GmbH Osnabrück Germany, Łukasiewicz
-						Research Network – Institute of Non-Ferrous Metals Gliwice Poland,
-						Montanwerke Brixlegg Brixlegg Austria, Raghavendra Spectro Metallurgical
-						Laboratory Bangalore India, Wieland-Werke AG Vöhringen Germany</dcc:content>
-			</drmd:subcontractors>
-			<drmd:legalNotice>
-				<dcc:name>
-					<dcc:content lang="en">Legal Notice</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">Legal information and disclaimers.</dcc:content>
-			</drmd:legalNotice>
-			<drmd:referenceToCertificationReport>
-				<dcc:name>
-					<dcc:content lang="en">Reference to Certification Report</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">Links or references to certification reports.</dcc:content>
-			</drmd:referenceToCertificationReport>
-			<drmd:statement>
-				<dcc:name>
-					<dcc:content lang="en">Accreditation Statement</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">Details of accreditation relevant to the reference
-						material.</dcc:content>
-			</drmd:statement>
-			<drmd:statement>
-				<dcc:name>
-					<dcc:content lang="en">Literature</dcc:content>
-				</dcc:name>
-					<dcc:content lang="en">A detailed technical report describing the analysis
-						procedures and the treatment of the analytical data used to certify
-						BAM-M375a is available on request or can be downloaded from BAM website
-						(https://rrr.bam.de).</dcc:content>
-			</drmd:statement>
-		</drmd:statements>
-	</drmd:digitalReferenceMaterialDocument>
+</drmd:digitalReferenceMaterialDocument>

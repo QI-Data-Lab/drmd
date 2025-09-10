@@ -1,19 +1,206 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <xs:schema version="0.2.0"
-		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		   xmlns:drmd="https://example.org/drmd"
-		   xmlns:dcc="https://ptb.de/dcc"
-		   xmlns:si="https://ptb.de/si"
-		   xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-		   targetNamespace="https://example.org/drmd"
-		   elementFormDefault="qualified">
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:drmd="https://example.org/drmd"
+           xmlns:dcc="https://ptb.de/dcc"
+           xmlns:si="https://ptb.de/si"
+           xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+           targetNamespace="https://example.org/drmd"
+           elementFormDefault="qualified">
 
-	<!-- Lokale Imports für Offline-Validierung und Best Practice -->
-	<xs:import namespace="https://ptb.de/dcc"
-			   schemaLocation="dcc.xsd"/>
-	<xs:import namespace="https://ptb.de/si"
-			   schemaLocation="si/SI_Format.xsd"/>
-	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
-			   schemaLocation="d-sig/xmldsig-core-schema.xsd"/>
+    <!-- Local imports for offline validation -->
+    <xs:import namespace="https://ptb.de/dcc"
+               schemaLocation="../dcc.xsd"/>
+    <xs:import namespace="https://ptb.de/si"
+               schemaLocation="../si/SI_Format.xsd"/>
+    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+               schemaLocation="../d-sig/xmldsig-core-schema.xsd"/>
 
+    <!-- identifier and list building blocks -->
+    <xs:complexType name="identifierType">
+      <xs:sequence>
+        <xs:element name="scheme" type="dcc:notEmptyStringType"/>
+        <xs:element name="value"  type="dcc:notEmptyStringType"/>
+        <xs:element name="link"   type="xs:anyURI" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="id"      type="xs:ID"     use="optional"/>
+      <xs:attribute name="refId"   type="xs:IDREFS" use="optional"/>
+      <xs:attribute name="refType" type="drmd:refTypesType" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="organizationIdentifierListType">
+      <xs:sequence>
+        <xs:element name="organizationIdentifier"
+                    type="drmd:identifierType"
+                    maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="materialIdentifierListType">
+      <xs:sequence>
+        <xs:element name="materialIdentifier"
+                    type="drmd:identifierType"
+                    maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="propertyIdentifierListType">
+      <xs:sequence>
+        <xs:element name="propertyIdentifier"
+                    type="drmd:identifierType"
+                    maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="documentIdentifierListType">
+      <xs:sequence>
+        <xs:element name="documentIdentifier"
+                    type="drmd:identifierType"
+                    maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+
+    <!-- ref type -->
+    <xs:simpleType name="refTypesType">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="basic_measuredValue"/>
+        <xs:enumeration value="basic_propertyValue"/>
+        <xs:enumeration value="basic_documentReference"/>
+      </xs:restriction>
+    </xs:simpleType>
+
+    <!-- root element -->
+    <xs:element name="digitalReferenceMaterialDocument"
+                type="drmd:digitalReferenceMaterialDocumentType"/>
+
+    <xs:complexType name="digitalReferenceMaterialDocumentType">
+      <xs:sequence>
+        <xs:element name="administrativeData" type="drmd:administrativeDataType"/>
+        <xs:element name="statements" type="drmd:statementsType"/>
+        <xs:element name="materials" type="drmd:materialsType"/>
+        <xs:element name="materialPropertiesList" type="drmd:materialPropertiesListType"/>
+        <xs:element name="comment" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="document" type="dcc:byteDataType" minOccurs="0"/>
+        <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="schemaVersion" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- administrativeData without materials -->
+    <xs:complexType name="administrativeDataType">
+        <xs:sequence>
+            <xs:element name="coreData" type="drmd:coreDataType"/>
+            <xs:element name="referenceMaterialProducer" type="drmd:referenceMaterialProducerType"/>
+            <xs:element name="respPersons" type="dcc:respPersonListType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="coreDataType">
+        <xs:sequence>
+            <xs:element name="titleOfTheDocument" type="drmd:titleOfDocumentType"/>
+            <xs:element name="uniqueIdentifier" type="dcc:notEmptyStringType"/>
+            <xs:element name="documentIdentifiers" type="drmd:documentIdentifierListType" minOccurs="0"/>
+            <xs:element name="validity" type="drmd:ValidityType" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="titleOfDocumentType">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="productInformationSheet"/>
+        <xs:enumeration value="referenceMaterialCertificate"/>
+      </xs:restriction>
+    </xs:simpleType>
+
+    <!-- validity subset -->
+    <xs:complexType name="ValidityType">
+      <xs:choice>
+        <xs:element name="timeAfterDispatch">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="period" type="xs:duration"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dateOfIssue" type="xs:date"/>
+        <xs:element name="dateOfCertificateApproval" type="xs:date"/>
+        <xs:element name="untilRevoked" type="xs:boolean"/>
+      </xs:choice>
+    </xs:complexType>
+
+    <!-- producer and persons -->
+    <xs:complexType name="referenceMaterialProducerType">
+      <xs:sequence>
+        <xs:element name="name" type="dcc:textType"/>
+        <xs:element name="contact" type="dcc:contactType"/>
+        <xs:element name="organizationIdentifiers" type="drmd:organizationIdentifierListType" minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+
+    <!-- materials -->
+    <xs:complexType name="materialsType">
+      <xs:sequence>
+        <xs:element name="material" type="drmd:materialType" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="materialType">
+      <xs:sequence>
+        <xs:element name="name" type="dcc:textType"/>
+        <xs:element name="description" type="dcc:richContentType"/>
+        <xs:element name="minimumSampleSize" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="itemQuantity" type="dcc:primitiveQuantityType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="materialIdentifiers" type="drmd:materialIdentifierListType" minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+
+    <!-- material properties -->
+    <xs:complexType name="materialPropertiesListType">
+      <xs:sequence>
+        <xs:element name="materialProperties" type="drmd:materialPropertiesType" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="materialPropertiesType">
+      <xs:sequence>
+        <xs:element name="name" type="dcc:textType"/>
+        <xs:element name="results" type="dcc:resultListType"/>
+      </xs:sequence>
+      <xs:attribute name="isCertified" type="xs:boolean" use="optional" />
+    </xs:complexType>
+
+    <!-- statements -->
+    <xs:complexType name="statementsType">
+      <xs:sequence>
+        <xs:element name="intendedUse" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="commutability" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="storageInformation" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="instructionsForHandlingAndUse" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="metrologicalTraceability" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="healthAndSafetyInformation" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="subcontractors" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="legalNotice" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="referenceToCertificationReport" type="drmd:statementType" minOccurs="0"/>
+        <xs:element name="statement" type="drmd:statementType" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="statementType">
+      <xs:sequence>
+        <xs:element name="name" type="dcc:textType"/>
+        <xs:element name="content" type="dcc:richContentType" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
 	<!-- ...existing code from v0.2.0/xsd/drmd.xsd... (Schema-Inhalt wie oben) ... -->
