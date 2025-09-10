@@ -637,8 +637,29 @@ for k, v in SESSION_DEFAULTS.items():
 # -----------------------------------------------------------------------------
 # Sidebar utilities (minimal – header/status removed per request)
 xml_template = st.sidebar.file_uploader("Load XML file", type=["xml"])
-if xml_template and not st.session_state.template_loaded:
-    load_xml_into_state(xml_template.getvalue())
+if xml_template:
+    xml_bytes = xml_template.getvalue()
+    # Load into state only once per upload
+    if not st.session_state.template_loaded:
+        load_xml_into_state(xml_bytes)
+    # Validate against schema and report status
+    try:
+        import hashlib, lxml.etree as _etree
+        current_hash = hashlib.md5(xml_bytes).hexdigest()
+        prev_hash = st.session_state.get("_last_validated_xml_hash")
+        # Always validate new content (hash differs or never validated)
+        if current_hash != prev_hash:
+            schema_doc = _etree.parse(DEFAULT_XSD_PATH)
+            schema = _etree.XMLSchema(schema_doc)
+            schema.assertValid(_etree.parse(io.BytesIO(xml_bytes)))
+            st.sidebar.success("XML schema validation: OK")
+            st.session_state._last_validated_xml_hash = current_hash
+        else:
+            st.sidebar.info("XML already validated against schema.")
+    except Exception as e:
+        # Show concise error (first line)
+        first_line = str(e).splitlines()[0]
+        st.sidebar.error(f"Schema validation failed: {first_line}")
 
 if st.sidebar.button("Reset All"):
     st.session_state.clear(); st.rerun()
