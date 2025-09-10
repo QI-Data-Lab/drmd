@@ -8,6 +8,7 @@
            targetNamespace="https://example.org/drmd"
            elementFormDefault="qualified">
 
+    <!-- Remote canonical dependencies (preferred for full validation) -->
     <xs:import namespace="https://ptb.de/dcc"
                schemaLocation="https://www.ptb.de/dcc/dcc.xsd"/>
     <xs:import namespace="https://ptb.de/si"
@@ -15,7 +16,26 @@
     <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
                schemaLocation="https://www.ptb.de/dcc/d-sig/xmldsig-core-schema.xsd"/>
 
-    <!-- identifier and list building blocks -->
+        <!-- ========================================================= -->
+        <!--  Simple Types (global for reuse & validation)             -->
+        <!-- ========================================================= -->
+
+        <!-- Semantic version: major.minor.patch -->
+        <xs:simpleType name="schemaVersionType">
+            <xs:restriction base="xs:string">
+                <xs:pattern value="\d+\.\d+\.\d+"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+        <!-- Title of the DRMD document (extracted from inline enum) -->
+        <xs:simpleType name="titleOfDocumentType">
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="productInformationSheet"/>
+                <xs:enumeration value="referenceMaterialCertificate"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+        <!-- identifier and list building blocks -->
     <xs:complexType name="identifierType">
       <xs:sequence>
         <xs:element name="scheme" type="dcc:notEmptyStringType"/>
@@ -121,12 +141,11 @@
                         type="xs:string" minOccurs="0"/>
             <xs:element name="document"
                         type="dcc:byteDataType" minOccurs="0"/>
-            <xs:element ref="ds:Signature"
-                        minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:attribute name="schemaVersion"
-                      type="xs:string"
-                      use="required"/>
+    <xs:attribute name="schemaVersion"
+              type="drmd:schemaVersionType"
+              use="required"/>
     </xs:complexType>
 
     <!-- administrativeData without materials -->
@@ -137,14 +156,12 @@
                 and statements related to the DRMD.
             </xs:documentation>
         </xs:annotation>
-        <xs:all>
-            <xs:element name="coreData"
-                        type="drmd:coreDataType"/>
-            <xs:element name="referenceMaterialProducer"
-                        type="drmd:referenceMaterialProducerType"/>
-            <xs:element name="respPersons"
-                        type="dcc:respPersonListType"/>
-        </xs:all>
+        <!-- changed from xs:all to xs:sequence for extensibility and deterministic order -->
+        <xs:sequence>
+            <xs:element name="coreData" type="drmd:coreDataType"/>
+            <xs:element name="referenceMaterialProducer" type="drmd:referenceMaterialProducerType"/>
+            <xs:element name="respPersons" type="dcc:respPersonListType"/>
+        </xs:sequence>
     </xs:complexType>
 
 	<xs:complexType name="coreDataType">
@@ -152,15 +169,8 @@
 			<xs:documentation> Contains the core information about the document, such as title,
 				unique identifier, and issue date. </xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="titleOfTheDocument">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="productInformationSheet"/>
-						<xs:enumeration value="referenceMaterialCertificate"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+        <xs:sequence>
+            <xs:element name="titleOfTheDocument" type="drmd:titleOfDocumentType"/>
                         <xs:element name="uniqueIdentifier"
                                     type="dcc:notEmptyStringType"/>
                         <xs:element name="documentIdentifiers"
@@ -375,21 +385,30 @@
       </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="resultType">
-      <xs:sequence>
-          <xs:element name="name" type="dcc:textType" />
-          <xs:element name="description" type="dcc:richContentType" minOccurs="0" />
-          <xs:element name="data" type="drmd:dataType" />
-      </xs:sequence>
-      <xs:attribute name="id" type="xs:ID" use="optional" />
-      <xs:attribute name="refId" type="xs:IDREFS" use="optional" />
-      <xs:attribute name="refType" type="drmd:refTypesType" use="optional" />
-  </xs:complexType>
+    <xs:complexType name="resultType">
+            <xs:annotation>
+                <xs:documentation>
+                    DRMD-specific result container. Elements are re-declared in the drmd namespace so that
+                    all nested quantities resolve to drmd:quantityType (with propertyIdentifiers). Future
+                    specialization could extend this base (e.g. certifiedResultType).
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                    <xs:element name="name" type="dcc:textType" />
+                    <xs:element name="description" type="dcc:richContentType" minOccurs="0" />
+                    <xs:element name="data" type="drmd:dataType" />
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID" use="optional" />
+            <xs:attribute name="refId" type="xs:IDREFS" use="optional" />
+            <xs:attribute name="refType" type="drmd:refTypesType" use="optional" />
+    </xs:complexType>
 
+  <!-- Option A: permit either a list of quantities or a single quantity -->
   <xs:complexType name="dataType">
-      <xs:sequence>
+      <xs:choice>
           <xs:element name="list" type="drmd:listType" />
-      </xs:sequence>
+          <xs:element name="quantity" type="drmd:quantityType" />
+      </xs:choice>
   </xs:complexType>
 
   <xs:complexType name="listType">

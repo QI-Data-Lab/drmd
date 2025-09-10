@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema version="0.2.0"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:drmd="https://example.org/drmd"
+		   xmlns:dcc="https://ptb.de/dcc"
+		   xmlns:si="https://ptb.de/si"
+		   xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+		   targetNamespace="https://example.org/drmd"
+		   elementFormDefault="qualified">
+
+	<!-- Lokale Imports für Offline-Validierung und Best Practice -->
+	<xs:import namespace="https://ptb.de/dcc"
+			   schemaLocation="dcc.xsd"/>
+	<xs:import namespace="https://ptb.de/si"
+			   schemaLocation="si/SI_Format.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+			   schemaLocation="d-sig/xmldsig-core-schema.xsd"/>
+
+	<!-- ...existing code from v0.2.0/xsd/drmd.xsd... (Schema-Inhalt wie oben) ... -->

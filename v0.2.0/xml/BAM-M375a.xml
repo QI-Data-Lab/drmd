@@ -94,11 +94,11 @@
 				<dcc:content lang="en">Certified mass fractions and their associated uncertainties.</dcc:content>
 			</drmd:name>
 			<drmd:results>
-				<dcc:result>
-					<dcc:name>
+				<drmd:result>
+					<drmd:name>
 						<dcc:content lang="en">Certified Values</dcc:content>
-					</dcc:name>
-					<dcc:description>
+					</drmd:name>
+					<drmd:description>
 						<dcc:content lang="en">1) Unweighted mean value of the means of accepted
 							sets of data (consisting of at least 3 single results), each set being
 							obtained by a different laboratory and/or a different method of
@@ -108,8 +108,8 @@
 							the Guide to the Expression of Uncertainty in Measurement, (GUM, ISO/IEC
 							Guide 98-3:2008).
 							uncertainties.</dcc:content>
-					</dcc:description>
-					<dcc:data>
+					</drmd:description>
+					<drmd:data>
 						<drmd:list>
 							
 							<drmd:quantity refType="basic_measuredValue">
@@ -619,8 +619,8 @@
             </drmd:propertyIdentifiers>
 							</drmd:quantity>
 						</drmd:list>
-					</dcc:data>
-				</dcc:result>
+					</drmd:data>
+				</drmd:result>
 			</drmd:results>
 
 		</drmd:materialProperties>
@@ -630,11 +630,11 @@
 			</drmd:name>
 			<drmd:results>
 				
-				<dcc:result>
-					<dcc:name>
+				<drmd:result>
+					<drmd:name>
 						<dcc:content lang="en">Informative Values</dcc:content>
-					</dcc:name>
-					<dcc:description>
+					</drmd:name>
+					<drmd:description>
 						<dcc:content lang="en">Values were not certified, but given for information,
 							because the spread of results was considered to be too high.
 							Estimated expanded uncertainty U with a coverage factor of k = 2,
@@ -642,8 +642,8 @@
 							the Guide to the expression of uncertainty in measurement, (GUM, ISO/IEC
 							Guide 98-3:2008).
             </dcc:content>
-					</dcc:description>
-					<dcc:data>
+					</drmd:description>
+					<drmd:data>
 						<drmd:list>
 							
 							<drmd:quantity refType="basic_measuredValue">
@@ -702,8 +702,8 @@
             </drmd:propertyIdentifiers>
 							</drmd:quantity>
 						</drmd:list>
-					</dcc:data>
-				</dcc:result>
+					</drmd:data>
+				</drmd:result>
 			</drmd:results>
 		</drmd:materialProperties>
 	</drmd:materialPropertiesList>

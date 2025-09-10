@@ -99,16 +99,16 @@
         </dcc:content>
       </drmd:name>
       <drmd:results>
-        <dcc:result>
-          <dcc:name>
+        <drmd:result>
+          <drmd:name>
             <dcc:content lang="en">Certified Value</dcc:content>
-          </dcc:name>
-          <dcc:description>
+          </drmd:name>
+          <drmd:description>
             <dcc:content lang="en">
               a) Ethanolic dye solution of BAM-F017 with an absorbance at the excitation wavelength between 0.09 and 0.11.
             </dcc:content>
-          </dcc:description>
-          <dcc:data>
+          </drmd:description>
+          <drmd:data>
             <drmd:list>
               <drmd:quantity refType="basic_measuredValue">
                 <dcc:name>
@@ -135,8 +135,8 @@
                 </drmd:propertyIdentifiers>
               </drmd:quantity>
             </drmd:list>
-          </dcc:data>
-        </dcc:result>
+          </drmd:data>
+        </drmd:result>
       </drmd:results>
     </drmd:materialProperties>
   </drmd:materialPropertiesList>
