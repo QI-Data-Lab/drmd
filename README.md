@@ -65,10 +65,10 @@ drmd/
 │   ├── SI_Format.xsd
 │   └── xmldsig-core-schema.xsd
 ├── scripts/
-│   ├── xml2html.py
+│   ├── convert_v0_1_to_v0_2.py
 │   ├── validate_v0_2.py
-│   └── utility/
-│       └── normalize_v0_2_examples.py
+│   ├── xml2html.py
+│   └── normalize_v0_2_examples.py
 ├── tests/
 │   └── test_v0_2_0.py
 ├── webapp/
@@ -144,13 +144,13 @@ Several helper scripts are provided in `scripts`.
   to the `v0.2.0` layout.
 
   ```bash
-  python scripts/utility/convert_v0_1_to_v0_2.py old.xml new.xml
+  python scripts/convert_v0_1_to_v0_2.py old.xml new.xml
   ```
 
 - **validate_v0_2.py** – validate a `v0.2.0` XML document against the schema.
 
   ```bash
-  python scripts/utility/validate_v0_2.py your.xml v0.2.0/xsd/drmd.xsd
+  python scripts/validate_v0_2.py your.xml v0.2.0/xsd/drmd.xsd
   ```
 
 - **xml2html.py** – transform a DRMD XML document into HTML using the
@@ -159,7 +159,13 @@ Several helper scripts are provided in `scripts`.
   ```bash
   python scripts/xml2html.py v0.2.0/xml/BAM-F017.xml \
       v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
-```
+  ```
+
+- **normalize_v0_2_examples.py** – normalize sample XMLs to match v0.2.0 element names and structure.
+
+  ```bash
+  python scripts/normalize_v0_2_examples.py v0.2.0/xml/*.xml
+  ```
 
 ### Tests
 
@@ -167,7 +173,7 @@ Run automated checks for schema validity, example XML validation, and XSLT trans
 
 ```
 python -m unittest tests/test_v0_2_0.py -v
-  ```
+```
 
 
 ## Contributing
