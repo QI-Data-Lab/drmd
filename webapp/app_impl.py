@@ -599,21 +599,13 @@ def load_xml_into_state(xml_bytes: bytes):
         if embedded_files:
             st.session_state.embedded_files = embedded_files
 
+        # Mark template as loaded only if parsing succeeded
         st.session_state.template_loaded = True
-        st.sidebar.success("XML template loaded ✔")
+        # Removed sidebar status message
 
-    except Exception as e:
-        st.sidebar.error(f"Failed to load template: {e}")
-        # Print detailed error for debugging
-        st.sidebar.error(f"Error details: {traceback.format_exc()}")
-
-        # Display the XML structure for debugging
-        try:
-            tree = ET.parse(io.BytesIO(xml_bytes))
-            root = tree.getroot()
-            st.sidebar.expander("XML Structure (for debugging)").code(ET.tostring(root, encoding='unicode', method='xml')[:1000] + "...")
-        except Exception as debug_e:
-            st.sidebar.error(f"Could not parse XML for debugging: {debug_e}")
+    except Exception:
+        # Silently ignore parsing errors; user can run diagnostics in Settings tab
+        return
 
 # -----------------------------------------------------------------------------
 # Robust session‑state initialisation (covers all tabs)
@@ -643,8 +635,7 @@ for k, v in SESSION_DEFAULTS.items():
         st.session_state[k] = v
 
 # -----------------------------------------------------------------------------
-# Sidebar utilities
-st.sidebar.header("DRMD Generator")
+# Sidebar utilities (minimal – header/status removed per request)
 xml_template = st.sidebar.file_uploader("Load XML file", type=["xml"])
 if xml_template and not st.session_state.template_loaded:
     load_xml_into_state(xml_template.getvalue())
@@ -1042,14 +1033,35 @@ def add_if_valid(parent, tag, value, ns):
     return elem
 
 def export_identifier_list(parent, tag, id_list, ns_drmd):
-    outer = ET.SubElement(parent, f"{{{ns_drmd}}}{tag}")
+    """Export identifier list (e.g. propertyIdentifiers) respecting schema constraints.
+
+    Rules:
+    - Skip creation entirely if id_list is falsy or no entries have BOTH non-empty scheme & value.
+    - Whitespace-only strings are treated as empty.
+    - link is optional; only emitted if non-empty.
+    - Returns created outer element or None.
+    This prevents invalid empty containers like <drmd:propertyIdentifiers/> which violate
+    the sequence requirement (must contain at least one child element).
+    """
     singular = tag[:-1] if tag.endswith('s') else tag
-    for ident in id_list:
+    valid = []
+    for ident in (id_list or []):
+        if not isinstance(ident, dict):
+            continue
+        scheme = (ident.get("scheme") or "").strip()
+        value = (ident.get("value") or "").strip()
+        link = (ident.get("link") or "").strip()
+        if scheme and value:
+            valid.append({"scheme": scheme, "value": value, "link": link})
+    if not valid:
+        return None
+    outer = ET.SubElement(parent, f"{{{ns_drmd}}}{tag}")
+    for ident in valid:
         ident_elem = ET.SubElement(outer, f"{{{ns_drmd}}}{singular}")
-        ET.SubElement(ident_elem, f"{{{ns_drmd}}}scheme").text = ident.get("scheme", "")
-        ET.SubElement(ident_elem, f"{{{ns_drmd}}}value").text = ident.get("value", "")
-        if ident.get("link", "").strip():
-            ET.SubElement(ident_elem, f"{{{ns_drmd}}}link").text = ident.get("link", "")
+        ET.SubElement(ident_elem, f"{{{ns_drmd}}}scheme").text = ident["scheme"]
+        ET.SubElement(ident_elem, f"{{{ns_drmd}}}value").text = ident["value"]
+        if ident["link"]:
+            ET.SubElement(ident_elem, f"{{{ns_drmd}}}link").text = ident["link"]
     return outer
 
 # def export_materialProperties(ns_drmd, ns_dcc, ns_si):
@@ -1692,67 +1704,70 @@ with tabs[-1]:
                 pass
             st.success('Paths updated')
 
-    # Diagnostics
+    # Diagnostics (on-demand)
     st.markdown('---')
     st.markdown('### Diagnostics')
-    from lxml import etree as _etree
-    import xmlschema as _xmlschema
-    from pathlib import Path as _P
+    if st.button('Run Diagnostics', key='run_diagnostics'):
+        from lxml import etree as _etree
+        import xmlschema as _xmlschema
+        from pathlib import Path as _P
 
-    st.write(f"XSD: `{DEFAULT_XSD_PATH}`")
-    st.write(f"XSL: `{DEFAULT_XSL_PATH}`")
-    st.write(f"QUDT TTL: `{_os.environ.get('QUDT_TTL_PATH','')}`")
+        st.write(f"XSD: `{DEFAULT_XSD_PATH}`")
+        st.write(f"XSL: `{DEFAULT_XSL_PATH}`")
+        st.write(f"QUDT TTL: `{_os.environ.get('QUDT_TTL_PATH','')}`")
 
-    # Compile schema
-    xsd_ok = False
-    xsd_err = None
-    try:
-        _schema_doc = _etree.parse(DEFAULT_XSD_PATH)
-        _schema = _etree.XMLSchema(_schema_doc)
-        xsd_ok = True
-    except Exception as e:
-        xsd_err = str(e)
-    st.write(f"XSD compile: {'✅' if xsd_ok else '❌'}")
-    if xsd_err:
-        st.code(xsd_err)
-
-    # Compile XSL
-    xsl_ok = False
-    xsl_err = None
-    try:
-        _xslt = _etree.XSLT(_etree.parse(DEFAULT_XSL_PATH))
-        xsl_ok = True
-    except Exception as e:
-        xsl_err = str(e)
-    st.write(f"XSLT compile: {'✅' if xsl_ok else '❌'}")
-    if xsl_err:
-        st.code(xsl_err)
-
-    # Validate examples from the detected version folder
-    try:
-        xsd_dir = _P(DEFAULT_XSD_PATH).resolve().parent
-        version_dir = xsd_dir.parent
-        xml_dir = version_dir / 'xml'
-        examples = sorted([str(p) for p in xml_dir.glob('*.xml')])
-    except Exception:
-        examples = []
-    if examples:
-        st.write("Example XML validation:")
-    if xsd_ok:
+        # Compile schema
+        xsd_ok = False
+        xsd_err = None
         try:
-            _xs = _xmlschema.XMLSchema(DEFAULT_XSD_PATH)
+            _schema_doc = _etree.parse(DEFAULT_XSD_PATH)
+            _schema = _etree.XMLSchema(_schema_doc)
+            xsd_ok = True
+        except Exception as e:
+            xsd_err = str(e)
+        st.write(f"XSD compile: {'✅' if xsd_ok else '❌'}")
+        if xsd_err:
+            st.code(xsd_err)
+
+        # Compile XSL
+        xsl_ok = False
+        xsl_err = None
+        try:
+            _xslt = _etree.XSLT(_etree.parse(DEFAULT_XSL_PATH))
+            xsl_ok = True
+        except Exception as e:
+            xsl_err = str(e)
+        st.write(f"XSLT compile: {'✅' if xsl_ok else '❌'}")
+        if xsl_err:
+            st.code(xsl_err)
+
+        # Validate examples from the detected version folder
+        try:
+            xsd_dir = _P(DEFAULT_XSD_PATH).resolve().parent
+            version_dir = xsd_dir.parent
+            xml_dir = version_dir / 'xml'
+            examples = sorted([str(p) for p in xml_dir.glob('*.xml')])
         except Exception:
-            _xs = None
-        for ex in examples:
+            examples = []
+        if examples:
+            st.write("Example XML validation:")
+        if xsd_ok:
             try:
-                _schema.assertValid(_etree.parse(ex))
-                st.write(f"- ✅ Valid: `{ex}`")
-            except Exception as ve:
-                st.write(f"- ❌ Invalid: `{ex}`")
-                st.code(str(ve))
-                if _xs is not None:
-                    for err in _xs.iter_errors(ex):
-                        st.code(str(err))
+                _xs = _xmlschema.XMLSchema(DEFAULT_XSD_PATH)
+            except Exception:
+                _xs = None
+            for ex in examples:
+                try:
+                    _schema.assertValid(_etree.parse(ex))
+                    st.write(f"- ✅ Valid: `{ex}`")
+                except Exception as ve:
+                    st.write(f"- ❌ Invalid: `{ex}`")
+                    st.code(str(ve))
+                    if _xs is not None:
+                        for err in _xs.iter_errors(ex):
+                            st.code(str(err))
+        else:
+            for ex in examples:
+                st.write(f"- ⚠️ Skipped (schema failed): `{ex}`")
     else:
-        for ex in examples:
-            st.write(f"- ⚠️ Skipped (schema failed): `{ex}`")
+        st.info("Click 'Run Diagnostics' to compile schema/XSL and validate bundled example XML files.")

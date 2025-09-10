@@ -170,11 +170,12 @@
               <xsl:when test="$isCertified='true'">
                 <h3>
                   <span style="color:green; font-weight:bold;">&#10004; Certified </span>
-                  <xsl:value-of select="drmd:results/dcc:result/dcc:name/dcc:content[@lang='en']" />
+                  <!-- Support result/name in either drmd: or dcc: namespace -->
+                  <xsl:value-of select="drmd:results/drmd:result/drmd:name/dcc:content[@lang='en'] | drmd:results/drmd:result/dcc:name/dcc:content[@lang='en'] | drmd:results/dcc:result/drmd:name/dcc:content[@lang='en'] | drmd:results/dcc:result/dcc:name/dcc:content[@lang='en']" />
                 </h3>
                 <h3>Certified Values</h3>
                 <p>
-                  <xsl:for-each select="drmd:results/dcc:result/dcc:description/dcc:content[@lang='en']">
+                  <xsl:for-each select="drmd:results/drmd:result/drmd:description/dcc:content[@lang='en'] | drmd:results/drmd:result/dcc:description/dcc:content[@lang='en'] | drmd:results/dcc:result/drmd:description/dcc:content[@lang='en'] | drmd:results/dcc:result/dcc:description/dcc:content[@lang='en']">
                     <xsl:value-of select="."/><br/>
                   </xsl:for-each>
                 </p>
@@ -185,17 +186,17 @@
                     <th>Property Unit</th>
                     <th>Uncertainty Value</th>
                   </tr>
-                  <xsl:apply-templates select="drmd:results/dcc:result/dcc:data/drmd:list/drmd:quantity" />
+                  <xsl:apply-templates select="drmd:results/drmd:result/drmd:data/drmd:list/drmd:quantity | drmd:results/dcc:result/drmd:data/drmd:list/drmd:quantity | drmd:results/drmd:result/dcc:data/drmd:list/drmd:quantity | drmd:results/dcc:result/dcc:data/drmd:list/drmd:quantity" />
                 </table>
                 <hr/>
               </xsl:when>
               <xsl:when test="$isCertified='false'">
                 <h3>
-                  <xsl:value-of select="drmd:results/dcc:result/dcc:name/dcc:content[@lang='en']" />
+                  <xsl:value-of select="drmd:results/drmd:result/drmd:name/dcc:content[@lang='en'] | drmd:results/drmd:result/dcc:name/dcc:content[@lang='en'] | drmd:results/dcc:result/drmd:name/dcc:content[@lang='en'] | drmd:results/dcc:result/dcc:name/dcc:content[@lang='en']" />
                 </h3>
                 <h3>Informative Values</h3>
                 <p>
-                  <xsl:for-each select="drmd:results/dcc:result/dcc:description/dcc:content[@lang='en']">
+                  <xsl:for-each select="drmd:results/drmd:result/drmd:description/dcc:content[@lang='en'] | drmd:results/drmd:result/dcc:description/dcc:content[@lang='en'] | drmd:results/dcc:result/drmd:description/dcc:content[@lang='en'] | drmd:results/dcc:result/dcc:description/dcc:content[@lang='en']">
                     <xsl:value-of select="."/><br/>
                   </xsl:for-each>
                 </p>
@@ -206,7 +207,7 @@
                     <th>Property Unit</th>
                     <th>Uncertainty Value</th>
                   </tr>
-                  <xsl:apply-templates select="drmd:results/dcc:result/dcc:data/drmd:list/drmd:quantity" />
+                  <xsl:apply-templates select="drmd:results/drmd:result/drmd:data/drmd:list/drmd:quantity | drmd:results/dcc:result/drmd:data/drmd:list/drmd:quantity | drmd:results/drmd:result/dcc:data/drmd:list/drmd:quantity | drmd:results/dcc:result/dcc:data/drmd:list/drmd:quantity" />
                 </table>
                 <hr/>
               </xsl:when>
@@ -233,7 +234,7 @@
     <xsl:template match="drmd:quantity">
       <tr>
         <td>
-          <xsl:value-of select="dcc:name/dcc:content[@lang='en']" />
+          <xsl:value-of select="dcc:name/dcc:content[@lang='en'] | drmd:name/dcc:content[@lang='en']" />
         </td>
         <td>
           <xsl:value-of select="si:real/si:value" />
