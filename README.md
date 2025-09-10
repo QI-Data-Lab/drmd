@@ -1,8 +1,8 @@
 # DRMD (Digital Reference Material Document)
 
-This repository provides the DRMD XML schema (v0.2.0), example XML files, an XSLT for HTML rendering, a Streamlit app to author and validate DRMD documents, and utilities/tests to keep everything consistent.
+This repository provides the DRMD XML schema (v0.3.0), example XML files, an XSLT for HTML rendering, a Streamlit app to author and validate DRMD documents, and utilities/tests to keep everything consistent.
 
-Current version: v0.3.0
+Current stable version: v0.3.0 (previous: v0.2.0)
 
 ## Repository Structure
 
@@ -21,7 +21,7 @@ webapp/           # Streamlit app
   app.py          # Launcher (sets absolute resource paths)
   app_impl.py     # App implementation
 scripts/          # Utilities
-  validate_v0_2.py
+  validate_v0_2.py         # Generic validator (still works for v0.3.0 when given paths)
   xml2html.py
   convert_v0_1_to_v0_2.py
   normalize_v0_2_examples.py
@@ -33,9 +33,9 @@ Makefile          # Common dev tasks
 Dockerfile        # Container image for the app
 ```
 
-## DRMD Schema (v0.2.0)
+## DRMD Schema (v0.3.0)
 
-The canonical schema lives at `v0.2.0/xsd/drmd.xsd` and imports external dependencies from `../../imports/`:
+The canonical schema lives at `v0.3.0/xsd/drmd.xsd` and imports external dependencies from `../../imports/`:
 - DCC: `imports/dcc.xsd`
 - D‑SI: `imports/SI_Format.xsd`
 - XMLDSIG: `imports/xmldsig-core-schema.xsd`
@@ -68,11 +68,12 @@ The app includes Diagnostics (compile XSD/XSL, validate examples) and a Help tab
 
 ## Utilities
 
-- `scripts/validate_v0_2.py`: validate XML against `v0.2.0/xsd/drmd.xsd`
-- `scripts/xml2html.py`: transform XML → HTML via `v0.2.0/xsl/drmd.xsl`
-- `scripts/normalize_v0_2_examples.py`: normalize example XMLs to current structure
+- `scripts/validate_v0_2.py`: validate XML against a provided schema (use with `v0.3.0/xsd/drmd.xsd`)
+- `scripts/xml2html.py`: transform XML → HTML via `v0.3.0/xsl/drmd.xsl`
+- `scripts/normalize_v0_2_examples.py`: legacy helper to normalize v0.2.0-era examples (kept for backward maintenance)
+- `scripts/convert_v0_1_to_v0_2.py`: legacy converter retained for historical migrations
 
-Examples:
+Examples (current version):
 ```
 python scripts/validate_v0_2.py v0.3.0/xml/BAM-F017.xml v0.3.0/xsd/drmd.xsd
 python scripts/xml2html.py v0.3.0/xml/BAM-F017.xml v0.3.0/xsl/drmd.xsl v0.3.0/html/BAM-F017.html
@@ -80,7 +81,7 @@ python scripts/xml2html.py v0.3.0/xml/BAM-F017.xml v0.3.0/xsl/drmd.xsl v0.3.0/ht
 
 ## Tests
 ```
-python -m unittest tests/test_v0_2_0.py -v
+python -m pytest -q   # or run specific unittest modules
 ```
 
 ## Containerization
@@ -95,7 +96,7 @@ The container sets `DRMD_XSD_PATH`, `DRMD_XSL_PATH`, and `QUDT_TTL_PATH` to repo
 
 ## Notes
 
-- Root-level duplicates (`xsd/`, `xsl/`, `xml/`, `html/`) are removed. Use the versioned folder `v0.2.0/` as the source of truth.
+- Root-level duplicates (`xsd/`, `xsl/`, `xml/`, `html/`) are removed. Use the versioned folder `v0.3.0/` as the source of truth.
 - `imports/` holds offline copies of external schemas and QUDT data used by the app.
 
 ## License

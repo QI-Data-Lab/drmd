@@ -27,7 +27,7 @@ html: install
 	$(PY) scripts/xml2html.py v0.3.0/xml/BAM-M375a.xml v0.3.0/xsl/drmd.xsl v0.3.0/html/BAM-M375a.html
 
 test: install
-	$(PY) -m unittest tests/test_v0_2_0.py -v
+	$(PY) -m unittest discover -s tests -p 'test*.py' -v
 
 check: normalize validate html test
 

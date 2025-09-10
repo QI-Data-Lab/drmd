@@ -239,8 +239,9 @@ def create_empty_result():
         "result_name": "",
         "description": "",
         "quantities": pd.DataFrame(columns=[
-            "Name", "Label", "Value", "Quantity Kind", "Unit",
-            "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution", "Identifier"
+            "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
+            "Value", "Quantity Kind", "Unit",
+            "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
         ]),
         "identifiers": [],
     }
@@ -545,12 +546,22 @@ def load_xml_into_state(xml_bytes: bytes):
                                             "value": v.text.strip() if v is not None and v.text else "",
                                             "link": l.text.strip() if l is not None and l.text else ""
                                         })
+                                    # First identifier (if any) flattened into columns
+                                    if q_ids:
+                                        quant["Identifier Scheme"] = q_ids[0]["scheme"]
+                                        quant["Identifier Value"] = q_ids[0]["value"]
+                                        quant["Identifier Link"] = q_ids[0]["link"]
+                                    else:
+                                        quant["Identifier Scheme"] = ""
+                                        quant["Identifier Value"] = ""
+                                        quant["Identifier Link"] = ""
                                     quantities.append(quant)
-                                    row_ids.append(q_ids or [ ])
-                        # Convert list of quantities to a DataFrame
-                        df_quant = pd.DataFrame(quantities, columns=["Name", "Label", "Value", "Quantity Type", "Unit", "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution", "Identifier"])
-                        for i, ids in enumerate(row_ids):
-                            df_quant.loc[i, "Identifier"] = ids[0]["value"] if ids else ""
+                                    row_ids.append(q_ids or [])
+                        # Convert list of quantities to a DataFrame (new column layout)
+                        df_quant = pd.DataFrame(quantities, columns=[
+                            "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
+                            "Value", "Quantity Type", "Unit", "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
+                        ])
                         res_dict["quantities"] = df_quant
                         res_dict["identifiers"] = row_ids
                         results.append(res_dict)
@@ -645,7 +656,7 @@ if st.sidebar.button("Reset All"):
 # Main Tabs list
 tabs = st.tabs([
     "Administrative Data", "Materials", "Properties", "Statements",
-    "Comments & Documents", "Digital Signature", "Validate & Export","Help"
+    "Comments & Documents", "Digital Signature", "Validate & Export", "Help", "Settings"
 ])
 
 # -----------------------------------------------------------------------------
@@ -734,8 +745,8 @@ with tabs[0]:
                         addr_cols = st.columns([3, 1])
                         with addr_cols[0]:
                             prod["producerStreet"] = st.text_input("Street", value=prod.get("producerStreet", ""), key=f"producerStreet_{idx}")
-                    with addr_cols[1]:
-                        prod["producerStreetNo"] = st.text_input("No.", value=prod.get("producerStreetNo", ""), key=f"producerStreetNo_{idx}")
+                        with addr_cols[1]:
+                            prod["producerStreetNo"] = st.text_input("No.", value=prod.get("producerStreetNo", ""), key=f"producerStreetNo_{idx}")
 
                         city_cols = st.columns([1, 2, 1])
                         with city_cols[0]:
@@ -908,11 +919,12 @@ with tabs[2]:
                                 result["identifiers"] = [ [] for _ in range(len(result.get("quantities", pd.DataFrame()))) ]
                             result["quantities"] = st.data_editor(
                                 result.get("quantities", pd.DataFrame(columns=[
-                                    "Name", "Label", "Value", "Quantity Kind", "Unit",
-                                    "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution", "Identifier"
+                                    "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
+                                    "Value", "Quantity Kind", "Unit",
+                                    "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
                                 ])),
                                 num_rows="dynamic",
-                                disabled=["Identifier"],
+                                disabled=["Identifier Scheme", "Identifier Value", "Identifier Link"],
                                 key=f"quantities_{mp_uuid}_{res_idx}"
                             )
                             # Sync identifier rows with dataframe length
@@ -929,31 +941,58 @@ with tabs[2]:
                                 pid["scheme"] = cols_id[0].text_input("Scheme", pid.get("scheme", ""), key=f"prop_scheme_{mp_uuid}_{res_idx}_{pid_idx}")
                                 pid["value"] = cols_id[1].text_input("Value", pid.get("value", ""), key=f"prop_value_{mp_uuid}_{res_idx}_{pid_idx}")
                                 pid["link"] = cols_id[2].text_input("Link", pid.get("link", ""), key=f"prop_link_{mp_uuid}_{res_idx}_{pid_idx}")
-                                if cols_id[3].button("🗑️", key=f"del_prop_{mp_uuid}_{res_idx}_{pid_idx}") and len(current_ids)>1:
-                                    current_ids.pop(pid_idx); st.rerun()
-                            if st.button("➕ Add Identifier", key=f"add_prop_{mp_uuid}_{res_idx}"):
-                                current_ids.append(INIT_ID.copy()); st.rerun()
+                                cols_id[3].checkbox("Delete", key=f"del_prop_chk_{mp_uuid}_{res_idx}_{pid_idx}")
+                            add_new_identifier = st.checkbox("Add Identifier", key=f"add_prop_chk_{mp_uuid}_{res_idx}")
                             result["identifiers"][sel] = current_ids
-                            result["quantities"].loc[sel, "Identifier"] = current_ids[0]["value"] if current_ids else ""
+                            # Update flattened identifier columns for selected row
+                            if current_ids:
+                                result["quantities"].loc[sel, "Identifier Scheme"] = current_ids[0].get("scheme", "")
+                                result["quantities"].loc[sel, "Identifier Value"] = current_ids[0].get("value", "")
+                                result["quantities"].loc[sel, "Identifier Link"] = current_ids[0].get("link", "")
+                            else:
+                                result["quantities"].loc[sel, ["Identifier Scheme", "Identifier Value", "Identifier Link"]] = ""
 
-                            # Default uncertainty controls in one line under the table
+                            # Default uncertainty controls
                             st.markdown("**Default Uncertainty Values:**")
-                            col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
+                            col1, col2, col3 = st.columns([2, 2, 2])
                             with col1:
                                 local_coverage_factor = st.number_input("Coverage Factor", min_value=1.0, max_value=10.0, value=2.0, step=0.1, key=f"local_cf_{mp_uuid}_{res_idx}")
                             with col2:
                                 local_coverage_probability = st.number_input("Probability", min_value=0.0, max_value=1.0, value=0.95, step=0.01, key=f"local_cp_{mp_uuid}_{res_idx}")
                             with col3:
                                 local_distribution = st.selectbox("Distribution", ["normal", "log-normal", "uniform"], index=0, key=f"local_dist_{mp_uuid}_{res_idx}")
-                            with col4:
-                                # Button to apply default uncertainty values to all rows
-                                if st.form_submit_button("Apply to All Rows"):
-                                    # Apply the local values to all rows in the current table
-                                    if not result["quantities"].empty:
-                                        result["quantities"]["Coverage Factor"] = local_coverage_factor
-                                        result["quantities"]["Coverage Probability"] = local_coverage_probability
-                                        result["quantities"]["Distribution"] = local_distribution
-                                    st.rerun()
+
+                            # Submit actions for the form
+                            apply_defaults = st.form_submit_button("Apply Defaults to All Rows")
+                            save_changes = st.form_submit_button("Save Table Changes")
+
+                            if apply_defaults:
+                                if not result["quantities"].empty:
+                                    result["quantities"]["Coverage Factor"] = local_coverage_factor
+                                    result["quantities"]["Coverage Probability"] = local_coverage_probability
+                                    result["quantities"]["Distribution"] = local_distribution
+                                st.rerun()
+
+                            if save_changes:
+                                # Process deletions for identifiers of selected row
+                                # Remove in reverse index order to avoid reindex issues
+                                to_del = []
+                                for pid_idx, _ in enumerate(current_ids):
+                                    if st.session_state.get(f"del_prop_chk_{mp_uuid}_{res_idx}_{pid_idx}"):
+                                        to_del.append(pid_idx)
+                                for pid_idx in sorted(to_del, reverse=True):
+                                    if len(current_ids) > 1:
+                                        current_ids.pop(pid_idx)
+                                if add_new_identifier:
+                                    current_ids.append(INIT_ID.copy())
+                                result["identifiers"][sel] = current_ids
+                                if current_ids:
+                                    result["quantities"].loc[sel, "Identifier Scheme"] = current_ids[0].get("scheme", "")
+                                    result["quantities"].loc[sel, "Identifier Value"] = current_ids[0].get("value", "")
+                                    result["quantities"].loc[sel, "Identifier Link"] = current_ids[0].get("link", "")
+                                else:
+                                    result["quantities"].loc[sel, ["Identifier Scheme", "Identifier Value", "Identifier Link"]] = ""
+                                st.success("Saved changes")
 
 
                     # Button to add a new measurement result.
@@ -1093,19 +1132,25 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
         # Required: results
         results_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}results")
         for res in mp.get("results", []):
-            res_elem = ET.SubElement(results_elem, f"{{{ns_dcc}}}result")
-            res_name_elem = ET.SubElement(res_elem, f"{{{ns_dcc}}}name")
+            # drmd:result container
+            res_elem = ET.SubElement(results_elem, f"{{{ns_drmd}}}result")
+            # drmd:name (type dcc:textType)
+            res_name_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}name")
             ET.SubElement(res_name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = res.get("result_name", "")
+            # drmd:description (type dcc:richContentType)
             if res.get("description", "").strip():
-                res_desc_elem = ET.SubElement(res_elem, f"{{{ns_dcc}}}description")
+                res_desc_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}description")
                 ET.SubElement(res_desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = res.get("description", "")
-            data_elem = ET.SubElement(res_elem, f"{{{ns_dcc}}}data")
-            list_elem = ET.SubElement(data_elem, f"{{{ns_dcc}}}list")
+            # drmd:data with drmd:list
+            data_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}data")
+            list_elem = ET.SubElement(data_elem, f"{{{ns_drmd}}}list")
             for q_idx, row in res.get("quantities", pd.DataFrame()).iterrows():
-                q_wrap = ET.SubElement(list_elem, f"{{{ns_drmd}}}quantity")
-                quantity_elem = ET.SubElement(q_wrap, f"{{{ns_dcc}}}quantity", attrib={"refType": "basic_measuredValue"})
+                # drmd:quantity (type drmd:quantityType extends dcc:primitiveQuantityType)
+                quantity_elem = ET.SubElement(list_elem, f"{{{ns_drmd}}}quantity")
+                # dcc:name inside the quantity (per dcc text type)
                 qname_elem = ET.SubElement(quantity_elem, f"{{{ns_dcc}}}name")
                 ET.SubElement(qname_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = str(row.get("Name", ""))
+                # Numerical value with SI block
                 real_elem = ET.SubElement(quantity_elem, f"{{{ns_si}}}real")
                 ET.SubElement(real_elem, f"{{{ns_si}}}value").text = str(row.get("Value", ""))
                 ET.SubElement(real_elem, f"{{{ns_si}}}unit").text = str(row.get("Unit", ""))
@@ -1127,7 +1172,7 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
                     for tag, value in expandedMU_vals.items():
                         ET.SubElement(expMU_elem, f"{{{ns_si}}}{tag}").text = str(value)
                 if res.get("identifiers") and q_idx < len(res["identifiers"]):
-                    export_identifier_list(q_wrap, "propertyIdentifiers", res["identifiers"][q_idx], ns_drmd)
+                    export_identifier_list(quantity_elem, "propertyIdentifiers", res["identifiers"][q_idx], ns_drmd)
     return mp_list_elem
 
 
@@ -1341,7 +1386,7 @@ with tabs[6]:
         ET.register_namespace("ds", DS_NS)
 
         # Create the root element.
-        root = ET.Element(f"{{{ns_drmd}}}digitalReferenceMaterialDocument", attrib={"schemaVersion": "0.2.0"})
+        root = ET.Element(f"{{{ns_drmd}}}digitalReferenceMaterialDocument", attrib={"schemaVersion": "0.3.0"})
 
         # --- Build administrativeData ---
         admin_data = ET.SubElement(root, f"{{{ns_drmd}}}administrativeData")
@@ -1363,7 +1408,7 @@ with tabs[6]:
             ET.SubElement(validity_elem, f"{{{ns_drmd}}}untilRevoked").text = "true"
 
         # Materials: using the list from the Materials form.
-        materials_elem = ET.SubElement(admin_data, f"{{{ns_drmd}}}materials")
+        materials_elem = ET.SubElement(root, f"{{{ns_drmd}}}materials")
         if not st.session_state.materials:
             # If no material was entered, add a dummy material.
             dummy = ET.SubElement(materials_elem, f"{{{ns_drmd}}}material")
@@ -1461,14 +1506,15 @@ with tabs[6]:
                 if rp.get("cryptElectronicTimeStamp", False):
                     ET.SubElement(rp_elem, f"{{{ns_dcc}}}cryptElectronicTimeStamp").text = "true"
 
-        # Add the statements section.
+        # Prepare statements section (append later to maintain schema order)
         statements_elem = export_statements(ns_drmd, ns_dcc)
-        admin_data.append(statements_elem)
 
     # --- Material Properties ---
          # Next: materialPropertiesList.
         mp_list_elem = export_materialProperties(ns_drmd, ns_dcc, ns_si)
         root.append(mp_list_elem)
+        # Now append statements after materialPropertiesList to respect sequence order
+        root.append(statements_elem)
 
         # 3️ Add a single <comment> element, if provided.
         comment_elem = export_comment(ns_drmd)
@@ -1549,7 +1595,7 @@ with tabs[6]:
 # (after your existing tabs, add “Help”)
 
 
-with tabs[-1]:
+with tabs[-2]:
 
     # Load help content from docs/help.md instead of hardcoding
     _help_md_path = _Path(__file__).resolve().parents[1] / 'docs' / 'help.md'
@@ -1611,3 +1657,102 @@ with tabs[-1]:
                 "- Original DCC schema: [link-to-dcc-schema]")
 
 render_ui_settings_panel()
+
+# -----------------------------------------------------------------------------
+# --- Tab: Settings (path overrides + diagnostics) ---
+# -----------------------------------------------------------------------------
+with tabs[-1]:
+    st.markdown("### Settings")
+    # Initialize settings values
+    if 'settings_xsd_path' not in st.session_state:
+        st.session_state.settings_xsd_path = DEFAULT_XSD_PATH
+    if 'settings_xsl_path' not in st.session_state:
+        st.session_state.settings_xsl_path = DEFAULT_XSL_PATH
+    if 'settings_qudt_path' not in st.session_state:
+        st.session_state.settings_qudt_path = _os.environ.get('QUDT_TTL_PATH', '')
+
+    colA, _ = st.columns([2, 1])
+    with colA:
+        xsd_in = st.text_input('XSD Path', st.session_state.settings_xsd_path)
+        xsl_in = st.text_input('XSL Path', st.session_state.settings_xsl_path)
+        qudt_in = st.text_input('QUDT TTL Path', st.session_state.settings_qudt_path)
+        if st.button('Apply Paths', key='apply_paths_btn'):
+            # Update environment and module defaults
+            _os.environ['DRMD_XSD_PATH'] = xsd_in
+            _os.environ['DRMD_XSL_PATH'] = xsl_in
+            if qudt_in:
+                _os.environ['QUDT_TTL_PATH'] = qudt_in
+            globals()['DEFAULT_XSD_PATH'] = xsd_in
+            globals()['DEFAULT_XSL_PATH'] = xsl_in
+            # Refresh QUDT cache
+            try:
+                load_qudt.clear()
+                globals()['qudt_quantities'] = load_qudt()
+            except Exception:
+                pass
+            st.success('Paths updated')
+
+    # Diagnostics
+    st.markdown('---')
+    st.markdown('### Diagnostics')
+    from lxml import etree as _etree
+    import xmlschema as _xmlschema
+    from pathlib import Path as _P
+
+    st.write(f"XSD: `{DEFAULT_XSD_PATH}`")
+    st.write(f"XSL: `{DEFAULT_XSL_PATH}`")
+    st.write(f"QUDT TTL: `{_os.environ.get('QUDT_TTL_PATH','')}`")
+
+    # Compile schema
+    xsd_ok = False
+    xsd_err = None
+    try:
+        _schema_doc = _etree.parse(DEFAULT_XSD_PATH)
+        _schema = _etree.XMLSchema(_schema_doc)
+        xsd_ok = True
+    except Exception as e:
+        xsd_err = str(e)
+    st.write(f"XSD compile: {'✅' if xsd_ok else '❌'}")
+    if xsd_err:
+        st.code(xsd_err)
+
+    # Compile XSL
+    xsl_ok = False
+    xsl_err = None
+    try:
+        _xslt = _etree.XSLT(_etree.parse(DEFAULT_XSL_PATH))
+        xsl_ok = True
+    except Exception as e:
+        xsl_err = str(e)
+    st.write(f"XSLT compile: {'✅' if xsl_ok else '❌'}")
+    if xsl_err:
+        st.code(xsl_err)
+
+    # Validate examples from the detected version folder
+    try:
+        xsd_dir = _P(DEFAULT_XSD_PATH).resolve().parent
+        version_dir = xsd_dir.parent
+        xml_dir = version_dir / 'xml'
+        examples = sorted([str(p) for p in xml_dir.glob('*.xml')])
+    except Exception:
+        examples = []
+    if examples:
+        st.write("Example XML validation:")
+    if xsd_ok:
+        try:
+            _xs = _xmlschema.XMLSchema(DEFAULT_XSD_PATH)
+        except Exception:
+            _xs = None
+        for ex in examples:
+            try:
+                _schema.assertValid(_etree.parse(ex))
+                st.write(f"- ✅ Valid: `{ex}`")
+            except Exception as ve:
+                st.write(f"- ❌ Invalid: `{ex}`")
+                st.code(str(ve))
+                if _xs is not None:
+                    for err in _xs.iter_errors(ex):
+                        st.code(str(err))
+    else:
+        for ex in examples:
+            st.write(f"- ⚠️ Skipped (schema failed): `{ex}`")
