@@ -6,7 +6,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 XSD_PATH = BASE_DIR / "v0.2.0" / "xsd" / "drmd.xsd"
 XSL_PATH = BASE_DIR / "v0.2.0" / "xsl" / "drmd.xsl"
-QUDT_PATH = BASE_DIR / "webapp_src" / "qudt.ttl"
+QUDT_PATH = BASE_DIR / "imports" / "qudt.ttl"
 
 if not XSD_PATH.exists():
     raise FileNotFoundError(f"DRMD schema not found at {XSD_PATH}")
@@ -22,7 +22,11 @@ DEFAULT_XSL_PATH = str(XSL_PATH)
 
 from importlib import util
 
-_SRC_FILE = BASE_DIR / "webapp_src" / "app.py"
+_SRC_FILE = BASE_DIR / "webapp" / "app_impl.py"
+# Ensure impl can locate resources via environment variables before module import
+os.environ.setdefault("QUDT_TTL_PATH", str(QUDT_PATH))
+os.environ.setdefault("DRMD_XSD_PATH", DEFAULT_XSD_PATH)
+os.environ.setdefault("DRMD_XSL_PATH", DEFAULT_XSL_PATH)
 spec = util.spec_from_file_location("webapp_impl", _SRC_FILE)
 webapp_impl = util.module_from_spec(spec)
 sys.modules[spec.name] = webapp_impl

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <drmd:digitalReferenceMaterialDocument xmlns:dcc="https://ptb.de/dcc" xmlns:drmd="https://example.org/drmd" xmlns:si="https://ptb.de/si" schemaVersion="0.2.0">
   <drmd:administrativeData>
     <drmd:coreData>
@@ -63,57 +63,6 @@
       </dcc:respPerson>
     </drmd:respPersons>
     </drmd:administrativeData>
-  <drmd:statements>
-      <drmd:intendedUse>
-        <drmd:name>
-          <dcc:content lang="en">Intended Use</dcc:content>
-        </drmd:name>
-        <drmd:content>
-          <dcc:content lang="en">BAM-F017 dissolved in absolute ethanol is certified for use as a fluorescence quantum yield standard for the relative determination of fluorescence quantum yields of transparent luminophore solutions.</dcc:content>
-        </drmd:content>
-      </drmd:intendedUse>
-      <drmd:storageInformation>
-        <drmd:name>
-          <dcc:content lang="en">Storage Information</dcc:content>
-        </drmd:name>
-        <drmd:content>
-          <dcc:content lang="en">This certificate is valid for 2 years after dispatch, if the solid CRM is stored at 2 - 8 °C in the dark.
-          BAM-F017 can be shipped at room temperature.</dcc:content>
-        </drmd:content>
-      </drmd:storageInformation>
-      <drmd:instructionsForHandlingAndUse>
-        <drmd:name>
-          <dcc:content lang="en">Handling Instructions</dcc:content>
-        </drmd:name>
-        <drmd:content>
-          <dcc:content lang="en">Please follow the Standard Operation Procedure (SOP) provided with the material.</dcc:content>
-        </drmd:content>
-      </drmd:instructionsForHandlingAndUse>
-      <drmd:metrologicalTraceability>
-        <drmd:name>
-          <dcc:content lang="en">Metrological Traceability</dcc:content>
-        </drmd:name>
-        <drmd:content>
-          <dcc:content lang="en">The certified fluorescence quantum yield value was determined with a calibrated custom-built integrating sphere setup.</dcc:content>
-        </drmd:content>
-      </drmd:metrologicalTraceability>
-      <drmd:legalNotice>
-        <drmd:name>
-          <dcc:content lang="en">Legal Notice</dcc:content>
-        </drmd:name>
-        <drmd:content>
-          <dcc:content lang="en">Neither BAM, its contractors, nor any person acting on their behalf make any warranty or representation regarding intellectual property rights or assume any liability for damages.</dcc:content>
-        </drmd:content>
-      </drmd:legalNotice>
-      <drmd:referenceToCertificationReport>
-        <drmd:name>
-          <dcc:content lang="en">Reference to Certification Report</dcc:content>
-        </drmd:name>
-        <drmd:content>
-          <dcc:content lang="en">A detailed technical report describing the analysis procedures and the treatment of the analytical data used to certify BAM-F017 is available upon request.</dcc:content>
-        </drmd:content>
-      </drmd:referenceToCertificationReport>
-    </drmd:statements>
   <drmd:materials>
       <drmd:material>
         <drmd:name>
@@ -126,12 +75,12 @@
           </dcc:content>
         </drmd:description>
 				<drmd:minimumSampleSize>
-					<drmd:itemQuantity>
+					<dcc:itemQuantity>
 						<si:realListXMLList>
 							<si:valueXMLList>0.2</si:valueXMLList>
 							<si:unitXMLList>g</si:unitXMLList>
 						</si:realListXMLList>
-					</drmd:itemQuantity>
+					</dcc:itemQuantity>
 				</drmd:minimumSampleSize>
                                 <drmd:materialIdentifiers>
                                         <drmd:materialIdentifier>
@@ -150,18 +99,18 @@
         </dcc:content>
       </drmd:name>
       <drmd:results>
-        <dcc:result>
-          <dcc:name>
+        <drmd:result>
+          <drmd:name>
             <dcc:content lang="en">Certified Value</dcc:content>
-          </dcc:name>
-          <dcc:description>
+          </drmd:name>
+          <drmd:description>
             <dcc:content lang="en">
               a) Ethanolic dye solution of BAM-F017 with an absorbance at the excitation wavelength between 0.09 and 0.11.
             </dcc:content>
-          </dcc:description>
-          <dcc:data>
-            <dcc:list>
-              <dcc:quantity refType="basic_measuredValue">
+          </drmd:description>
+          <drmd:data>
+            <drmd:list>
+              <drmd:quantity refType="basic_measuredValue">
                 <dcc:name>
                   <dcc:content lang="en">Fluorescence Quantum Yield (Φf)</dcc:content>
                 </dcc:name>
@@ -177,11 +126,50 @@
                     </si:expandedMU>
                   </si:measurementUncertaintyUnivariate>
                 </si:real>
-              </dcc:quantity>
-            </dcc:list>
-          </dcc:data>
-        </dcc:result>
+              </drmd:quantity>
+            </drmd:list>
+          </drmd:data>
+        </drmd:result>
       </drmd:results>
     </drmd:materialProperties>
   </drmd:materialPropertiesList>
+  <drmd:statements>
+      <drmd:intendedUse>
+        <dcc:name>
+          <dcc:content lang="en">Intended Use</dcc:content>
+        </dcc:name>
+        <dcc:content lang="en">BAM-F017 dissolved in absolute ethanol is certified for use as a fluorescence quantum yield standard for the relative determination of fluorescence quantum yields of transparent luminophore solutions.</dcc:content>
+        </drmd:intendedUse>
+      <drmd:storageInformation>
+        <dcc:name>
+          <dcc:content lang="en">Storage Information</dcc:content>
+        </dcc:name>
+        <dcc:content lang="en">This certificate is valid for 2 years after dispatch, if the solid CRM is stored at 2 - 8 °C in the dark.
+          BAM-F017 can be shipped at room temperature.</dcc:content>
+        </drmd:storageInformation>
+      <drmd:instructionsForHandlingAndUse>
+        <dcc:name>
+          <dcc:content lang="en">Handling Instructions</dcc:content>
+        </dcc:name>
+        <dcc:content lang="en">Please follow the Standard Operation Procedure (SOP) provided with the material.</dcc:content>
+        </drmd:instructionsForHandlingAndUse>
+      <drmd:metrologicalTraceability>
+        <dcc:name>
+          <dcc:content lang="en">Metrological Traceability</dcc:content>
+        </dcc:name>
+        <dcc:content lang="en">The certified fluorescence quantum yield value was determined with a calibrated custom-built integrating sphere setup.</dcc:content>
+        </drmd:metrologicalTraceability>
+      <drmd:legalNotice>
+        <dcc:name>
+          <dcc:content lang="en">Legal Notice</dcc:content>
+        </dcc:name>
+        <dcc:content lang="en">Neither BAM, its contractors, nor any person acting on their behalf make any warranty or representation regarding intellectual property rights or assume any liability for damages.</dcc:content>
+        </drmd:legalNotice>
+      <drmd:referenceToCertificationReport>
+        <dcc:name>
+          <dcc:content lang="en">Reference to Certification Report</dcc:content>
+        </dcc:name>
+        <dcc:content lang="en">A detailed technical report describing the analysis procedures and the treatment of the analytical data used to certify BAM-F017 is available upon request.</dcc:content>
+        </drmd:referenceToCertificationReport>
+    </drmd:statements>
   </drmd:digitalReferenceMaterialDocument>

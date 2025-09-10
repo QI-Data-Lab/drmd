@@ -1,186 +1,103 @@
-# Digital Reference Material Document (DRMD) Project
+# DRMD (Digital Reference Material Document)
 
-**Current Release:** `v0.2.0`  – all schema, examples (XML), stylesheets (XSL), and generated HTML live under `v0.2.0/`. Root-level `imports/` contains local copies of external schemas for offline validation.
+This repository provides the DRMD XML schema (v0.2.0), example XML files, an XSLT for HTML rendering, a Streamlit app to author and validate DRMD documents, and utilities/tests to keep everything consistent.
 
-The Digital Reference Material Document (DRMD) project aims to create a standardized digital format for reference material certificates. This project is developed by the Bundesanstalt für Materialforschung und -prüfung (BAM) and is partially funded by the QI-Digital project from BMWK. The DRMD schema is based on the existing Digital Calibration Certificate (DCC) schema and complies with the requirements of the ISO 17034 standard for reference material certificates
+Current version: v0.2.0
 
-
-## Schema Information
-
-The DRMD schema is designed to encapsulate all necessary data for reference material certificates, ensuring consistency and adherence to international standards.
-
-### Key Features:
-
-- **Administrative Data**: Core information about the document, items, producer information, responsible persons, and relevant statements.
-- **Measurement Results**: Structured representation of measurement data, including certified values and uncertainties.
-
-### Documentation:
-
-The development of the DRMD is partially funded and supported by the QI-Digital project from BMWK. Further documentation and project details can be found [here](https://www.bam.de/Content/EN/Projects/QI-Digital/qi-digital.html).
-
-## Dependencies
-
-The DRMD schema builds upon the existing DCC schema. You can find the DCC schema [here](https://ptb.de/dcc/v3.2.1/DCC.xsd). 
-
-### External Standards:
-
-- **ISO 17034**: The DRMD schema is designed to meet the requirements of the ISO 17034 standard for reference material certificates.
-
-## Usage
-
-### XML Schema Definition (XSD)
-
-The `drmd.xsd` file defines the structure of the DRMD. This file is essential for creating and validating XML documents that conform to the DRMD specifications.
-
-### Sample XML Document
-
-Sample XML documents for the current version can be found in `v0.2.0/xml/` (e.g. `BAM-F017.xml`). Use these as references when creating your own DRMD XML files.
-
-### XSLT Stylesheet
-
-The `drmd.xsl` file is an XSLT stylesheet that can be used to transform DRMD XML documents into human-readable HTML format. To use this stylesheet, reference it in your XML document as follows:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="drmd.xsl"?>
-<drmd:digitalReferenceMaterialDocument >
-  <!-- XML content here -->
-</drmd:digitalReferenceMaterialDocument>
-```
-
-
-## Project Structure
+## Repository Structure
 
 ```
-drmd/
-├── v0.2.0/
-│   ├── xsd/            # DRMD XML Schema (canonical)
-│   │   └── drmd.xsd
-│   ├── xsl/            # XSLT stylesheets
-│   │   └── drmd.xsl
-│   ├── xml/            # Example XMLs
-│   └── html/           # Generated HTML examples
-├── imports/            # Local copies of external schemas (for offline validation)
-│   ├── dcc.xsd
-│   ├── SI_Format.xsd
-│   └── xmldsig-core-schema.xsd
-├── scripts/
-│   ├── convert_v0_1_to_v0_2.py
-│   ├── validate_v0_2.py
-│   ├── xml2html.py
-│   └── normalize_v0_2_examples.py
-├── tests/
-│   └── test_v0_2_0.py
-├── webapp/
-│   ├── app.py          # Uses v0.2.0 schema/xsl
-│   └── requirements.txt
-└── README.md
+v0.2.0/
+  xsd/            # Canonical schema (drmd.xsd)
+  xsl/            # Stylesheets (drmd.xsl)
+  xml/            # Example XML documents
+  html/           # Generated example HTML
+imports/          # Local copies of external dependencies
+  dcc.xsd
+  SI_Format.xsd
+  xmldsig-core-schema.xsd
+  qudt.ttl
+webapp/           # Streamlit app
+  app.py          # Launcher (sets absolute resource paths)
+  app_impl.py     # App implementation
+scripts/          # Utilities
+  validate_v0_2.py
+  xml2html.py
+  convert_v0_1_to_v0_2.py
+  normalize_v0_2_examples.py
+tests/            # Unit tests
+  test_v0_2_0.py
+docs/
+  help.md         # App help loaded inside Streamlit
+Makefile          # Common dev tasks
+Dockerfile        # Container image for the app
 ```
 
-## Digital Reference Material Document (DRMD) Structure
+## DRMD Schema (v0.2.0)
 
-The `drmd` (Digital Reference Material Document) structure is defined using an XSD schema and includes the following key components:
+The canonical schema lives at `v0.2.0/xsd/drmd.xsd` and imports external dependencies from `../../imports/`:
+- DCC: `imports/dcc.xsd`
+- D‑SI: `imports/SI_Format.xsd`
+- XMLDSIG: `imports/xmldsig-core-schema.xsd`
 
-1. **digitalReferenceMaterialDocument**
-    - **administrativeData**
-        - **coreData**
-            - titleOfTheDocument
-            - uniqueIdentifier
-            - periodOfValidity
-            - dateOfDispatch
-            - dateOfCertificateApproval
-            - dataOfIssue
-            - dateOfValidity
-        - **referenceMaterialProducer**
-            - name
-            - contact
-        - **respPersons**
-            - respPerson
+Top-level elements of a DRMD document:
+- `administrativeData` (coreData, producer, respPersons)
+- `materials` (one or more materials)
+- `materialPropertiesList` (results and quantities)
+- `statements` (official/custom statements)
+- optional `comment`, `document`, and 0..n `ds:Signature`
 
-    - **materials**
-        - **material**
-            - name
-            - description
-            - minimumSampleSize
-            - identifications
+See `docs/help.md` for the end-user mapping and guidance.
 
-    - **materialPropertiesList**
-        - **materialProperties**
-            - name
-            - description
-            - results
+## Setup
 
-    - **statements**
-        - intendedUse
-        - commutability
-        - storageInformation
-        - instructionsForHandlingAndUse
-        - metrologicalTraceability
-        - healthAndSafetyInformation
-        - subcontractors
-        - legalNotice
-        - referenceToCertificationReport
-        - statement
+Prerequisite: Python 3.12+
 
-    - **comment**
+Install and validate:
+```
+make install     # create venv + install deps
+make check       # normalize + validate + html + tests
+```
 
-    - **document**
+Run the app:
+```
+make app         # http://localhost:8501
+```
 
-    - **digitalSignature**
+The app includes Diagnostics (compile XSD/XSL, validate examples) and a Help tab that loads `docs/help.md`.
 
+## Utilities
 
-## Getting Started
+- `scripts/validate_v0_2.py`: validate XML against `v0.2.0/xsd/drmd.xsd`
+- `scripts/xml2html.py`: transform XML → HTML via `v0.2.0/xsl/drmd.xsl`
+- `scripts/normalize_v0_2_examples.py`: normalize example XMLs to current structure
 
-### Prerequisites
+Examples:
+```
+python scripts/validate_v0_2.py v0.2.0/xml/BAM-F017.xml v0.2.0/xsd/drmd.xsd
+python scripts/xml2html.py v0.2.0/xml/BAM-F017.xml v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
+```
 
-- Python 3.x
-- lxml library (`pip install lxml`)
-
-### Utilities
-
-Several helper scripts are provided in `scripts`.
-
-- **convert_v0_1_to_v0_2.py** – convert an XML file from the `v0.1.x` format
-  to the `v0.2.0` layout.
-
-  ```bash
-  python scripts/convert_v0_1_to_v0_2.py old.xml new.xml
-  ```
-
-- **validate_v0_2.py** – validate a `v0.2.0` XML document against the schema.
-
-  ```bash
-  python scripts/validate_v0_2.py your.xml v0.2.0/xsd/drmd.xsd
-  ```
-
-- **xml2html.py** – transform a DRMD XML document into HTML using the
-  versioned XSLT stylesheet.
-
-  ```bash
-  python scripts/xml2html.py v0.2.0/xml/BAM-F017.xml \
-      v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
-  ```
-
-- **normalize_v0_2_examples.py** – normalize sample XMLs to match v0.2.0 element names and structure.
-
-  ```bash
-  python scripts/normalize_v0_2_examples.py v0.2.0/xml/*.xml
-  ```
-
-### Tests
-
-Run automated checks for schema validity, example XML validation, and XSLT transforms:
-
+## Tests
 ```
 python -m unittest tests/test_v0_2_0.py -v
 ```
 
+## Containerization
 
-## Contributing
+Build and run the Streamlit app in Docker:
+```
+make docker-build
+make docker-run    # http://localhost:8501
+```
 
-Contributions are welcome! Please submit a pull request or open an issue to discuss your ideas.
+The container sets `DRMD_XSD_PATH`, `DRMD_XSL_PATH`, and `QUDT_TTL_PATH` to repository locations.
+
+## Notes
+
+- Root-level duplicates (`xsd/`, `xsl/`, `xml/`, `html/`) are removed. Use the versioned folder `v0.2.0/` as the source of truth.
+- `imports/` holds offline copies of external schemas and QUDT data used by the app.
 
 ## License
-This XML Schema Definition (XSD) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, version 3 of the License.
+LGPL-3.0 (schema). See headers in source files where applicable.
 
-This XSD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
