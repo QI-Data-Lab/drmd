@@ -190,6 +190,21 @@ def data_editor_df(df: pd.DataFrame, key: str, **kwargs) -> pd.DataFrame:
                 updated.at[int(row_idx), col] = new_val
     return updated
 
+# Helpers to support both drmd:* and dcc:* variants in examples
+def _find_one(elem, ns, *paths):
+    for xp in paths:
+        found = elem.find(xp, ns)
+        if found is not None:
+            return found
+    return None
+
+def _findall_first(elem, ns, *paths):
+    for xp in paths:
+        lst = elem.findall(xp, ns)
+        if lst:
+            return lst
+    return []
+
 # QUDT cache (Properties tab later)
 @st.cache_data
 def load_qudt():
@@ -478,26 +493,26 @@ def load_xml_into_state(xml_bytes: bytes):
 
                 # Results (required)
                 results = []
-                results_elem = mp_elem.find("drmd:results", ns)
+                results_elem = _find_one(mp_elem, ns, "drmd:results")
                 if results_elem is not None:
-                    for res_elem in results_elem.findall("dcc:result", ns):
+                    for res_elem in _findall_first(results_elem, ns, "drmd:result", "dcc:result"):
                         res_dict = {}
-                        res_name_elem = res_elem.find("dcc:name/dcc:content", ns)
+                        res_name_elem = _find_one(res_elem, ns, "drmd:name/dcc:content", "dcc:name/dcc:content")
                         res_dict["result_name"] = clean_text(res_name_elem.text) if res_name_elem is not None and res_name_elem.text else ""
-                        res_desc_elem = res_elem.find("dcc:description/dcc:content", ns)
+                        res_desc_elem = _find_one(res_elem, ns, "drmd:description/dcc:content", "dcc:description/dcc:content")
                         res_dict["description"] = clean_text(res_desc_elem.text) if res_desc_elem is not None and res_desc_elem.text else ""
                         # Quantities
                         quantities = []
                         row_ids = []
-                        data_elem = res_elem.find("dcc:data", ns)
+                        data_elem = _find_one(res_elem, ns, "drmd:data", "dcc:data")
                         if data_elem is not None:
-                            list_elem = data_elem.find("dcc:list", ns)
+                            list_elem = _find_one(data_elem, ns, "drmd:list", "dcc:list")
                             if list_elem is not None:
-                                for quant_elem in list_elem.findall("dcc:quantity", ns):
+                                for quant_elem in _findall_first(list_elem, ns, "drmd:quantity", "dcc:quantity"):
                                     quant = {}
                                     q_ids = []
                                     # Get quantity name
-                                    qname_elem = quant_elem.find("dcc:name/dcc:content", ns)
+                                    qname_elem = _find_one(quant_elem, ns, "drmd:name/dcc:content", "dcc:name/dcc:content")
                                     quant["Name"] = clean_text(qname_elem.text) if qname_elem is not None and qname_elem.text else ""
                                     # We'll leave Label and Quantity Type as empty for now
                                     quant["Label"] = ""

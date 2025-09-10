@@ -4,9 +4,9 @@ This application creates and validates Digital Reference Material Documents (DRM
 
 ### Repository Layout (relevant to the app)
 
-- `v0.2.0/xsd/drmd.xsd`: Canonical DRMD schema (imports DCC, SI, and XMLDSIG via `../../imports/...`).
-- `v0.2.0/xsl/drmd.xsl`: Stylesheet for HTML rendering.
-- `v0.2.0/xml/`: Example DRMD XML documents.
+- `v0.3.0/xsd/drmd.xsd`: Canonical DRMD schema (imports DCC, SI, and XMLDSIG via `../../imports/...`).
+- `v0.3.0/xsl/drmd.xsl`: Stylesheet for HTML rendering.
+- `v0.3.0/xml/`: Example DRMD XML documents.
 - `imports/`: Local copies of external schemas and QUDT data: `dcc.xsd`, `SI_Format.xsd`, `xmldsig-core-schema.xsd`, `qudt.ttl`.
 - `webapp/`: Streamlit application (`app.py` launcher, `app_impl.py` implementation).
 
@@ -41,4 +41,3 @@ Root: `drmd:digitalReferenceMaterialDocument` with attributes:
 
 - If “XSL Transformation Error” appears, ensure the stylesheet exists and the app points to `v0.2.0/xsl/drmd.xsl` (the launcher sets this automatically).
 - If schema validation fails, expand Diagnostics to see the exact error.
-

@@ -19,11 +19,10 @@ RUN pip install --upgrade pip && pip install -r /app/webapp/requirements.txt
 COPY . /app
 
 # Env for resource paths (app also sets these automatically)
-ENV DRMD_XSD_PATH=/app/v0.2.0/xsd/drmd.xsd \
-    DRMD_XSL_PATH=/app/v0.2.0/xsl/drmd.xsl \
+ENV DRMD_XSD_PATH=/app/v0.3.0/xsd/drmd.xsd \
+    DRMD_XSL_PATH=/app/v0.3.0/xsl/drmd.xsl \
     QUDT_TTL_PATH=/app/imports/qudt.ttl
 
 EXPOSE 8501
 
 CMD ["streamlit", "run", "webapp/app.py", "--server.headless=true", "--server.port=8501"]
-

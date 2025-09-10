@@ -4,8 +4,8 @@ from pathlib import Path
 # Reuse the original webapp code but adapt schema/XSL paths to the unified repo layout.
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-XSD_PATH = BASE_DIR / "v0.2.0" / "xsd" / "drmd.xsd"
-XSL_PATH = BASE_DIR / "v0.2.0" / "xsl" / "drmd.xsl"
+XSD_PATH = BASE_DIR / "v0.3.0" / "xsd" / "drmd.xsd"
+XSL_PATH = BASE_DIR / "v0.3.0" / "xsl" / "drmd.xsl"
 QUDT_PATH = BASE_DIR / "imports" / "qudt.ttl"
 
 if not XSD_PATH.exists():

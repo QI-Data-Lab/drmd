@@ -2,12 +2,12 @@
 
 This repository provides the DRMD XML schema (v0.2.0), example XML files, an XSLT for HTML rendering, a Streamlit app to author and validate DRMD documents, and utilities/tests to keep everything consistent.
 
-Current version: v0.2.0
+Current version: v0.3.0
 
 ## Repository Structure
 
 ```
-v0.2.0/
+v0.3.0/
   xsd/            # Canonical schema (drmd.xsd)
   xsl/            # Stylesheets (drmd.xsl)
   xml/            # Example XML documents
@@ -74,8 +74,8 @@ The app includes Diagnostics (compile XSD/XSL, validate examples) and a Help tab
 
 Examples:
 ```
-python scripts/validate_v0_2.py v0.2.0/xml/BAM-F017.xml v0.2.0/xsd/drmd.xsd
-python scripts/xml2html.py v0.2.0/xml/BAM-F017.xml v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
+python scripts/validate_v0_2.py v0.3.0/xml/BAM-F017.xml v0.3.0/xsd/drmd.xsd
+python scripts/xml2html.py v0.3.0/xml/BAM-F017.xml v0.3.0/xsl/drmd.xsl v0.3.0/html/BAM-F017.html
 ```
 
 ## Tests
@@ -100,4 +100,3 @@ The container sets `DRMD_XSD_PATH`, `DRMD_XSL_PATH`, and `QUDT_TTL_PATH` to repo
 
 ## License
 LGPL-3.0 (schema). See headers in source files where applicable.
-

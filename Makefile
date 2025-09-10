@@ -15,16 +15,16 @@ install: venv
 	$(PIP) install -r webapp/requirements.txt
 
 normalize: install
-	$(PY) scripts/normalize_v0_2_examples.py v0.2.0/xml/*.xml
+	$(PY) scripts/normalize_v0_2_examples.py v0.3.0/xml/*.xml
 
 validate: install
-	$(PY) scripts/validate_v0_2.py v0.2.0/xml/BAM-F017.xml v0.2.0/xsd/drmd.xsd
-	$(PY) scripts/validate_v0_2.py v0.2.0/xml/BAM-M375a.xml v0.2.0/xsd/drmd.xsd
+	$(PY) scripts/validate_v0_2.py v0.3.0/xml/BAM-F017.xml v0.3.0/xsd/drmd.xsd
+	$(PY) scripts/validate_v0_2.py v0.3.0/xml/BAM-M375a.xml v0.3.0/xsd/drmd.xsd
 
 html: install
-	mkdir -p v0.2.0/html
-	$(PY) scripts/xml2html.py v0.2.0/xml/BAM-F017.xml v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-F017.html
-	$(PY) scripts/xml2html.py v0.2.0/xml/BAM-M375a.xml v0.2.0/xsl/drmd.xsl v0.2.0/html/BAM-M375a.html
+	mkdir -p v0.3.0/html
+	$(PY) scripts/xml2html.py v0.3.0/xml/BAM-F017.xml v0.3.0/xsl/drmd.xsl v0.3.0/html/BAM-F017.html
+	$(PY) scripts/xml2html.py v0.3.0/xml/BAM-M375a.xml v0.3.0/xsl/drmd.xsl v0.3.0/html/BAM-M375a.html
 
 test: install
 	$(PY) -m unittest tests/test_v0_2_0.py -v
@@ -41,7 +41,7 @@ docker-build:
 
 docker-run:
 	docker run --rm -p 8501:8501 \
-	  -e DRMD_XSD_PATH=/app/v0.2.0/xsd/drmd.xsd \
-	  -e DRMD_XSL_PATH=/app/v0.2.0/xsl/drmd.xsl \
+	  -e DRMD_XSD_PATH=/app/v0.3.0/xsd/drmd.xsd \
+	  -e DRMD_XSL_PATH=/app/v0.3.0/xsl/drmd.xsl \
 	  -e QUDT_TTL_PATH=/app/imports/qudt.ttl \
 	  drmd-app:latest
