@@ -3,3 +3,4 @@ pandas
 rdflib
 xmlschema
 lxml
+pint
