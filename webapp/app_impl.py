@@ -5,6 +5,7 @@ import re, math, uuid, base64, functools, traceback, io
 from datetime import date
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
+import pint
 
 import pandas as pd
 import streamlit as st
@@ -38,7 +39,7 @@ st.set_page_config(layout="wide")
 DEFAULT_XSD_PATH = _os.environ.get("DRMD_XSD_PATH", "./drmd.xsd")
 DEFAULT_XSL_PATH = _os.environ.get("DRMD_XSL_PATH", "./drmd.xsl")
 DS_NS = "http://www.w3.org/2000/09/xmldsig#"
-ALLOWED_TITLES = ["referenceMaterialCertificate", "productInformationSheet"]  # default first
+ALLOWED_TITLES = ["ReferenceMaterialCertificate", "ProductInformationSheet"]  # default first
 INIT_ID = {"scheme": "", "value": "", "link": ""}
 DEFAULT_PRODUCER = {
     "producerName": "",
@@ -243,12 +244,87 @@ def create_empty_result():
         "result_name": "",
         "description": "",
         "quantities": pd.DataFrame(columns=[
-            "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
-            "Value", "Quantity Kind", "Unit",
+            "#", "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
+            "Value", "Quantity Kind", "Unit", "D-SI Unit",
             "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
         ]),
         "identifiers": [],
     }
+
+# UnitRegistry instance
+ureg = pint.UnitRegistry()
+
+
+def convert_to_dsi(value_str: str, unit_str: str) -> str:
+    """Converts a value and unit to its base SI representation."""
+    # More robust check for empty/invalid inputs from the data editor
+    if pd.isna(value_str) or pd.isna(unit_str) or not str(value_str).strip() or not str(unit_str).strip():
+        return ""
+
+    try:
+        # Handle both comma and period as decimal separators
+        cleaned_value = float(str(value_str).replace(',', '.'))
+
+        quantity = ureg.Quantity(cleaned_value, unit_str)
+        base_quantity = quantity.to_base_units()
+
+        # --- FIX ---
+        # Explicitly handle dimensionless quantities
+        if base_quantity.dimensionless:
+            return f"{base_quantity.magnitude:.6g} (dimensionless)"
+        else:
+            return f"{base_quantity.magnitude:.6g} {base_quantity.units:~}"
+
+    except (ValueError, pint.errors.UndefinedUnitError, AttributeError):
+        return "ERROR: Invalid value or unit"
+
+
+def inject_highlighting_code():
+    """Injects CSS and JavaScript to highlight the active expander."""
+    highlight_js = """
+    <script>
+    // Function to add the highlight class
+    function addHighlight(element) {
+        const expander = element.closest('details');
+        if (expander) {
+            expander.classList.add('highlighted-expander');
+        }
+    }
+
+    // Function to remove the highlight class
+    function removeHighlight(element) {
+        const expander = element.closest('details');
+        if (expander) {
+            expander.classList.remove('highlighted-expander');
+        }
+    }
+
+    // Use event delegation to listen for focus events on the body
+    document.body.addEventListener('focusin', function(e) {
+        // e.target is the element that gained focus
+        addHighlight(e.target);
+    });
+
+    document.body.addEventListener('focusout', function(e) {
+        // e.target is the element that lost focus
+        removeHighlight(e.target);
+    });
+    </script>
+    """
+
+    highlight_css = """
+    <style>
+        .highlighted-expander {
+            border: 2px solid #4A90E2 !important;
+            border-radius: 0.5rem; /* Match Streamlit's default radius */
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+    """
+
+    st.markdown(highlight_css, unsafe_allow_html=True)
+    st.markdown(highlight_js, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
 # XML → session‑state loader (comprehensive - loads all tabs and fields)
@@ -618,7 +694,20 @@ SESSION_DEFAULTS = {
     "materials": [{"uuid": str(uuid.uuid4()), "name": "", "description": "", "materialClass": "",
                     "minimumSampleSize": "", "itemQuantities": "", "isCertified": False,
                     "materialIdentifiers": [INIT_ID.copy()]}],
-    "materialProperties": [],
+    "materialProperties": [
+        {
+            "uuid": str(uuid.uuid4()), "id": "",
+            "name": "Certified Properties Set",
+            "displayName": "Certified Values",
+            "description": "", "procedures": "", "results": [],
+        },
+        {
+            "uuid": str(uuid.uuid4()), "id": "",
+            "name": "Informative Properties Set",
+            "displayName": "Informative Values",
+            "description": "", "procedures": "", "results": [],
+        },
+    ],
     "producers": [DEFAULT_PRODUCER.copy()],
     "responsible_persons": [DEFAULT_PERSON.copy()],
     "official_statements": OFFICIAL_STMPL.copy(),
@@ -627,7 +716,7 @@ SESSION_DEFAULTS = {
     "mp_tables": [],
     "selected_quantity": "", "selected_unit": "", "coverage_factor": 2.0,
     "coverage_probability": 0.95, "distribution": "normal",
-    "title_option": "referenceMaterialCertificate",  # default
+    "title_option": None,  # default
     "persistent_id": "",
     "persistent_id_value": "",
     "validity_type": "Until Revoked", "raw_validity_period": "",
@@ -681,7 +770,9 @@ with tabs[0]:
                 "Title of the Document",
                 ALLOWED_TITLES,
                 key="title_option",
-                format_func=lambda x: " ".join(re.findall(r"[A-Z][^A-Z]*", x)).title(),
+                placeholder="Select a document type...",
+                index=None,
+                format_func=lambda x: re.sub(r'(?<!^)(?=[A-Z])', ' ', x).title(),
             )
         # Initialize persistent_id_value if it doesn't exist
         if "persistent_id_value" not in st.session_state:
@@ -724,11 +815,38 @@ with tabs[0]:
         # Period of Validity row with new help text
         cols = st.columns([3, 3, 3])
         with cols[0]:
-            v_type = st.selectbox("Period of Validity", ["Until Revoked", "Time After Dispatch", "Specific Time"], key="validity_type")
+            v_type = st.selectbox("Period of Validity", ["Until Revoked", "Time After Dispatch", "Specific Time"],
+                                  key="validity_type")
         if v_type == "Time After Dispatch":
+            # Create separate input boxes for years and months
             with cols[1]:
-                st.text_input("Duration", key="raw_validity_period", placeholder="P1Y6M", help=xs_duration_hint())
+                sub_cols = st.columns(2)
+                with sub_cols[0]:
+                    years = st.number_input("Years", min_value=0, step=1, key="duration_y")
+                with sub_cols[1]:
+                    months = st.number_input("Months", min_value=0, max_value=11, step=1, key="duration_m")
+
+            # Dynamically build and display the ISO 8601 string
             with cols[2]:
+                iso_parts = []
+                if years > 0:
+                    iso_parts.append(f"{years}Y")
+                if months > 0:
+                    iso_parts.append(f"{months}M")
+
+                # Only form the string if there is a duration entered
+                iso_duration = f"P{''.join(iso_parts)}" if iso_parts else ""
+
+                # Store the final, valid string for XML generation
+                st.session_state.raw_validity_period = iso_duration
+
+                st.write("ISO 8601 Format:")
+                if iso_duration:
+                    st.success(f"`{iso_duration}`")
+                else:
+                    # Display a placeholder if no duration is entered
+                    st.info("`P`")
+
                 st.date_input("Dispatch Date", key="date_of_issue")
         elif v_type == "Specific Time":
             with cols[1]:
@@ -880,147 +998,153 @@ with tabs[1]:
 # -----------------------------------------------------------------------------
 
 # --- Tab 2: Materials Properties (Editable Material Properties Tables) ---
+# --- Tab 2: Materials Properties (modified) ---
 with tabs[2]:
+    # Loop over the two fixed materialProperties sets.
+    for mp in st.session_state.materialProperties:
+        mp_uuid = mp.get("uuid")
 
-    col_left,  = st.columns([1])
+        # Use the set's name in the expander title
+        with st.expander(mp.get("name"), expanded=True):
+            # Main Material Properties data
+            col1, col2 = st.columns(2)
+            with col1:
+                mp["id"] = st.text_input("ID (optional)", value=mp.get("id", ""), key=f"mp_id_{mp_uuid}")
+                st.text_input("Name", value=mp.get("displayName", ""), key=f"mp_name_{mp_uuid}", disabled=True)
+            with col2:
+                mp["description"] = st.text_area("Description", value=mp.get("description", ""),
+                                                 key=f"mp_desc_{mp_uuid}")
+                mp["procedures"] = st.text_area("Procedures", value=mp.get("procedures", ""), key=f"mp_proc_{mp_uuid}")
 
-    with col_left:
-        # material_scroll = st.container(height=1000)
-        # with material_scroll:
+            st.markdown("---")
 
-        #     st.subheader("Properties")
+            # For each measurement result table
+            for res_idx, result in enumerate(mp.get("results", [])):
+                st.markdown(f"##### Table {res_idx + 1}")
+                c1, c2 = st.columns([4, 1])
+                with c1:
+                    result["result_name"] = st.text_input("Table Name", value=result.get("result_name", ""),
+                                                          key=f"res_name_{mp_uuid}_{res_idx}")
+                with c2:
+                    if st.button("Remove Table", key=f"remove_res_{mp_uuid}_{res_idx}"):
+                        mp["results"].pop(res_idx)
+                        st.rerun()
 
+                result["description"] = st.text_area("Table Description", value=result.get("description", ""),
+                                                     key=f"res_desc_{mp_uuid}_{res_idx}")
 
-            # Loop over each materialProperties entry.
-            for idx, mp in enumerate(st.session_state.materialProperties):
-                # Ensure each entry has a UUID.
-                mp_uuid = mp.get("uuid", str(uuid.uuid4()))
-                mp["uuid"] = mp_uuid
-                with st.expander(f"Properties Set {idx+1}", expanded=True):
-                    # Main Material Properties data (single form)
-                    with st.form(key=f"mp_main_form_{mp_uuid}"):
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            mp["id"] = st.text_input("ID (optional)", value=mp.get("id", ""), key=f"mp_id_{mp_uuid}")
-                            mp["name"] = st.text_input("Name", value=mp.get("name", ""), key=f"mp_name_{mp_uuid}")
-                            mp["isCertified"] = st.checkbox("Certified", value=mp.get("isCertified", False), key=f"mp_certified_{mp_uuid}")
-                        with col2:
-                            mp["description"] = st.text_area("Description", value=mp.get("description", ""), key=f"mp_desc_{mp_uuid}")
-                            mp["procedures"] = st.text_area("Procedures", value=mp.get("procedures", ""), key=f"mp_proc_{mp_uuid}")
+                # --- START OF CRITICAL CHANGE BLOCK ---
+                # Ensure original_df has "#" column populated before passing to data_editor
+                current_df = result["quantities"].copy()
+                if not current_df.empty:
+                    current_df["#"] = range(1, len(current_df) + 1)
+                else:
+                    # If empty, ensure "#" column exists for display
+                    current_df["#"] = pd.Series(dtype='int')
 
-                        submitted_mp = st.form_submit_button("Save Properties Set")
-                        if submitted_mp:
-                            st.success(f"Properties Set {idx+1} updated!")
+                # Keep a copy for comparison AFTER potentially adding row numbers for display
+                original_df_for_comparison = current_df.copy()
 
-                    # For each measurement result (non-nested forms)
-                    for res_idx, result in enumerate(mp.get("results", [])):
+                # Display the data editor and get the edited dataframe back
+                edited_df = st.data_editor(
+                    current_df,  # Pass the potentially re-numbered df for display
+                    num_rows="dynamic",
+                    hide_index=True,  # This hides the extra index column
+                    disabled=["#", "D-SI Unit", "Identifier Scheme", "Identifier Value", "Identifier Link"],
+                    key=f"quantities_{mp_uuid}_{res_idx}"
+                )
 
-                        col1, col2,  = st.columns([5, 2])
-                        with col1:
-                            st.markdown(f"Table {res_idx+1}")
-                        with col2:
-                            if st.button("Remove Table", disabled=len(mp["results"])==1, key=f"remove_res_{mp_uuid}_{res_idx}"):
-                                mp["results"].pop(res_idx)
-                                st.rerun()
+                # Check if the user has actually made an edit (row count or values changed)
+                # Compare edited_df to original_df_for_comparison which already has numbering for existing rows
+                if len(edited_df) != len(original_df_for_comparison) or not edited_df.equals(
+                        original_df_for_comparison):
+                    # Only re-calculate D-SI and re-assign quantities, numbering is handled above
+                    dsi_values = [
+                        convert_to_dsi(row.get("Value"), row.get("Unit"))
+                        for index, row in edited_df.iterrows()
+                    ]
+                    edited_df["D-SI Unit"] = dsi_values
 
-                        with st.form(key=f"res_form_{mp_uuid}_{res_idx}"):
-                            result["result_name"] = st.text_input("Name", value=result.get("result_name", ""), key=f"res_name_{mp_uuid}_{res_idx}")
-                            result["description"] = st.text_area("Description", value=result.get("description", ""), key=f"res_desc_{mp_uuid}_{res_idx}")
-                            if "identifiers" not in result:
-                                result["identifiers"] = [ [] for _ in range(len(result.get("quantities", pd.DataFrame()))) ]
-                            result["quantities"] = st.data_editor(
-                                result.get("quantities", pd.DataFrame(columns=[
-                                    "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
-                                    "Value", "Quantity Kind", "Unit",
-                                    "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
-                                ])),
-                                num_rows="dynamic",
-                                disabled=["Identifier Scheme", "Identifier Value", "Identifier Link"],
-                                key=f"quantities_{mp_uuid}_{res_idx}"
-                            )
-                            # Sync identifier rows with dataframe length
-                            qlen = len(result["quantities"])
-                            if len(result["identifiers"]) < qlen:
-                                result["identifiers"] += [[ ] for _ in range(qlen - len(result["identifiers"]))]
-                            elif len(result["identifiers"]) > qlen:
-                                result["identifiers"] = result["identifiers"][:qlen]
+                    # Re-apply row numbering for the new state of edited_df
+                    # This ensures new rows added by "dynamic" are numbered correctly in the *next* rerun
+                    if not edited_df.empty:
+                        edited_df["#"] = range(1, len(edited_df) + 1)
+                    else:
+                        edited_df["#"] = pd.Series(dtype='int')
 
-                            sel = st.number_input("Row #", min_value=0, max_value=max(0, qlen-1), key=f"row_sel_{mp_uuid}_{res_idx}", step=1)
-                            current_ids = result["identifiers"][sel]
-                            for pid_idx, pid in enumerate(current_ids):
-                                cols_id = st.columns([2,3,4,1])
-                                pid["scheme"] = cols_id[0].text_input("Scheme", pid.get("scheme", ""), key=f"prop_scheme_{mp_uuid}_{res_idx}_{pid_idx}")
-                                pid["value"] = cols_id[1].text_input("Value", pid.get("value", ""), key=f"prop_value_{mp_uuid}_{res_idx}_{pid_idx}")
-                                pid["link"] = cols_id[2].text_input("Link", pid.get("link", ""), key=f"prop_link_{mp_uuid}_{res_idx}_{pid_idx}")
-                                cols_id[3].checkbox("Delete", key=f"del_prop_chk_{mp_uuid}_{res_idx}_{pid_idx}")
-                            add_new_identifier = st.checkbox("Add Identifier", key=f"add_prop_chk_{mp_uuid}_{res_idx}")
-                            result["identifiers"][sel] = current_ids
-                            # Update flattened identifier columns for selected row
-                            if current_ids:
-                                result["quantities"].loc[sel, "Identifier Scheme"] = current_ids[0].get("scheme", "")
-                                result["quantities"].loc[sel, "Identifier Value"] = current_ids[0].get("value", "")
-                                result["quantities"].loc[sel, "Identifier Link"] = current_ids[0].get("link", "")
-                            else:
-                                result["quantities"].loc[sel, ["Identifier Scheme", "Identifier Value", "Identifier Link"]] = ""
+                    result["quantities"] = edited_df
+                    st.rerun()
+                # --- END OF CRITICAL CHANGE BLOCK ---
 
-                            # Default uncertainty controls
-                            st.markdown("**Default Uncertainty Values:**")
-                            col1, col2, col3 = st.columns([2, 2, 2])
-                            with col1:
-                                local_coverage_factor = st.number_input("Coverage Factor", min_value=1.0, max_value=10.0, value=2.0, step=0.1, key=f"local_cf_{mp_uuid}_{res_idx}")
-                            with col2:
-                                local_coverage_probability = st.number_input("Probability", min_value=0.0, max_value=1.0, value=0.95, step=0.01, key=f"local_cp_{mp_uuid}_{res_idx}")
-                            with col3:
-                                local_distribution = st.selectbox("Distribution", ["normal", "log-normal", "uniform"], index=0, key=f"local_dist_{mp_uuid}_{res_idx}")
+                qlen = len(edited_df)  # Use edited_df as it's the current state after potential updates
+                if qlen > 0:
+                    st.markdown("###### Edit Identifiers for a Row")
+                    sel = st.number_input("Select Row #", min_value=1, max_value=qlen, step=1,
+                                          key=f"row_sel_{mp_uuid}_{res_idx}")
+                    row_index = sel - 1  # Adjust for 0-based index
 
-                            # Submit actions for the form
-                            apply_defaults = st.form_submit_button("Apply Defaults to All Rows")
-                            save_changes = st.form_submit_button("Save Table Changes")
+                    if "identifiers" not in result:
+                        result["identifiers"] = [[] for _ in range(qlen)]
 
-                            if apply_defaults:
-                                if not result["quantities"].empty:
-                                    result["quantities"]["Coverage Factor"] = local_coverage_factor
-                                    result["quantities"]["Coverage Probability"] = local_coverage_probability
-                                    result["quantities"]["Distribution"] = local_distribution
-                                st.rerun()
+                    # Ensure identifiers list has enough empty lists for new rows
+                    while len(result["identifiers"]) < qlen:
+                        result["identifiers"].append([])
 
-                            if save_changes:
-                                # Process deletions for identifiers of selected row
-                                # Remove in reverse index order to avoid reindex issues
-                                to_del = []
-                                for pid_idx, _ in enumerate(current_ids):
-                                    if st.session_state.get(f"del_prop_chk_{mp_uuid}_{res_idx}_{pid_idx}"):
-                                        to_del.append(pid_idx)
-                                for pid_idx in sorted(to_del, reverse=True):
-                                    if len(current_ids) > 1:
-                                        current_ids.pop(pid_idx)
-                                if add_new_identifier:
-                                    current_ids.append(INIT_ID.copy())
-                                result["identifiers"][sel] = current_ids
-                                if current_ids:
-                                    result["quantities"].loc[sel, "Identifier Scheme"] = current_ids[0].get("scheme", "")
-                                    result["quantities"].loc[sel, "Identifier Value"] = current_ids[0].get("value", "")
-                                    result["quantities"].loc[sel, "Identifier Link"] = current_ids[0].get("link", "")
-                                else:
-                                    result["quantities"].loc[sel, ["Identifier Scheme", "Identifier Value", "Identifier Link"]] = ""
-                                st.success("Saved changes")
-
-
-                    # Button to add a new measurement result.
-
-                    col1, col2 = st.columns(2)
-
-                    with col1:
-                        if st.button("Add Table", key=f"add_result_{mp_uuid}"):
-                            mp.setdefault("results", []).append(create_empty_result())
+                    current_ids = result["identifiers"][row_index]
+                    for pid_idx, pid in enumerate(current_ids):
+                        cols_id = st.columns([2, 3, 4, 1])
+                        pid["scheme"] = cols_id[0].text_input("Scheme", pid.get("scheme", ""),
+                                                              key=f"prop_scheme_{mp_uuid}_{res_idx}_{row_index}_{pid_idx}")
+                        pid["value"] = cols_id[1].text_input("Value", pid.get("value", ""),
+                                                             key=f"prop_value_{mp_uuid}_{res_idx}_{row_index}_{pid_idx}")
+                        pid["link"] = cols_id[2].text_input("Link", pid.get("link", ""),
+                                                            key=f"prop_link_{mp_uuid}_{res_idx}_{row_index}_{pid_idx}")
+                        if cols_id[3].button("🗑️", key=f"del_prop_id_{mp_uuid}_{res_idx}_{row_index}_{pid_idx}"):
+                            current_ids.pop(pid_idx)
                             st.rerun()
-                    with col2:
-                        if st.button("Remove Properties Set", key=f"remove_mp_{mp_uuid}"):
-                            st.session_state.materialProperties.pop(idx)
-                            st.rerun()
-            # Button to add a new material properties entry.
-            if st.button("Add Properties Set"):
-                st.session_state.materialProperties.append(create_empty_materialProperties())
+
+                    if st.button("Add Identifier for this Row", key=f"add_prop_id_{mp_uuid}_{res_idx}_{row_index}"):
+                        current_ids.append(INIT_ID.copy())
+                        st.rerun()
+
+                    # Update the main identifiers list and the flattened columns in the dataframe
+                    result["identifiers"][row_index] = current_ids
+                    # Ensure loc doesn't error on empty current_ids
+                    if not edited_df.empty:  # Only update if there are rows
+                        if current_ids:
+                            edited_df.loc[row_index, "Identifier Scheme"] = current_ids[0].get("scheme", "")
+                            edited_df.loc[row_index, "Identifier Value"] = current_ids[0].get("value", "")
+                            edited_df.loc[row_index, "Identifier Link"] = current_ids[0].get("link", "")
+                        else:
+                            edited_df.loc[row_index, ["Identifier Scheme", "Identifier Value", "Identifier Link"]] = ""
+                    result["quantities"] = edited_df
+
+                st.markdown("---")
+                st.markdown("**Default Uncertainty Values:**")
+                col1, col2, col3 = st.columns([2, 2, 2])
+                with col1:
+                    local_coverage_factor = st.number_input("Coverage Factor", min_value=1.0, max_value=10.0, value=2.0,
+                                                            step=0.1, key=f"local_cf_{mp_uuid}_{res_idx}")
+                with col2:
+                    local_coverage_probability = st.number_input("Probability", min_value=0.0, max_value=1.0,
+                                                                 value=0.95, step=0.01,
+                                                                 key=f"local_cp_{mp_uuid}_{res_idx}")
+                with col3:
+                    local_distribution = st.selectbox("Distribution", ["normal", "log-normal", "uniform"], index=0,
+                                                      key=f"local_dist_{mp_uuid}_{res_idx}")
+
+                if st.button("Apply Defaults to All Rows", key=f"apply_defaults_{mp_uuid}_{res_idx}"):
+                    if not edited_df.empty:
+                        edited_df["Coverage Factor"] = local_coverage_factor
+                        edited_df["Coverage Probability"] = local_coverage_probability
+                        edited_df["Distribution"] = local_distribution
+                        result["quantities"] = edited_df
+                    st.rerun()
+
+                st.markdown("---")
+
+            if st.button("Add Table", key=f"add_result_{mp_uuid}"):
+                mp.setdefault("results", []).append(create_empty_result())
                 st.rerun()
 
     # with col_right:
@@ -1145,8 +1269,10 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
     # Create the wrapping element for materialPropertiesList.
     mp_list_elem = ET.Element(f"{{{ns_drmd}}}materialPropertiesList")
     for mp in st.session_state.materialProperties:
+        # Determine the certified status based on the set's name
+        is_certified_flag = "true" if mp.get("name") == "Certified Properties Set" else "false"
         mp_elem = ET.SubElement(mp_list_elem, f"{{{ns_drmd}}}materialProperties", attrib={
-            "isCertified": "true" if mp.get("isCertified", False) else "false"
+            "isCertified": is_certified_flag
         })
         if mp.get("id", "").strip():
             mp_elem.set("id", mp.get("id").strip())
@@ -1182,10 +1308,26 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
                 # dcc:name inside the quantity (per dcc text type)
                 qname_elem = ET.SubElement(quantity_elem, f"{{{ns_dcc}}}name")
                 ET.SubElement(qname_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = str(row.get("Name", ""))
+
                 # Numerical value with SI block
+                # Default to original values as a fallback
+                si_value = str(row.get("Value", ""))
+                si_unit = str(row.get("Unit", ""))
+
+                # Get the converted D-SI string from the dataframe
+                dsi_string = row.get("D-SI Unit", "")
+
+                # If the D-SI string is valid, parse it for the value and unit
+                if dsi_string and "ERROR" not in dsi_string:
+                    parts = dsi_string.split(" ", 1)
+                    if len(parts) == 2:
+                        si_value = parts[0]
+                        si_unit = parts[1]
+
+                # Numerical value with SI block, using the D-SI values
                 real_elem = ET.SubElement(quantity_elem, f"{{{ns_si}}}real")
-                ET.SubElement(real_elem, f"{{{ns_si}}}value").text = str(row.get("Value", ""))
-                ET.SubElement(real_elem, f"{{{ns_si}}}unit").text = str(row.get("Unit", ""))
+                ET.SubElement(real_elem, f"{{{ns_si}}}value").text = si_value
+                ET.SubElement(real_elem, f"{{{ns_si}}}unit").text = si_unit
 
                 # Check uncertainty values.
                 expandedMU_vals = {}
