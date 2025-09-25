@@ -921,7 +921,7 @@ with tabs[0]:
                                 options=COUNTRY_CODES,
                                 index=default_index,
                                 key=f"producerCountryCode_{idx}",
-                                placeholder="Select..."
+                                placeholder="Select...",
                             )
                         prod["producerFax"] = st.text_input("Fax", value=prod.get("producerFax", ""), key=f"producerFax_{idx}")
 
