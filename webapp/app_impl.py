@@ -179,14 +179,6 @@ st.markdown(
 def clean_text(txt: str) -> str:
     return re.sub(r"\s+", " ", txt or "").strip()
 
-def sanitize_xml_string(text: str) -> str:
-    """Remove illegal XML characters from a string"""
-    if not isinstance(text, str):
-        text = str(text)
-
-    illegal_xml_chars_re = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f\ufffe\uffff]')
-    return illegal_xml_chars_re.sub('', text)
-
 def xs_duration_hint() -> str:
     return "Enter a valid xs:duration – e.g. P1Y6M means 1 year 6 months"
 
@@ -248,16 +240,16 @@ def create_empty_materialProperties():
     }
 
 def create_empty_result():
-    return {
-        "result_name": "",
-        "description": "",
-        "quantities": pd.DataFrame(columns=[
-            "#", "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
-            "Value", "Quantity Kind", "Unit", "D-SI Unit",
-            "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
-        ]),
-        "identifiers": [],
-    }
+    return {
+        "result_name": "",
+        "description": "",
+        "quantities": pd.DataFrame(columns=[
+            "#", "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
+            "Value", "Quantity Kind", "Unit", "D-SI Unit",
+            "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
+        ]),
+        "identifiers": [],
+    }
 
 # UnitRegistry instance
 ureg = pint.UnitRegistry()
@@ -888,10 +880,10 @@ with tabs[0]:
                         city_cols = st.columns([1, 2, 1])
                         with city_cols[0]:
                             prod["producerPostCode"] = st.text_input("Post Code", value=prod.get("producerPostCode", ""), key=f"producerPostCode_{idx}")
+                        with city_cols[1]:
                             prod["producerCity"] = st.text_input("City", value=prod.get("producerCity", ""), key=f"producerCity_{idx}")
                         with city_cols[2]:
                             prod["producerCountryCode"] = st.text_input("Country", value=prod.get("producerCountryCode", ""), key=f"producerCountryCode_{idx}")
-                        
                         prod["producerFax"] = st.text_input("Fax", value=prod.get("producerFax", ""), key=f"producerFax_{idx}")
 
                     st.markdown("#### Organization Identifiers")
@@ -1286,15 +1278,15 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
             mp_elem.set("id", mp.get("id").strip())
         # Required: name
         name_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}name")
-        ET.SubElement(name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(mp.get("name", ""))
+        ET.SubElement(name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = mp.get("name", "")
         # Optional: description
         if mp.get("description", "").strip():
             desc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}description")
-            ET.SubElement(desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(mp.get("description", ""))
+            ET.SubElement(desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = mp.get("description", "")
         # Optional: procedures
         if mp.get("procedures", "").strip():
             proc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}procedures")
-            ET.SubElement(proc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(mp.get("procedures", ""))
+            ET.SubElement(proc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = mp.get("procedures", "")
         # Required: results
         results_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}results")
         for res in mp.get("results", []):
@@ -1302,11 +1294,11 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
             res_elem = ET.SubElement(results_elem, f"{{{ns_drmd}}}result")
             # drmd:name (type dcc:textType)
             res_name_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}name")
-            ET.SubElement(res_name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(res.get("result_name", ""))
+            ET.SubElement(res_name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = res.get("result_name", "")
             # drmd:description (type dcc:richContentType)
             if res.get("description", "").strip():
                 res_desc_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}description")
-                ET.SubElement(res_desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(res.get("description", ""))
+                ET.SubElement(res_desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = res.get("description", "")
             # drmd:data with drmd:list
             data_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}data")
             list_elem = ET.SubElement(data_elem, f"{{{ns_drmd}}}list")
@@ -1315,7 +1307,7 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
                 quantity_elem = ET.SubElement(list_elem, f"{{{ns_drmd}}}quantity")
                 # dcc:name inside the quantity (per dcc text type)
                 qname_elem = ET.SubElement(quantity_elem, f"{{{ns_dcc}}}name")
-                ET.SubElement(qname_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(str(row.get("Name", "")))
+                ET.SubElement(qname_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = str(row.get("Name", ""))
 
                 # Numerical value with SI block
                 # Default to original values as a fallback
@@ -1334,8 +1326,8 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
 
                 # Numerical value with SI block, using the D-SI values
                 real_elem = ET.SubElement(quantity_elem, f"{{{ns_si}}}real")
-                ET.SubElement(real_elem, f"{{{ns_si}}}value").text = sanitize_xml_string(si_value)
-                ET.SubElement(real_elem, f"{{{ns_si}}}unit").text = sanitize_xml_string(si_unit)
+                ET.SubElement(real_elem, f"{{{ns_si}}}value").text = si_value
+                ET.SubElement(real_elem, f"{{{ns_si}}}unit").text = si_unit
 
                 # Check uncertainty values.
                 expandedMU_vals = {}
@@ -1352,7 +1344,7 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
                     mu_elem = ET.SubElement(real_elem, f"{{{ns_si}}}measurementUncertaintyUnivariate")
                     expMU_elem = ET.SubElement(mu_elem, f"{{{ns_si}}}expandedMU")
                     for tag, value in expandedMU_vals.items():
-                        ET.SubElement(expMU_elem, f"{{{ns_si}}}{tag}").text = sanitize_xml_string(str(value))
+                        ET.SubElement(expMU_elem, f"{{{ns_si}}}{tag}").text = str(value)
                 if res.get("identifiers") and q_idx < len(res["identifiers"]):
                     export_identifier_list(quantity_elem, "propertyIdentifiers", res["identifiers"][q_idx], ns_drmd)
     return mp_list_elem
@@ -1574,8 +1566,8 @@ with tabs[6]:
         admin_data = ET.SubElement(root, f"{{{ns_drmd}}}administrativeData")
         # coreData: title, uniqueIdentifier, documentIdentifiers, validity.
         core_data = ET.SubElement(admin_data, f"{{{ns_drmd}}}coreData")
-        ET.SubElement(core_data, f"{{{ns_drmd}}}titleOfTheDocument").text = sanitize_xml_string(st.session_state.title_option)
-        ET.SubElement(core_data, f"{{{ns_drmd}}}uniqueIdentifier").text = sanitize_xml_string(st.session_state.persistent_id_value)
+        ET.SubElement(core_data, f"{{{ns_drmd}}}titleOfTheDocument").text = st.session_state.title_option
+        ET.SubElement(core_data, f"{{{ns_drmd}}}uniqueIdentifier").text = st.session_state.persistent_id_value
         if st.session_state.documentIdentifiers:
             export_identifier_list(core_data, "documentIdentifiers", st.session_state.documentIdentifiers, ns_drmd)
         # Validity (simplified example)
