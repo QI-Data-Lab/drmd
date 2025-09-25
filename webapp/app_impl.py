@@ -39,7 +39,7 @@ st.set_page_config(layout="wide")
 DEFAULT_XSD_PATH = _os.environ.get("DRMD_XSD_PATH", "./drmd.xsd")
 DEFAULT_XSL_PATH = _os.environ.get("DRMD_XSL_PATH", "./drmd.xsl")
 DS_NS = "http://www.w3.org/2000/09/xmldsig#"
-ALLOWED_TITLES = ["ReferenceMaterialCertificate", "ProductInformationSheet"]  # default first
+ALLOWED_TITLES = ["referenceMaterialCertificate", "productInformationSheet"]  # default first
 INIT_ID = {"scheme": "", "value": "", "link": ""}
 DEFAULT_PRODUCER = {
     "producerName": "",
