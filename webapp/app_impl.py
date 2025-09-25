@@ -910,18 +910,18 @@ with tabs[0]:
                             prod["producerCity"] = st.text_input("City", value=prod.get("producerCity", ""), key=f"producerCity_{idx}")
                         with city_cols[2]:
                             current_code = prod.get("producerCountryCode", "")
-                        try:
-                            # Set default index if current code is valid
-                            default_index = COUNTRY_CODES.index(current_code)
-                        except ValueError:
-                            default_index = None # Show placeholder if no valid code
-                        prod["producerCountryCode"] = st.selectbox(
-                            "Country", 
-                            options=COUNTRY_CODES, 
-                            index=default_index, 
-                            key=f"producerCountryCode_{idx}",
-                            placeholder="Select..."
-                        )
+                            try:
+                                # Set default index if current code is valid
+                                default_index = COUNTRY_CODES.index(current_code)
+                            except ValueError:
+                                default_index = None # Show placeholder if no valid code
+                            prod["producerCountryCode"] = st.selectbox(
+                                "Country", 
+                                options=COUNTRY_CODES, 
+                                index=default_index, 
+                                key=f"producerCountryCode_{idx}",
+                                placeholder="Select..."
+                            )
                         prod["producerFax"] = st.text_input("Fax", value=prod.get("producerFax", ""), key=f"producerFax_{idx}")
 
                     st.markdown("#### Organization Identifiers")
