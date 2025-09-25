@@ -70,24 +70,6 @@ OFFICIAL_STMPL = {
         "referenceToCertificationReport",
     ]
 }
-COUNTRY_CODES = [
-    "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT", "AU", "AW", "AX", "AZ",
-    "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR", "BS",
-    "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN",
-    "CO", "CR", "CU", "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE",
-    "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", "FM", "FO", "FR", "GA", "GB", "GD", "GE", "GF",
-    "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM",
-    "HN", "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE", "JM",
-    "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KY", "KZ", "LA", "LB", "LC",
-    "LI", "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF", "MG", "MH", "MK",
-    "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA",
-    "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ", "OM", "PA", "PE", "PF", "PG",
-    "PH", "PK", "PL", "PM", "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW",
-    "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR", "SS",
-    "ST", "SV", "SX", "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL", "TM", "TN", "TO",
-    "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", "VC", "VE", "VG", "VI",
-    "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "ZW"
-]
 
 # -----------------------------------------------------------------------------
 # Misc helpers
@@ -272,7 +254,7 @@ def create_empty_result():
         "quantities": pd.DataFrame(columns=[
             "#", "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
             "Value", "Quantity Kind", "Unit", "D-SI Unit",
-            "Uncertainty", "unit_Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
+            "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
         ]),
         "identifiers": [],
     }
@@ -666,7 +648,7 @@ def load_xml_into_state(xml_bytes: bytes):
                         # Convert list of quantities to a DataFrame (new column layout)
                         df_quant = pd.DataFrame(quantities, columns=[
                             "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
-                            "Value", "Quantity Type", "Unit", "Uncertainty", "unit_Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
+                            "Value", "Quantity Type", "Unit", "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
                         ])
                         res_dict["quantities"] = df_quant
                         res_dict["identifiers"] = row_ids
@@ -906,23 +888,10 @@ with tabs[0]:
                         city_cols = st.columns([1, 2, 1])
                         with city_cols[0]:
                             prod["producerPostCode"] = st.text_input("Post Code", value=prod.get("producerPostCode", ""), key=f"producerPostCode_{idx}")
-                        with city_cols[1]:
                             prod["producerCity"] = st.text_input("City", value=prod.get("producerCity", ""), key=f"producerCity_{idx}")
                         with city_cols[2]:
-                            current_code = prod.get("producerCountryCode", "")
-                            try:
-                                # Set default index if current code is valid
-                                default_index = COUNTRY_CODES.index(current_code)
-                            except ValueError:
-                                default_index = None # Show placeholder if no valid code
-                            
-                            prod["producerCountryCode"] = st.selectbox(
-                                "Country",
-                                options=COUNTRY_CODES,
-                                index=default_index,
-                                key=f"producerCountryCode_{idx}",
-                                placeholder="Select...",
-                            )
+                            prod["producerCountryCode"] = st.text_input("Country", value=prod.get("producerCountryCode", ""), key=f"producerCountryCode_{idx}")
+                        
                         prod["producerFax"] = st.text_input("Fax", value=prod.get("producerFax", ""), key=f"producerFax_{idx}")
 
                     st.markdown("#### Organization Identifiers")
