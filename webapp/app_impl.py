@@ -1286,15 +1286,15 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
             mp_elem.set("id", mp.get("id").strip())
         # Required: name
         name_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}name")
-        ET.SubElement(name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = mp.get("name", "")
+        ET.SubElement(name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(mp.get("name", ""))
         # Optional: description
         if mp.get("description", "").strip():
             desc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}description")
-            ET.SubElement(desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = mp.get("description", "")
+            ET.SubElement(desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(mp.get("description", ""))
         # Optional: procedures
         if mp.get("procedures", "").strip():
             proc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}procedures")
-            ET.SubElement(proc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = mp.get("procedures", "")
+            ET.SubElement(proc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(mp.get("procedures", ""))
         # Required: results
         results_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}results")
         for res in mp.get("results", []):
@@ -1302,11 +1302,11 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
             res_elem = ET.SubElement(results_elem, f"{{{ns_drmd}}}result")
             # drmd:name (type dcc:textType)
             res_name_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}name")
-            ET.SubElement(res_name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = res.get("result_name", "")
+            ET.SubElement(res_name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(res.get("result_name", ""))
             # drmd:description (type dcc:richContentType)
             if res.get("description", "").strip():
                 res_desc_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}description")
-                ET.SubElement(res_desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = res.get("description", "")
+                ET.SubElement(res_desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(res.get("description", ""))
             # drmd:data with drmd:list
             data_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}data")
             list_elem = ET.SubElement(data_elem, f"{{{ns_drmd}}}list")
@@ -1315,7 +1315,7 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
                 quantity_elem = ET.SubElement(list_elem, f"{{{ns_drmd}}}quantity")
                 # dcc:name inside the quantity (per dcc text type)
                 qname_elem = ET.SubElement(quantity_elem, f"{{{ns_dcc}}}name")
-                ET.SubElement(qname_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = str(row.get("Name", ""))
+                ET.SubElement(qname_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(str(row.get("Name", "")))
 
                 # Numerical value with SI block
                 # Default to original values as a fallback
@@ -1334,8 +1334,8 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
 
                 # Numerical value with SI block, using the D-SI values
                 real_elem = ET.SubElement(quantity_elem, f"{{{ns_si}}}real")
-                ET.SubElement(real_elem, f"{{{ns_si}}}value").text = si_value
-                ET.SubElement(real_elem, f"{{{ns_si}}}unit").text = si_unit
+                ET.SubElement(real_elem, f"{{{ns_si}}}value").text = sanitize_xml_string(si_value)
+                ET.SubElement(real_elem, f"{{{ns_si}}}unit").text = sanitize_xml_string(si_unit)
 
                 # Check uncertainty values.
                 expandedMU_vals = {}
@@ -1352,7 +1352,7 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
                     mu_elem = ET.SubElement(real_elem, f"{{{ns_si}}}measurementUncertaintyUnivariate")
                     expMU_elem = ET.SubElement(mu_elem, f"{{{ns_si}}}expandedMU")
                     for tag, value in expandedMU_vals.items():
-                        ET.SubElement(expMU_elem, f"{{{ns_si}}}{tag}").text = str(value)
+                        ET.SubElement(expMU_elem, f"{{{ns_si}}}{tag}").text = sanitize_xml_string(str(value))
                 if res.get("identifiers") and q_idx < len(res["identifiers"]):
                     export_identifier_list(quantity_elem, "propertyIdentifiers", res["identifiers"][q_idx], ns_drmd)
     return mp_list_elem
