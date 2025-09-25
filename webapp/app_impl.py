@@ -915,10 +915,11 @@ with tabs[0]:
                                 default_index = COUNTRY_CODES.index(current_code)
                             except ValueError:
                                 default_index = None # Show placeholder if no valid code
+                            
                             prod["producerCountryCode"] = st.selectbox(
-                                "Country", 
-                                options=COUNTRY_CODES, 
-                                index=default_index, 
+                                "Country",
+                                options=COUNTRY_CODES,
+                                index=default_index,
                                 key=f"producerCountryCode_{idx}",
                                 placeholder="Select..."
                             )
