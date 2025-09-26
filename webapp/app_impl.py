@@ -179,6 +179,15 @@ st.markdown(
 def clean_text(txt: str) -> str:
     return re.sub(r"\s+", " ", txt or "").strip()
 
+def sanitize_xml_string(text: str) -> str:
+    """Removes illegal XML characters from a string."""
+    if not isinstance(text, str):
+        text = str(text)
+    # XML 1.0 spec defines the valid character range.
+    # This regex removes any character outside that range, except for common whitespace.
+    illegal_xml_chars_re = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f\ufffe\uffff]')
+    return illegal_xml_chars_re.sub('', text)
+
 def xs_duration_hint() -> str:
     return "Enter a valid xs:duration – e.g. P1Y6M means 1 year 6 months"
 
@@ -1566,8 +1575,8 @@ with tabs[6]:
         admin_data = ET.SubElement(root, f"{{{ns_drmd}}}administrativeData")
         # coreData: title, uniqueIdentifier, documentIdentifiers, validity.
         core_data = ET.SubElement(admin_data, f"{{{ns_drmd}}}coreData")
-        ET.SubElement(core_data, f"{{{ns_drmd}}}titleOfTheDocument").text = st.session_state.title_option
-        ET.SubElement(core_data, f"{{{ns_drmd}}}uniqueIdentifier").text = st.session_state.persistent_id_value
+        ET.SubElement(core_data, f"{{{ns_drmd}}}titleOfTheDocument").text = sanitize_xml_string(st.session_state.title_option)
+        ET.SubElement(core_data, f"{{{ns_drmd}}}uniqueIdentifier").text = sanitize_xml_string(st.session_state.persistent_id_value)
         if st.session_state.documentIdentifiers:
             export_identifier_list(core_data, "documentIdentifiers", st.session_state.documentIdentifiers, ns_drmd)
         # Validity (simplified example)
@@ -1592,7 +1601,7 @@ with tabs[6]:
             for material in st.session_state.materials:
                 mat_elem = ET.SubElement(materials_elem, f"{{{ns_drmd}}}material")
                 name_elem = ET.SubElement(mat_elem, f"{{{ns_drmd}}}name")
-                ET.SubElement(name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = material.get("name", "")
+                ET.SubElement(name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(material.get("name", ""))
                 if (material.get("description", "") or "").strip():
                     desc_elem = ET.SubElement(mat_elem, f"{{{ns_drmd}}}description")
                     ET.SubElement(desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = material.get("description", "")
@@ -1630,7 +1639,7 @@ with tabs[6]:
                 contact_name_elem = ET.SubElement(contact_elem, f"{{{ns_dcc}}}name")
                 ET.SubElement(contact_name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = prod.get("contactName", prod.get("producerName", "Contact Name"))
                 if (prod.get("producerEmail", "") or "").strip():
-                    ET.SubElement(contact_elem, f"{{{ns_dcc}}}eMail").text = prod.get("producerEmail", "")
+                    ET.SubElement(contact_elem, f"{{{ns_dcc}}}eMail").text = sanitize_xml_string(prod.get("producerEmail", ""))
                 if (prod.get("producerPhone", "") or "").strip():
                     ET.SubElement(contact_elem, f"{{{ns_dcc}}}phone").text = prod.get("producerPhone", "")
                 if (prod.get("producerFax", "") or "").strip():
