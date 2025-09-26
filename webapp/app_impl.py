@@ -1297,6 +1297,8 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
             # Create the main <drmd:procedures> container
             proc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}procedures")
             used_method_elem = ET.SubElement(proc_elem, f"{{{ns_dcc}}}usedMethod")
+            name_elem = ET.SubElement(used_method_elem, f"{{{ns_dcc}}}name")
+            ET.SubElement(name_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = "Procedure"
             desc_elem = ET.SubElement(used_method_elem, f"{{{ns_dcc}}}description")
             ET.SubElement(desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = sanitize_xml_string(mp.get("procedures", ""))
         # Required: results
