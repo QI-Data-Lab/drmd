@@ -8,185 +8,88 @@
            targetNamespace="https://example.org/drmd"
            elementFormDefault="qualified">
 
-    <!-- Remote canonical dependencies (preferred for full validation) -->
-    <!-- Local imports (offline validation); canonical remote URLs can be used alternatively -->
-    <xs:import namespace="https://ptb.de/dcc"
-               schemaLocation="../../imports/dcc.xsd"/>
-    <xs:import namespace="https://ptb.de/si"
-               schemaLocation="../../imports/SI_Format.xsd"/>
-    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
-               schemaLocation="../../imports/xmldsig-core-schema.xsd"/>
+    <xs:import namespace="https://ptb.de/dcc" schemaLocation="../../imports/dcc.xsd"/>
+    <xs:import namespace="https://ptb.de/si" schemaLocation="../../imports/SI_Format.xsd"/>
+    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="../../imports/xmldsig-core-schema.xsd"/>
 
-        <!-- ========================================================= -->
-        <!--  Simple Types (global for reuse & validation)             -->
-        <!-- ========================================================= -->
+    <xs:element name="digitalReferenceMaterialDocument" type="drmd:digitalReferenceMaterialDocumentType">
+        <xs:annotation>
+            <xs:documentation>The root element for a Digital Reference Material Document (DRMD). It encapsulates all information about a reference material, digitally representing a physical certificate.</xs:documentation>
+        </xs:annotation>
+    </xs:element>
 
-        <!-- Semantic version: major.minor.patch -->
-        <xs:simpleType name="schemaVersionType">
-            <xs:restriction base="xs:string">
-                <xs:pattern value="\d+\.\d+\.\d+"/>
-            </xs:restriction>
-        </xs:simpleType>
-
-        <!-- Title of the DRMD document (extracted from inline enum) -->
-        <xs:simpleType name="titleOfDocumentType">
-            <xs:restriction base="xs:string">
-                <xs:enumeration value="productInformationSheet"/>
-                <xs:enumeration value="referenceMaterialCertificate"/>
-            </xs:restriction>
-        </xs:simpleType>
-
-        <!-- identifier and list building blocks -->
-    <xs:complexType name="identifierType">
-      <xs:sequence>
-        <xs:element name="scheme" type="dcc:notEmptyStringType"/>
-        <xs:element name="value"  type="dcc:notEmptyStringType"/>
-        <xs:element name="link"   type="xs:anyURI" minOccurs="0"/>
-      </xs:sequence>
-      <xs:attribute name="id"      type="xs:ID"     use="optional"/>
-      <xs:attribute name="refId"   type="xs:IDREFS" use="optional"/>
-      <xs:attribute name="refType" type="drmd:refTypesType" use="optional"/>
-    </xs:complexType>
-
-    <xs:complexType name="organizationIdentifierListType">
-      <xs:sequence>
-        <xs:element name="organizationIdentifier"
-                    type="drmd:identifierType"
-                    maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="materialIdentifierListType">
-      <xs:sequence>
-        <xs:element name="materialIdentifier"
-                    type="drmd:identifierType"
-                    maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="propertyIdentifierListType">
-      <xs:sequence>
-        <xs:element name="propertyIdentifier"
-                    type="drmd:identifierType"
-                    maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="documentIdentifierListType">
-      <xs:sequence>
-        <xs:element name="documentIdentifier"
-                    type="drmd:identifierType"
-                    maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-
-    <xs:simpleType name="refTypesType">
-      <xs:restriction base="xs:string">
-        <xs:enumeration value="basic_certificateIdentification"/>
-        <xs:enumeration value="basic_measuredValue"/>
-      </xs:restriction>
-    </xs:simpleType>
-
-    <xs:complexType name="quantityType">
-      <xs:complexContent>
-        <xs:extension base="dcc:primitiveQuantityType">
-          <xs:sequence>
-            <xs:element name="propertyIdentifiers"
-                        type="drmd:propertyIdentifierListType"
-                        minOccurs="0"/>
-          </xs:sequence>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-
-    <xs:annotation>
-        <xs:documentation>
-            DRMD - Digital Reference Material Document
-            Copyright (c) 2024 Bundesanstalt für Materialforschung und -prüfung (BAM)
-
-            This XML Schema Definition (XSD) is free software: you can redistribute
-            it and/or modify it under the terms of the GNU Lesser General Public License
-            as published by the Free Software Foundation, version 3 of the License.
-            This XSD is distributed in the hope that it will be useful, but WITHOUT ANY
-            WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-            FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
-            more details. The development of the Digital Reference Material Document (DRMD)
-            is partially funded and supported by the QI-Digital project.
-        </xs:documentation>
-    </xs:annotation>
-
-    <!-- Root element -->
-    <xs:element name="digitalReferenceMaterialDocument"
-                type="drmd:digitalReferenceMaterialDocumentType"/>
-
-    <!-- Root type -->
     <xs:complexType name="digitalReferenceMaterialDocumentType">
-        <xs:annotation>
-            <xs:documentation>
-                The root element that contains administrative data, materials,
-                measurement results, and signatures of the DRMD.
-            </xs:documentation>
-        </xs:annotation>
         <xs:sequence>
-            <!-- administrativeData no longer holds <materials> -->
-            <xs:element name="administrativeData"
-                        type="drmd:administrativeDataType"/>
-            <!-- moved to root -->
-            <xs:element name="materials"
-                        type="drmd:materialListType"/>
-            <xs:element name="materialPropertiesList"
-                        type="drmd:materialPropertiesListType"/>
-            <xs:element name="statements"
-                        type="drmd:statementListType"/>
-            <xs:element name="comment"
-                        type="xs:string" minOccurs="0"/>
-            <xs:element name="document"
-                        type="dcc:byteDataType" minOccurs="0"/>
-            <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="administrativeData" type="drmd:administrativeDataType"/>
+            <xs:element name="materials" type="drmd:materialListType"/>
+            <xs:element name="materialPropertiesList" type="drmd:materialPropertiesListType"/>
+            <xs:element name="statements" type="drmd:statementListType"/>
+            <xs:element name="comment" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>An optional field for any additional comments or notes that do not fit into other structured fields. May be found anywhere in the document.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="document" type="dcc:byteDataType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>An optional field to embed the original source document (e.g., as a Base64 encoded PDF) to create a self-contained digital twin.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Contains the digital signature(s) to ensure the authenticity and integrity of the document, following the W3C XML-DSig standard.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
-    <xs:attribute name="schemaVersion"
-              type="drmd:schemaVersionType"
-              use="required"/>
+        <xs:attribute name="schemaVersion" type="drmd:schemaVersionType" use="required"/>
     </xs:complexType>
 
-    <!-- administrativeData without materials -->
     <xs:complexType name="administrativeDataType">
-        <xs:annotation>
-            <xs:documentation>
-                Contains core data, producer information, responsible persons,
-                and statements related to the DRMD.
-            </xs:documentation>
-        </xs:annotation>
-        <!-- changed from xs:all to xs:sequence for extensibility and deterministic order -->
         <xs:sequence>
             <xs:element name="coreData" type="drmd:coreDataType"/>
             <xs:element name="referenceMaterialProducer" type="drmd:referenceMaterialProducerType"/>
-            <xs:element name="respPersons" type="dcc:respPersonListType"/>
+            <xs:element name="respPersons" type="dcc:respPersonListType">
+                <xs:annotation>
+                    <xs:documentation>A list of persons responsible for the certificate's content. Look for names and titles, often near the signature blocks. For example: 'Dr. Silke Richter, Committee for Certification'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 
-	<xs:complexType name="coreDataType">
-		<xs:annotation>
-			<xs:documentation> Contains the core information about the document, such as title,
-				unique identifier, and issue date. </xs:documentation>
-		</xs:annotation>
+    <xs:complexType name="coreDataType">
         <xs:sequence>
-            <xs:element name="titleOfTheDocument" type="drmd:titleOfDocumentType"/>
-                        <xs:element name="uniqueIdentifier"
-                                    type="dcc:notEmptyStringType"/>
-                        <xs:element name="documentIdentifiers"
-                                    type="drmd:documentIdentifierListType"
-                                    minOccurs="0"/>
-        	<xs:element name="validity" 
-						type="drmd:ValidityType"
-						 minOccurs="1" />
-		</xs:sequence>
-	</xs:complexType>
+            <xs:element name="titleOfTheDocument" type="drmd:titleOfDocumentType">
+                <xs:annotation>
+                    <xs:documentation>The official title of the document. Look for prominent, centered text at the top of the first page. For example: 'CERTIFICATE OF ANALYSIS', 'CERTIFICATE', or 'REFERENCE MATERIAL DOCUMENT'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="uniqueIdentifier" type="dcc:notEmptyStringType">
+                <xs:annotation>
+                    <xs:documentation>The primary unique alphanumeric code for the reference material. It is typically found near the top of the first page, often below the title. This identifier frequently starts with prefixes like 'BAM-' or 'ERM®-'. For example: 'ERM-BD272', 'BAM-H010', or 'BAM-A001'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="documentIdentifiers" type="drmd:documentIdentifierListType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A list of other identifiers for the document, such as a 'Sample No.' or 'Lot No.' if different from the main identifier.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="validity" type="drmd:ValidityType" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="ValidityType">
+        <xs:annotation>
+            <xs:documentation>Defines the validity period of the CRM certificate.</xs:documentation>
+        </xs:annotation>
         <xs:choice>
-            <xs:element name="untilRevoked" type="xs:boolean" fixed="true" />
+            <xs:element name="untilRevoked" type="xs:boolean" fixed="true">
+                <xs:annotation>
+                    <xs:documentation>Select this option if the certificate explicitly states it is valid until revoked or has no expiration date mentioned.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="timeAfterDispatch">
+                <xs:annotation>
+                    <xs:documentation>Select this option when validity is a duration after dispatch. Look for phrases like 'valid for X months/years after dispatch' or 'beginning with the dispatch of the material'. The dispatch date may be stamped or handwritten.</xs:documentation>
+                </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="dispatchDate" type="xs:date" minOccurs="0" />
@@ -194,15 +97,235 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="specificTime" type="xs:date" />
+            <xs:element name="specificTime" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Select this option for a specific expiration date. Look for headings like 'End of Validity' or a specific end date mentioned. For example: 'This certificate is valid until 05/2064'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:choice>
     </xs:complexType>
 
-	<!-- <xs:assert test="not(validity/timeAfterDispatch) or validity/timeAfterDispatch/dispatchDate = //digitalSignature/date">
-    Dispatch date in validity must match the signature date.
-	</xs:assert> -->
+    <xs:complexType name="referenceMaterialProducerType">
+        <xs:sequence>
+            <xs:element name="name" type="dcc:textType">
+                <xs:annotation>
+                    <xs:documentation>The name of the producing organization. For the provided documents, this is consistently 'Bundesanstalt für Materialforschung und -prüfung (BAM)'. Look for the BAM name and logo.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="contact" type="dcc:contactType">
+                <xs:annotation>
+                    <xs:documentation>The contact details for the producer. This is usually found at the bottom of the last page and includes address, phone, email, and webshop/internet URL.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cryptElectronicSeal" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Boolean flag indicating whether the document is protected by a cryptographic electronic seal.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cryptElectronicSignature" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Boolean flag indicating whether the document is protected by a cryptographic electronic signature.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cryptElectronicTimeStamp" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Boolean flag indicating whether the document is protected by a cryptographic electronic timestamp.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="organizationIdentifiers" type="drmd:organizationIdentifierListType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A list of formal identifiers for the producing organization, such as a URN or DOI.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
 
+    <xs:complexType name="materialListType">
+        <xs:sequence>
+            <xs:element name="material" type="drmd:materialType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
 
+    <xs:complexType name="materialType">
+        <xs:sequence>
+            <xs:element name="name" type="dcc:textType">
+                <xs:annotation>
+                    <xs:documentation>The name of the material, often describing the substance and its matrix. For example: 'Acrylamide in Crispbread' or 'Polycyclic Aromatic Hydrocarbons (PAH) in Olive Oil'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="dcc:richContentType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A detailed description of the material. Look for a section explicitly titled 'DESCRIPTION OF THE SAMPLE' or 'Material Description'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="materialClass" type="drmd:materialClassType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>A formal classification for the material, such as a CAS number for a chemical or a UNS number for a metal alloy.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="minimumSampleSize" type="dcc:itemQuantityListType">
+                <xs:annotation>
+                    <xs:documentation>The smallest amount of material recommended for a single analysis. Look for phrases like 'The minimum sample intake is...' or 'The recommended minimum sample intake should be...'. For example: '2 g' or '0.5 g'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="itemQuantities" type="dcc:itemQuantityListType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The total quantity of the material supplied in a single packaged unit. Look for phrases such as 'Each unit contains...' or 'available in form of...'. For example: '100 g in 250 mL glasses' or '14 mL of olive oil'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="materialIdentifiers" type="drmd:materialIdentifierListType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>A list of additional identifiers specific to the material, such as a 'Sample No.', 'Lot No.', or 'Batch No.'. These are often found near the bottom of the first page or near the main identifier.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="materialPropertiesListType">
+        <xs:sequence>
+            <xs:element name="materialProperties" type="drmd:materialPropertiesType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="materialPropertiesType">
+        <xs:sequence>
+            <xs:element name="name" type="dcc:textType">
+                <xs:annotation>
+                    <xs:documentation>The name of the property or substance being measured (the measurand). This is typically the first item in a row or column in the main results table. For example: 'Acrylamide', 'Benz[a]anthracene', 'Lead'.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="dcc:richContentType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>An optional, more detailed description of the material property being reported.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="procedures" type="dcc:usedMethodListType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The analytical methods and procedures used for certification. Look for a section titled 'ANALYTICAL METHODS USED FOR CERTIFICATION' or similar.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="results" type="drmd:resultListType">
+                <xs:annotation>
+                    <xs:documentation>Contains the quantitative results. Look for the main table, usually under a 'Certified Values' heading. This includes the value, uncertainty, and unit, which are typically in adjacent columns.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="measurementMetaData" type="dcc:measurementMetaDataListType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Contains metadata about the measurement process, such as references to standards like the 'Guide to the Expression of Uncertainty in Measurement (GUM)' (e.g., ISO/IEC Guide 98-3:2008).</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="optional" />
+        <xs:attribute name="refId" type="xs:IDREFS" use="optional" />
+        <xs:attribute name="refType" type="dcc:refTypesType" use="optional" />
+        <xs:attribute name="isCertified" type="xs:boolean" use="optional">
+            <xs:annotation>
+                <xs:documentation>A boolean flag to indicate if the property value is certified. Check if the results table is under a 'Certified Values' heading (true) or an 'Informative Values' heading (false).</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="statementListType">
+        <xs:sequence>
+            <xs:element name="intendedUse" type="dcc:richContentType" minOccurs="1">
+                <xs:annotation><xs:documentation>Find the section explicitly titled 'INTENDED USE' or 'Recommended Use'.</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="commutability" type="dcc:richContentType" minOccurs="0">
+                <xs:annotation><xs:documentation>Describes how the reference material behaves in comparison to real samples in various analytical procedures. Look for a 'Commutability' section.</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="storageInformation" type="dcc:richContentType" minOccurs="1">
+                <xs:annotation><xs:documentation>Find the section titled 'STORAGE'. This section specifies required storage conditions, such as temperature (e.g., '-20°C').</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="instructionsForHandlingAndUse" type="dcc:richContentType" minOccurs="1">
+                <xs:annotation><xs:documentation>Find the section titled 'INSTRUCTIONS FOR USE' or 'Handling'.</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="metrologicalTraceability" type="dcc:richContentType" minOccurs="0">
+                <xs:annotation><xs:documentation>Find the section titled 'Metrological Traceability'. This statement explains the traceability of the certified values to the SI.</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="healthAndSafetyInformation" type="dcc:richContentType" minOccurs="0">
+                <xs:annotation><xs:documentation>Find the section titled 'SAFETY INFORMATION'.</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="subcontractors" type="dcc:richContentType" minOccurs="0">
+                <xs:annotation><xs:documentation>Lists any subcontractors or external laboratories involved in the certification. Look for a 'PARTICIPANTS' or 'Beteiligte Laboratorien' section.</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="legalNotice" type="dcc:richContentType" minOccurs="0">
+                <xs:annotation><xs:documentation>Find the section titled 'LEGAL NOTICE'.</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="referenceToCertificationReport" type="dcc:richContentType" minOccurs="0">
+                <xs:annotation><xs:documentation>Find the section titled 'TECHNICAL REPORT' or 'Literature', which describes how to obtain the full certification report.</xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="statement" type="dcc:richContentType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation><xs:documentation>A catch-all field for any other official statements or notices not covered by the other specific fields.</xs:documentation></xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="schemaVersionType"><xs:restriction base="xs:string"><xs:pattern value="\d+\.\d+\.\d+"/></xs:restriction></xs:simpleType>
+    <xs:simpleType name="titleOfDocumentType"><xs:restriction base="xs:string"><xs:enumeration value="productInformationSheet"/><xs:enumeration value="referenceMaterialCertificate"/></xs:restriction></xs:simpleType>
+    
+    <xs:complexType name="identifierType">
+        <xs:annotation><xs:documentation>A generic type for an identifier, consisting of a scheme (e.g., 'DOI', 'URN'), a value, and an optional link.</xs:documentation></xs:annotation>
+        <xs:sequence>
+            <xs:element name="scheme" type="dcc:notEmptyStringType"/>
+            <xs:element name="value" type="dcc:notEmptyStringType"/>
+            <xs:element name="link" type="xs:anyURI" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id"      type="xs:ID"     use="optional"/>
+        <xs:attribute name="refId"   type="xs:IDREFS" use="optional"/>
+        <xs:attribute name="refType" type="drmd:refTypesType" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="organizationIdentifierListType"><xs:sequence><xs:element name="organizationIdentifier" type="drmd:identifierType" maxOccurs="unbounded"/></xs:sequence></xs:complexType>
+    <xs:complexType name="materialIdentifierListType"><xs:sequence><xs:element name="materialIdentifier" type="drmd:identifierType" maxOccurs="unbounded"/></xs:sequence></xs:complexType>
+    <xs:complexType name="propertyIdentifierListType"><xs:sequence><xs:element name="propertyIdentifier" type="drmd:identifierType" maxOccurs="unbounded"/></xs:sequence></xs:complexType>
+    <xs:complexType name="documentIdentifierListType"><xs:sequence><xs:element name="documentIdentifier" type="drmd:identifierType" maxOccurs="unbounded"/></xs:sequence></xs:complexType>
+    
+    <xs:complexType name="identificationListType">
+        <xs:sequence>
+            <xs:element name="identification"
+                        type="drmd:identificationType"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="identificationType">
+        <xs:sequence>
+            <xs:element name="issuer">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="referenceMaterialProducer"/>
+                        <xs:enumeration value="customer"/>
+                        <xs:enumeration value="owner"/>
+                        <xs:enumeration value="other"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="value"
+                        type="dcc:notEmptyStringType"/>
+            <xs:element name="name"
+                        type="dcc:textType"
+                        minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id"
+                      type="xs:ID"
+                      use="optional"/>
+        <xs:attribute name="refType"
+                      type="dcc:refTypesType"
+                      use="optional"/>
+    </xs:complexType>
+    
+    <xs:simpleType name="refTypesType"><xs:restriction base="xs:string"><xs:enumeration value="basic_certificateIdentification"/><xs:enumeration value="basic_measuredValue"/></xs:restriction></xs:simpleType>
+    
+    <xs:complexType name="quantityType">
+        <xs:annotation><xs:documentation>Extends the standard DCC quantity type by adding a list of formal property identifiers.</xs:documentation></xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="dcc:primitiveQuantityType">
+                <xs:sequence>
+                    <xs:element name="propertyIdentifiers" type="drmd:propertyIdentifierListType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
     <xs:complexType name="materialClassType">
         <xs:sequence>
             <xs:element name="reference" type="dcc:notEmptyStringType" />
@@ -213,236 +336,34 @@
         <xs:attribute name="refId" type="xs:IDREFS" use="optional" />
         <xs:attribute name="refType" type="dcc:refTypesType" use="optional" />
     </xs:complexType>
-
-
-	<!-- <materialClass>
-	<reference>
-	</materialClass> -->
-
-
-
-	<xs:complexType name="identificationListType">
-		<xs:annotation>
-			<xs:documentation> List of additional identifications. </xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="identification"
-			            type="drmd:identificationType"
-			            maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="identificationType">
-		<xs:annotation>
-			<xs:documentation> An additional identification (eg. reference no., serial number,
-				etc.). </xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="issuer">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<!-- <xs:enumeration value="manufacturer"/> -->
-						<xs:enumeration value="referenceMaterialProducer"/>
-						<xs:enumeration value="customer"/>
-						<xs:enumeration value="owner"/>
-						<xs:enumeration value="other"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="value"
-			            type="dcc:notEmptyStringType"/>
-			<xs:element name="name"
-			            type="dcc:textType"
-			            minOccurs="0"/>
-		</xs:sequence>
-		<xs:attribute name="id"
-		              type="xs:ID"
-		              use="optional"/>
-		<xs:attribute name="refType"
-		              type="dcc:refTypesType"
-		              use="optional"/>
-	</xs:complexType>
-
-	<xs:complexType name="referenceMaterialProducerType">
-		<xs:annotation>
-			<xs:documentation> Contains information about the producer of the reference material,
-				including contact details. </xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="name"
-			            type="dcc:textType"/>
-			<xs:element name="contact"
-			            type="dcc:contactType"/>
-			<xs:element name="cryptElectronicSeal"
-			            type="xs:boolean"
-			            minOccurs="0"/>
-			<xs:element name="cryptElectronicSignature"
-			            type="xs:boolean"
-			            minOccurs="0"/>
-                        <xs:element name="cryptElectronicTimeStamp"
-                                    type="xs:boolean"
-                                    minOccurs="0"/>
-                        <xs:element name="organizationIdentifiers"
-                                    type="drmd:organizationIdentifierListType"
-                                    minOccurs="0"/>
-                </xs:sequence>
-        </xs:complexType>
     
-    <!-- materialListType moved to root as <materials> -->
-    <xs:complexType name="materialListType">
-        <xs:annotation>
-            <xs:documentation>
-                A list of materials included in the DRMD, each with details.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="material"
-                        type="drmd:materialType"
-                        maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <!-- materialType now includes materialClass as a subelement -->
-    <xs:complexType name="materialType">
-        <xs:annotation>
-            <xs:documentation>
-                Details about an individual material in the DRMD, including
-                name, description, class, and sample sizes.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="name" type="dcc:textType"/>
-            <xs:element name="description"
-                        type="dcc:richContentType"
-                        minOccurs="0"/>
-            <xs:element name="materialClass"
-                        type="drmd:materialClassType"
-                        minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="minimumSampleSize"
-                        type="dcc:itemQuantityListType"/>
-            <xs:element name="itemQuantities"
-                        type="dcc:itemQuantityListType"
-                        minOccurs="0"/>
-            <xs:element name="materialIdentifiers"
-                        type="drmd:materialIdentifierListType"
-                        minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
-
-
-	<xs:complexType name="statementListType">
-		<xs:annotation>
-			<xs:documentation> A list of statements related to the DRMD, including intended use,
-				handling instructions, and storage information. </xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="intendedUse"
-			            type="dcc:richContentType"
-			            minOccurs="1"/>
-			<xs:element name="commutability"
-			            type="dcc:richContentType"
-			            minOccurs="0"/>
-			<xs:element name="storageInformation"
-			            type="dcc:richContentType"
-			            minOccurs="1"/>
-			<xs:element name="instructionsForHandlingAndUse"
-			            type="dcc:richContentType"
-			            minOccurs="1"/>
-			<xs:element name="metrologicalTraceability"
-			            type="dcc:richContentType"
-			            minOccurs="0"/>
-			<xs:element name="healthAndSafetyInformation"
-			            type="dcc:richContentType"
-			            minOccurs="0"/>
-			<xs:element name="subcontractors"
-			            type="dcc:richContentType"
-			            minOccurs="0"/>
-			<xs:element name="legalNotice"
-			            type="dcc:richContentType"
-			            minOccurs="0"/>
-			<xs:element name="referenceToCertificationReport"
-			            type="dcc:richContentType"
-			            minOccurs="0"/>
-			<xs:element name="statement"
-			            type="dcc:richContentType"
-			            minOccurs="0"
-			            maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-  <xs:complexType name="materialPropertiesListType">
-        <xs:annotation>
-            <xs:documentation> List of measurement results that are part of a DRMD. </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="materialProperties"
-                        type="drmd:materialPropertiesType"
-                        maxOccurs="unbounded"/>
-        </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="resultListType">
-      <xs:sequence>
-          <xs:element name="result" type="drmd:resultType" maxOccurs="unbounded"/>
-      </xs:sequence>
-  </xs:complexType>
-
+    <xs:complexType name="resultListType"><xs:sequence><xs:element name="result" type="drmd:resultType" maxOccurs="unbounded"/></xs:sequence></xs:complexType>
+    
     <xs:complexType name="resultType">
-            <xs:annotation>
-                <xs:documentation>
-                    DRMD-specific result container. Elements are re-declared in the drmd namespace so that
-                    all nested quantities resolve to drmd:quantityType (with propertyIdentifiers). Future
-                    specialization could extend this base (e.g. certifiedResultType).
-                </xs:documentation>
-            </xs:annotation>
-            <xs:sequence>
-                    <xs:element name="name" type="dcc:textType" />
-                    <xs:element name="description" type="dcc:richContentType" minOccurs="0" />
-                    <xs:element name="data" type="drmd:dataType" />
-            </xs:sequence>
-            <xs:attribute name="id" type="xs:ID" use="optional" />
-            <xs:attribute name="refId" type="xs:IDREFS" use="optional" />
-            <xs:attribute name="refType" type="drmd:refTypesType" use="optional" />
-    </xs:complexType>
-
-  <!-- Option A: permit either a list of quantities or a single quantity -->
-  <xs:complexType name="dataType">
-      <xs:choice>
-          <xs:element name="list" type="drmd:listType" />
-          <xs:element name="quantity" type="drmd:quantityType" />
-      </xs:choice>
-  </xs:complexType>
-
-  <xs:complexType name="listType">
-      <xs:sequence>
-          <xs:element name="quantity" type="drmd:quantityType" maxOccurs="unbounded"/>
-      </xs:sequence>
-  </xs:complexType>
-
-
-
-    <xs:complexType name="materialPropertiesType">
-        <xs:annotation>
-            <xs:documentation> Container for used methods, used software, influence conditions,
-                measuring equipment used for the measurments, metadata and measurments results. </xs:documentation>
-        </xs:annotation>
+        <xs:annotation><xs:documentation>A container for a single named result, which holds the actual data.</xs:documentation></xs:annotation>
         <xs:sequence>
             <xs:element name="name" type="dcc:textType" />
             <xs:element name="description" type="dcc:richContentType" minOccurs="0" />
-            <xs:element name="procedures" type="dcc:usedMethodListType" minOccurs="0" />
-            <xs:element name="results" type="drmd:resultListType" />
-            <xs:element name="measurementMetaData" type="dcc:measurementMetaDataListType"
-                minOccurs="0" />
+            <xs:element name="data" type="drmd:dataType" />
         </xs:sequence>
         <xs:attribute name="id" type="xs:ID" use="optional" />
         <xs:attribute name="refId" type="xs:IDREFS" use="optional" />
-        <xs:attribute name="refType" type="dcc:refTypesType" use="optional" />
-		<xs:attribute name="isCertified" type="xs:boolean" use="optional"/>
-
-
-
-
+        <xs:attribute name="refType" type="drmd:refTypesType" use="optional" />
     </xs:complexType>
-
-
+    
+    <xs:complexType name="dataType">
+        <xs:annotation><xs:documentation>A data container that can hold either a single quantity or a list of quantities.</xs:documentation></xs:annotation>
+        <xs:choice>
+            <xs:element name="list" type="drmd:listType" />
+            <xs:element name="quantity" type="drmd:quantityType" />
+        </xs:choice>
+    </xs:complexType>
+    
+    <xs:complexType name="listType">
+        <xs:annotation><xs:documentation>A container for a list of quantity elements.</xs:documentation></xs:annotation>
+        <xs:sequence>
+            <xs:element name="quantity" type="drmd:quantityType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
 
 </xs:schema>
