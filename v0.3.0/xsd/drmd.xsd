@@ -264,16 +264,30 @@
     <xs:simpleType name="titleOfDocumentType"><xs:restriction base="xs:string"><xs:enumeration value="productInformationSheet"/><xs:enumeration value="referenceMaterialCertificate"/></xs:restriction></xs:simpleType>
     
     <xs:complexType name="identifierType">
-        <xs:annotation><xs:documentation>A generic type for an identifier, consisting of a scheme (e.g., 'DOI', 'URN'), a value, and an optional link.</xs:documentation></xs:annotation>
-        <xs:sequence>
-            <xs:element name="scheme" type="dcc:notEmptyStringType"/>
-            <xs:element name="value" type="dcc:notEmptyStringType"/>
-            <xs:element name="link" type="xs:anyURI" minOccurs="0"/>
-        </xs:sequence>
-        <xs:attribute name="id"      type="xs:ID"     use="optional"/>
-        <xs:attribute name="refId"   type="xs:IDREFS" use="optional"/>
-        <xs:attribute name="refType" type="drmd:refTypesType" use="optional"/>
-    </xs:complexType>
+               <xs:annotation>
+                   <xs:documentation>A generic type for an identifier, consisting of a scheme (e.g., 'DOI', 'CAS'), a value, and an optional link.</xs:documentation>
+               </xs:annotation>
+             <xs:sequence>
+               <xs:element name="scheme" type="dcc:notEmptyStringType">
+                   <xs:annotation>
+                       <xs:documentation>The scheme of the identifier, defining its type (e.g., 'CAS Number', 'DOI', 'UNS').</xs:documentation>
+                   </xs:annotation>
+               </xs:element>
+               <xs:element name="value"  type="dcc:notEmptyStringType">
+                   <xs:annotation>
+                       <xs:documentation>The actual value of the identifier (e.g., '75-07-0').</xs:documentation>
+                   </xs:annotation>
+               </xs:element>
+               <xs:element name="link"   type="xs:anyURI" minOccurs="0">
+                   <xs:annotation>
+                       <xs:documentation>An optional URI linking to more information about the identifier.</xs:documentation>
+                   </xs:annotation>
+               </xs:element>
+             </xs:sequence>
+             <xs:attribute name="id"      type="xs:ID"     use="optional"/>
+             <xs:attribute name="refId"   type="xs:IDREFS" use="optional"/>
+             <xs:attribute name="refType" type="drmd:refTypesType" use="optional"/>
+</xs:complexType>
 
     <xs:complexType name="organizationIdentifierListType"><xs:sequence><xs:element name="organizationIdentifier" type="drmd:identifierType" maxOccurs="unbounded"/></xs:sequence></xs:complexType>
     <xs:complexType name="materialIdentifierListType"><xs:sequence><xs:element name="materialIdentifier" type="drmd:identifierType" maxOccurs="unbounded"/></xs:sequence></xs:complexType>
