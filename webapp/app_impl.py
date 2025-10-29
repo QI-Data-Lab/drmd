@@ -732,7 +732,14 @@ SESSION_DEFAULTS = {
     "validity_type": "Until Revoked", "raw_validity_period": "",
     "date_of_issue": date.today(), "specific_time": date.today(),
     "template_loaded": False,
+    "comar_xml_data": "",
+    "show_comar_instructions": False,
+    "generated_xml": "",
+    "generated_html": "",
+    "xml_is_valid": False,
+    "validation_message": "",
 }
+
 for k, v in SESSION_DEFAULTS.items():
     if k not in st.session_state:
         st.session_state[k] = v
@@ -1537,7 +1544,7 @@ with tabs[6]:
 
     # Only show this placeholder initially
     with col2:
-        if not generate_button:
+        if not generate_button and not st.session_state.get('generated_xml'):
             st.write("Click the button to generate XML from your entered data.")
 
     if generate_button:
@@ -1693,8 +1700,8 @@ with tabs[6]:
         # Prepare statements section (append later to maintain schema order)
         statements_elem = export_statements(ns_drmd, ns_dcc)
 
-    # --- Material Properties ---
-         # Next: materialPropertiesList.
+        # --- Material Properties ---
+        # Next: materialPropertiesList.
         mp_list_elem = export_materialProperties(ns_drmd, ns_dcc, ns_si)
         root.append(mp_list_elem)
         # Now append statements after materialPropertiesList to respect sequence order
@@ -1709,7 +1716,6 @@ with tabs[6]:
         doc_elem = export_document(ns_drmd, ns_dcc)
         if doc_elem is not None:
             root.append(doc_elem)
-
 
         if st.session_state.get("digital_signature_cert"):
             ds_elem = ET.SubElement(root, f"{{{DS_NS}}}Signature")
@@ -1752,17 +1758,54 @@ with tabs[6]:
             st.error(f"XSL Transformation Error: {e}")
             html_output = ""
 
+        # Store the generated data in session state
+        st.session_state.generated_xml = pretty_xml
+        st.session_state.generated_html = html_output
+        st.session_state.xml_is_valid = is_valid
+        st.session_state.validation_message = validation_message
+
+    # Show download buttons and COMAR functionality if XML has been generated
+    if st.session_state.get('generated_xml'):
+        pretty_xml = st.session_state.generated_xml
+        html_output = st.session_state.generated_html
+        is_valid = st.session_state.xml_is_valid
+        validation_message = st.session_state.validation_message
+        
         # Download buttons row
-        col1, col2, col3 = st.columns([1, 1, 2])
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             st.download_button("Download HTML", data=html_output, file_name="certificate.html", mime="text/html", use_container_width=True)
         with col2:
             st.download_button("Download XML", data=pretty_xml, file_name="material_properties.xml", mime="application/xml", use_container_width=True)
         with col3:
-            if is_valid:
-                st.success("XML is valid against the schema!")
-            else:
-                st.error("XML is NOT valid against the schema!")
+            st.link_button(
+                "Upload to COMAR",
+                "https://www.comar.bam.de/apex/r/eptiscomar/f_103106107107200990333500400/my-crms",
+                disabled=not is_valid,
+                use_container_width=True,
+                help="Open COMAR database to upload XML"
+            )
+        
+        # Validation status
+        if is_valid:
+            st.success("XML is valid against the schema!")
+        else:
+            st.error("XML is NOT valid against the schema!")
+        
+        # COMAR Upload Instructions (always visible)
+        st.markdown("---")
+        st.markdown("### 📤 COMAR Database Upload Procedure")
+        st.markdown("""
+        **Follow these steps to upload your XML to the COMAR database:**
+        
+        1. **Download XML**: Click the "Download XML" button above to save the XML file to your computer
+        2. **Open COMAR Database**: Click the "Upload to COMAR" button to open the COMAR database in a new tab
+        3. **Navigate to Upload**: In COMAR, go to the "My CRMs" section
+        4. **Drag & Drop**: Use the drag and drop XML feature to upload your downloaded XML file
+        5. **Verify**: Check that your reference material data appears correctly in COMAR
+        
+        ⚠️ **Note**: Make sure your XML file is valid (green checkmark above) before uploading.
+        """)
 
         # HTML preview (expanded by default)
         with st.expander("HTML Preview", expanded=True):
@@ -1776,7 +1819,8 @@ with tabs[6]:
             if not is_valid and validation_message:
                 st.error("Validation Errors:")
                 st.code(validation_message)
-# (after your existing tabs, add “Help”)
+
+
 
 
 with tabs[-2]:
