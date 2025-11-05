@@ -875,7 +875,7 @@ with tabs[0]:
                     # Display a placeholder if no duration is entered
                     st.info("`P`")
 
-                st.date_input("Dispatch Date", key="date_of_issue")
+                st.date_input("Dispatch Date", key="date_of_issue", max_value=date.max)
         elif v_type == "Specific Time":
             with cols[1]:
                 st.date_input("Date", key="specific_time")
