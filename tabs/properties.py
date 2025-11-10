@@ -1,4 +1,3 @@
-# tabs/properties.py
 import streamlit as st
 import pandas as pd
 from utils import INIT_ID, create_empty_result, qudt_quantities
@@ -26,45 +25,44 @@ def render_properties():
             for res_idx, result in enumerate(mp.get("results", [])):
                 st.markdown(f"##### Table {res_idx + 1}")
                 
-                # Remove table button outside of form
+                # Remove table button
                 col_name, col_remove = st.columns([4, 1])
                 with col_remove:
                     if st.button("Remove Table", key=f"remove_res_{mp_uuid}_{res_idx}"):
                         mp["results"].pop(res_idx)
                         st.rerun()
 
-                # Use form for smooth operation
-                with st.form(key=f"res_form_{mp_uuid}_{res_idx}"):
-                    result["result_name"] = st.text_input("Name", value=result.get("result_name", ""), key=f"res_name_{mp_uuid}_{res_idx}")
-                    result["description"] = st.text_area("Description", value=result.get("description", ""), key=f"res_desc_{mp_uuid}_{res_idx}")
-                    
-                    # Initialize identifiers if not present
-                    if "identifiers" not in result:
-                        result["identifiers"] = [ [] for _ in range(len(result.get("quantities", pd.DataFrame()))) ]
-                    
-                    # Smooth data editor without D-SI units
-                    result["quantities"] = st.data_editor(
-                        result.get("quantities", pd.DataFrame(columns=[
-                            "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
-                            "Value", "Quantity Kind", "Unit",
-                            "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
-                        ])),
-                        num_rows="dynamic",
-                        disabled=["Identifier Scheme", "Identifier Value", "Identifier Link"],
-                        key=f"quantities_{mp_uuid}_{res_idx}"
-                    )
-                    
-                    # Form submit button
-                    submitted = st.form_submit_button("Update Table")
-                    if submitted:
-                        # Update identifiers list length to match quantities
-                        quantities_len = len(result["quantities"])
-                        while len(result["identifiers"]) < quantities_len:
-                            result["identifiers"].append([])
-                        while len(result["identifiers"]) > quantities_len:
-                            result["identifiers"].pop()
+                # Result name and description
+                result["result_name"] = st.text_input("Name", value=result.get("result_name", ""), key=f"res_name_{mp_uuid}_{res_idx}")
+                result["description"] = st.text_area("Description", value=result.get("description", ""), key=f"res_desc_{mp_uuid}_{res_idx}")
+                
+                # Initialize identifiers if not present
+                if "identifiers" not in result:
+                    result["identifiers"] = [ [] for _ in range(len(result.get("quantities", pd.DataFrame()))) ]
+                
+                # Data editor without form - direct updates
+                edited_df = st.data_editor(
+                    result.get("quantities", pd.DataFrame(columns=[
+                        "Name", "Label", "Identifier Scheme", "Identifier Value", "Identifier Link",
+                        "Value", "Quantity Kind", "Unit",
+                        "Uncertainty", "Coverage Factor", "Coverage Probability", "Distribution"
+                    ])),
+                    num_rows="dynamic",
+                    disabled=["Identifier Scheme", "Identifier Value", "Identifier Link"],
+                    key=f"quantities_{mp_uuid}_{res_idx}"
+                )
+                
+                # Update the result quantities with edited data
+                result["quantities"] = edited_df
+                
+                # Update identifiers list length to match quantities
+                quantities_len = len(result["quantities"])
+                while len(result["identifiers"]) < quantities_len:
+                    result["identifiers"].append([])
+                while len(result["identifiers"]) > quantities_len:
+                    result["identifiers"].pop()
 
-                # Identifiers editing section (outside form for immediate feedback)
+                # Identifiers editing section
                 qlen = len(result.get("quantities", pd.DataFrame()))
                 if qlen > 0:
                     st.markdown("###### Edit Identifiers for a Row")
@@ -130,14 +128,3 @@ def render_properties():
             if st.button("Add Table", key=f"add_result_{mp_uuid}"):
                 mp.setdefault("results", []).append(create_empty_result())
                 st.rerun()
-
-
-    # with col_right:
-    #     # Commented out quantity selection and QUDT selection
-    #     # st.markdown("Quantity Selection", help="This panel shows available quantity types and their units from the QUDT ontology. Select a quantity to see applicable units.",)
-    #     # st.session_state.selected_quantity = st.selectbox("Type", list(qudt_quantities.keys()) + ["Custom"], key="quantity_select")
-    #     # st.session_state.selected_unit = st.selectbox("Unit", qudt_quantities.get(st.session_state.selected_quantity, ["Custom"]), key="unit_select")
-    #     # st.markdown("---")
-
-    #     # Removed uncertainty fields from right column - now they are under each table
-    #     #st.write("Properties configuration panel")
