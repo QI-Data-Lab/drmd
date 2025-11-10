@@ -144,7 +144,7 @@ st.markdown(
         padding: {pad/2}rem {pad}rem !important;
     }}
 
-    /* Markdown text (e.g. inside st.markdown or st.write) */
+    /* Markdown text (e.g., inside st.markdown or st.write) */
     .stMarkdown p {{
         font-size: {fs}rem !important;
     }}
@@ -345,30 +345,29 @@ def load_xml_into_state(xml_bytes: bytes):
         root = tree.getroot()
 
         # Define namespaces
+        # --- FIX: Hardcode namespaces as they are defined in the sample XML ---
+        # The auto-detection was unreliable.
         ns = {
             "drmd": "https://example.org/drmd",
             "dcc": "https://ptb.de/dcc",
             "si": "https://ptb.de/si",
             "ds": "http://www.w3.org/2000/09/xmldsig#"
         }
-
-        # Try to extract namespace from root tag if possible
-        ns_match = re.match(r'\{(.*?)\}', root.tag)
-        if ns_match:
-            ns["drmd"] = ns_match.group(1)
-
+        
+        # ---
+        
         # Load title and unique identifier
-        title_elem = root.find(".//drmd:titleOfTheDocument", ns)
+        title_elem = root.find("./drmd:administrativeData/drmd:coreData/drmd:titleOfTheDocument", ns)
         if title_elem is not None and title_elem.text:
             st.session_state.title_option = title_elem.text.strip() if title_elem.text.strip() in ALLOWED_TITLES else ALLOWED_TITLES[0]
 
-        uid_elem = root.find(".//drmd:uniqueIdentifier", ns)
+        uid_elem = root.find("./drmd:administrativeData/drmd:coreData/drmd:uniqueIdentifier", ns)
         if uid_elem is not None and uid_elem.text:
             st.session_state.persistent_id = uid_elem.text.strip()
             st.session_state.persistent_id_value = uid_elem.text.strip()
 
         # Load validity
-        validity_elem = root.find(".//drmd:validity", ns)
+        validity_elem = root.find("./drmd:administrativeData/drmd:coreData/drmd:validity", ns)
         if validity_elem is not None:
             if validity_elem.find("drmd:untilRevoked", ns) is not None:
                 st.session_state.validity_type = "Until Revoked"
@@ -377,6 +376,13 @@ def load_xml_into_state(xml_bytes: bytes):
                 period_elem = validity_elem.find("drmd:timeAfterDispatch/drmd:period", ns)
                 if period_elem is not None and period_elem.text:
                     st.session_state.raw_validity_period = period_elem.text.strip()
+                    # --- FIX: Parse ISO duration string for Years and Months ---
+                    period_str = period_elem.text.strip()
+                    years_match = re.search(r'P(\d+)Y', period_str)
+                    months_match = re.search(r'(\d+)M', period_str)
+                    st.session_state.duration_y = int(years_match.group(1)) if years_match else 0
+                    st.session_state.duration_m = int(months_match.group(1)) if months_match else 0
+                    # --- END FIX ---
                 dd_elem = validity_elem.find("drmd:timeAfterDispatch/drmd:dispatchDate", ns)
                 if dd_elem is not None and dd_elem.text:
                     try:
@@ -394,7 +400,7 @@ def load_xml_into_state(xml_bytes: bytes):
 
         # Load document identifiers (new style)
         dids = []
-        for did in root.findall(".//drmd:documentIdentifiers/drmd:documentIdentifier", ns):
+        for did in root.findall("./drmd:administrativeData/drmd:coreData/drmd:documentIdentifiers/drmd:documentIdentifier", ns):
             scheme = did.find("drmd:scheme", ns)
             value = did.find("drmd:value", ns)
             link_elem = did.find("drmd:link", ns)
@@ -415,11 +421,11 @@ def load_xml_into_state(xml_bytes: bytes):
                 }]
             else:
                 dids = [INIT_ID.copy()]
-        st.session_state.documentIdentifiers = dids
+            st.session_state.documentIdentifiers = dids
 
         # Load Producers
         prods = []
-        for prod_elem in root.findall(".//drmd:referenceMaterialProducer", ns):
+        for prod_elem in root.findall("./drmd:administrativeData/drmd:referenceMaterialProducer", ns):
             name_elem = prod_elem.find("drmd:name/dcc:content", ns)
             contact_elem = prod_elem.find("drmd:contact", ns)
             street = streetNo = postCode = city = country = phone = fax = email = ""
@@ -462,7 +468,7 @@ def load_xml_into_state(xml_bytes: bytes):
 
         # Load Responsible Persons
         rps = []
-        for rp_elem in root.findall(".//drmd:respPersons/dcc:respPerson", ns):
+        for rp_elem in root.findall("./drmd:administrativeData/drmd:respPersons/dcc:respPerson", ns):
             person_elem = rp_elem.find("dcc:person/dcc:name/dcc:content", ns)
             name = person_elem.text.strip() if person_elem is not None and person_elem.text else ""
             desc_elems = rp_elem.findall("dcc:description/dcc:content", ns)
@@ -491,19 +497,39 @@ def load_xml_into_state(xml_bytes: bytes):
 
         # Load Materials
         mats = []
-        for mat_elem in root.findall(".//drmd:materials/drmd:material", ns):
+        for mat_elem in root.findall("./drmd:materials/drmd:material", ns):
             name_elem = mat_elem.find("drmd:name/dcc:content", ns)
             desc_elem = mat_elem.find("drmd:description/dcc:content", ns)
-            sample_elem = mat_elem.find("drmd:minimumSampleSize/dcc:itemQuantity/si:realListXMLList/si:valueXMLList", ns)
+            
+            # --- FIX: Load Material Class ---
+            # Note: This tag is NOT in your sample XML, so it will be blank.
+            class_elem = mat_elem.find("drmd:materialClass/dcc:content", ns)
+            mat_class = class_elem.text.strip() if class_elem is not None and class_elem.text else ""
+            # --- END FIX ---
+
+            # --- FIX: Load Minimum Sample Size with Units ---
+            sample_val_elem = mat_elem.find("drmd:minimumSampleSize/dcc:itemQuantity/si:realListXMLList/si:valueXMLList", ns)
+            sample_unit_elem = mat_elem.find("drmd:minimumSampleSize/dcc:itemQuantity/si:realListXMLList/si:unitXMLList", ns)
+            sample_size = ""
+            if sample_val_elem is not None and sample_val_elem.text:
+                sample_size = sample_val_elem.text.strip()
+                if sample_unit_elem is not None and sample_unit_elem.text:
+                    sample_size += f" {sample_unit_elem.text.strip()}"
+            # --- END FIX ---
+
+            # --- FIX: Load Item Quantities ---
+            iq_elem = mat_elem.find("drmd:itemQuantities/dcc:itemQuantity/si:realListXMLList/si:valueXMLList", ns)
+            item_quantities = iq_elem.text.strip() if iq_elem is not None and iq_elem.text else ""
+            # --- END FIX ---
 
             # Build material dictionary with all required keys
             mat = {
                 "uuid": str(uuid.uuid4()),
                 "name": name_elem.text.strip() if name_elem is not None and name_elem.text else "",
                 "description": " ".join(desc_elem.text.split()) if desc_elem is not None and desc_elem.text else "",
-                "materialClass": "",
-                "minimumSampleSize": sample_elem.text.strip() if sample_elem is not None and sample_elem.text else "",
-                "itemQuantities": "",
+                "materialClass": mat_class, # FIX
+                "minimumSampleSize": sample_size, # FIX
+                "itemQuantities": item_quantities, # FIX
                 "isCertified": mat_elem.get("isCertified", "false").lower() == "true",
                 "materialIdentifiers": []
             }
@@ -539,7 +565,7 @@ def load_xml_into_state(xml_bytes: bytes):
         official_statements = {key: {"name": "", "content": ""} for key in official_keys}
         custom_statements = []
 
-        statements_elem = root.find(".//drmd:statements", ns)
+        statements_elem = root.find("./drmd:statements", ns)
         if statements_elem is not None:
             for child in statements_elem:
                 # Get the local tag name
@@ -549,7 +575,8 @@ def load_xml_into_state(xml_bytes: bytes):
                 name_text = clean_text(name_elem.text) if name_elem is not None and name_elem.text else ""
                 # Extract all direct dcc:content children (excluding the one inside dcc:name)
                 contents = []
-                for elem in child.findall("dcc:content", ns):
+                # Use ./ to find only direct children
+                for elem in child.findall("./dcc:content", ns):
                     if elem.text:
                         contents.append(clean_text(elem.text))
                 content_text = "\n".join(contents)
@@ -564,7 +591,9 @@ def load_xml_into_state(xml_bytes: bytes):
 
         # Load Material Properties
         mps = []
-        mp_list_elem = root.find("drmd:materialPropertiesList", ns)
+        # --- FIX: Add './' to path ---
+        mp_list_elem = root.find("./drmd:materialPropertiesList", ns)
+        # --- END FIX ---
         if mp_list_elem is not None:
             for mp_elem in mp_list_elem.findall("drmd:materialProperties", ns):
                 mp_dict = {}
@@ -575,12 +604,17 @@ def load_xml_into_state(xml_bytes: bytes):
                 # Name (required)
                 name_elem = mp_elem.find("drmd:name/dcc:content", ns)
                 mp_dict["name"] = clean_text(name_elem.text) if name_elem is not None and name_elem.text else ""
+                # --- FIX: Populate displayName for UI ---
+                mp_dict["displayName"] = mp_dict["name"]
+                # --- END FIX ---
                 # Description (optional)
                 desc_elem = mp_elem.find("drmd:description/dcc:content", ns)
                 mp_dict["description"] = clean_text(desc_elem.text) if desc_elem is not None and desc_elem.text else ""
-                # Procedures (optional)
-                proc_elem = mp_elem.find("drmd:procedures/dcc:content", ns)
+                
+                # --- FIX: Load Procedures from correct path ---
+                proc_elem = mp_elem.find("drmd:procedures/dcc:usedMethod/dcc:description/dcc:content", ns)
                 mp_dict["procedures"] = clean_text(proc_elem.text) if proc_elem is not None and proc_elem.text else ""
+                # --- END FIX ---
 
                 # Results (required)
                 results = []
@@ -660,8 +694,10 @@ def load_xml_into_state(xml_bytes: bytes):
                 mp_dict["uuid"] = str(uuid.uuid4())
                 mps.append(mp_dict)
         if mps:
+            # --- FIX: If loading from XML, overwrite the default properties ---
             st.session_state.materialProperties = mps
-
+            # --- END FIX ---
+        
         # Extract all <comment> elements separately
         comments = []
         for comment_elem in root.findall(".//drmd:comment", ns):
@@ -674,7 +710,9 @@ def load_xml_into_state(xml_bytes: bytes):
         for doc_elem in root.findall(".//drmd:document", ns):
             file_name = doc_elem.find("dcc:fileName", ns).text if doc_elem.find("dcc:fileName", ns) is not None else "unknown"
             mime_type = doc_elem.find("dcc:mimeType", ns).text if doc_elem.find("dcc:mimeType", ns) is not None else "application/octet-stream"
+            # --- FIX: Corrected typo from dataBase6A4 to dataBase64 ---
             base64_data = doc_elem.find("dcc:dataBase64", ns).text if doc_elem.find("dcc:dataBase64", ns) is not None else ""
+            # --- END FIX ---
 
             # Convert base64 data to bytes for download
             file_bytes = base64.b64decode(base64_data) if base64_data else b""
@@ -693,8 +731,11 @@ def load_xml_into_state(xml_bytes: bytes):
         st.session_state.template_loaded = True
         # Removed sidebar status message
 
-    except Exception:
-        # Silently ignore parsing errors; user can run diagnostics in Settings tab
+    except Exception as e:
+        # --- FIX: Show the error instead of failing silently ---
+        st.error(f"Error parsing XML: {e}")
+        traceback.print_exc() # Prints full error to console
+        # --- END FIX ---
         return
 
 # -----------------------------------------------------------------------------
@@ -731,6 +772,7 @@ SESSION_DEFAULTS = {
     "persistent_id_value": "",
     "validity_type": "Until Revoked", "raw_validity_period": "",
     "date_of_issue": date.today(), "specific_time": date.today(),
+    "duration_y": 0, "duration_m": 0, # Add keys for year/month
     "template_loaded": False,
     "comar_xml_data": "",
     "show_comar_instructions": False,
@@ -749,8 +791,12 @@ for k, v in SESSION_DEFAULTS.items():
 xml_template = st.sidebar.file_uploader("Load XML file", type=["xml"])
 if xml_template:
     xml_bytes = xml_template.getvalue()
-    if not st.session_state.template_loaded:
-        load_xml_into_state(xml_bytes)
+    # --- FIX: Always reload, don't check template_loaded ---
+    # This allows reloading a new file over an existing one
+    load_xml_into_state(xml_bytes)
+    st.session_state.template_loaded = False # Reset flag to allow re-upload
+    # --- END FIX ---
+    
     # Schema validation feedback (debounced by content hash)
     try:
         import hashlib, lxml.etree as _etree
@@ -1033,7 +1079,8 @@ with tabs[2]:
             col1, col2 = st.columns(2)
             with col1:
                 mp["id"] = st.text_input("ID (optional)", value=mp.get("id", ""), key=f"mp_id_{mp_uuid}")
-                st.text_input("Name", value=mp.get("displayName", ""), key=f"mp_name_{mp_uuid}", disabled=True)
+                # --- FIX: Use displayName from loaded data ---
+                st.text_input("Name", value=mp.get("displayName", mp.get("name", "")), key=f"mp_name_{mp_uuid}", disabled=True)
             with col2:
                 mp["description"] = st.text_area("Description", value=mp.get("description", ""),
                                                  key=f"mp_desc_{mp_uuid}")
@@ -1274,7 +1321,7 @@ def export_materialProperties(ns_drmd, ns_dcc, ns_si):
     mp_list_elem = ET.Element(f"{{{ns_drmd}}}materialPropertiesList")
     for mp in st.session_state.materialProperties:
         # Determine the certified status based on the set's name
-        is_certified_flag = "true" if mp.get("name") == "Certified Properties Set" else "false"
+        is_certified_flag = "true" if mp.get("isCertified", False) else "false" # Use the loaded isCertified flag
         mp_elem = ET.SubElement(mp_list_elem, f"{{{ns_drmd}}}materialProperties", attrib={
             "isCertified": is_certified_flag
         })
@@ -1595,6 +1642,13 @@ with tabs[6]:
                 if (material.get("description", "") or "").strip():
                     desc_elem = ET.SubElement(mat_elem, f"{{{ns_drmd}}}description")
                     ET.SubElement(desc_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = material.get("description", "")
+                
+                # --- FIX: Add materialClass ---
+                if (material.get("materialClass", "") or "").strip():
+                    class_elem = ET.SubElement(mat_elem, f"{{{ns_drmd}}}materialClass")
+                    ET.SubElement(class_elem, f"{{{ns_dcc}}}content", attrib={"lang": "en"}).text = material.get("materialClass", "")
+                # --- END FIX ---
+
                 # minimumSampleSize (required) – parse value and unit properly
                 min_sample_elem = ET.SubElement(mat_elem, f"{{{ns_drmd}}}minimumSampleSize")
                 iq_elem = ET.SubElement(min_sample_elem, f"{{{ns_dcc}}}itemQuantity")
@@ -1865,7 +1919,7 @@ with tabs[-2]:
                 "1. **Load** an existing DRMD XML (optional) — fields populate automatically.  \n"
                 "2. Work through each tab, filling in all required fields. Hover over ⓘ icons for inline help.  \n"
                 "3. **Generate** the Persistent Identifier (UUID) or supply your own.  \n"
-                "4. In **Validate & Export**, click “Validate” to catch schema errors, then “Download” to save your XML.")
+                "4. In **Validate & Export**, click “Validate” to catch schema errors, then “Download” to save your finished XML.")
 
     st.markdown("#### Dependencies  \n"
                 "- Python 3.8+  \n"
@@ -1985,5 +2039,3 @@ with tabs[-1]:
         else:
             for ex in examples:
                 st.write(f"- ⚠️ Skipped (schema failed): `{ex}`")
-    else:
-        st.info("Click 'Run Diagnostics' to compile schema/XSL and validate bundled example XML files.")

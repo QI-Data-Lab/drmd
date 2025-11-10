@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<drmd:digitalReferenceMaterialDocument xmlns:dcc="https://ptb.de/dcc" xmlns:drmd="https://example.org/drmd" xmlns:si="https://ptb.de/si" schemaVersion="0.3.0">
+  <drmd:administrativeData>
+    <drmd:coreData>
+      <drmd:titleOfTheDocument>productInformationSheet</drmd:titleOfTheDocument>
+      <drmd:uniqueIdentifier>{Hah-value}</drmd:uniqueIdentifier>
+      <drmd:validity>
+        <drmd:untilRevoked>true</drmd:untilRevoked>
+      </drmd:validity>
+    </drmd:coreData>
+    <drmd:referenceMaterialProducer>
+      <drmd:name>
+        <dcc:content>BAM</dcc:content>
+      </drmd:name>
+      <drmd:contact>
+        <dcc:name>
+          <dcc:content>BAM</dcc:content>
+        </dcc:name>
+        <dcc:eMail>sales.crm@bam.de</dcc:eMail>
+        <dcc:phone>+49 30 8104 2061</dcc:phone>
+        <dcc:fax>+49 30 8104 72061</dcc:fax>
+        <dcc:link>www.bam.de</dcc:link>
+        <dcc:location>
+          <dcc:street>Richard-Willstätter-Str.</dcc:street>
+          <dcc:streetNo>11</dcc:streetNo>
+          <dcc:postCode>D-12489</dcc:postCode>
+          <dcc:city>Berlin</dcc:city>
+          <dcc:countryCode>DE</dcc:countryCode>
+        </dcc:location>
+      </drmd:contact>
+    </drmd:referenceMaterialProducer>
+    <drmd:respPersons>
+      <dcc:respPerson>
+        <dcc:person>
+          <dcc:name>
+            <dcc:content>Dr. John Doe</dcc:content>
+          </dcc:name>
+        </dcc:person>
+        <dcc:role>Project Coordinator, Division 1.7</dcc:role>
+      </dcc:respPerson>
+    </drmd:respPersons>
+  </drmd:administrativeData>
+  <drmd:materials>
+    <drmd:material>
+      <drmd:name>
+        <dcc:content>material name</dcc:content>
+      </drmd:name>
+      <drmd:description>
+        <dcc:content>The RM disappears once looked upon.</dcc:content>
+      </drmd:description>
+      <drmd:minimumSampleSize>
+        <dcc:itemQuantity>
+          <si:realListXMLList>
+            <si:valueXMLList>2</si:valueXMLList>
+            <si:unitXMLList>mL</si:unitXMLList>
+          </si:realListXMLList>
+        </dcc:itemQuantity>
+      </drmd:minimumSampleSize>
+    </drmd:material>
+  </drmd:materials>
+  <drmd:materialPropertiesList>
+    <drmd:materialProperties isCertified="true">
+      <drmd:name>
+        <dcc:content lang="en">Certified mass fractions and their associated uncertainties.</dcc:content>
+      </drmd:name>
+      <drmd:results>
+        <drmd:result>
+          <drmd:name>
+            <dcc:content lang="en">Certified Values</dcc:content>
+          </drmd:name>
+          <drmd:description>
+            <dcc:content lang="en">Description</dcc:content>
+          </drmd:description>
+          <drmd:data>
+            <drmd:list>
+              <drmd:quantity refType="basic_measuredValue">
+                <dcc:name>
+                  <dcc:content lang="en">Benz(a)anthracen</dcc:content>
+                </dcc:name>
+                <si:real>
+                  <si:label>Benz(a)anthracen</si:label>
+                  <si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
+                  <si:value>1.72</si:value>
+                  <si:unit>µg/kg</si:unit>
+                  <si:measurementUncertaintyUnivariate>
+                    <si:expandedMU>
+                      <si:valueExpandedMU>0.13</si:valueExpandedMU>
+                      <si:coverageFactor>2</si:coverageFactor>
+                    </si:expandedMU>
+                  </si:measurementUncertaintyUnivariate>
+                </si:real>
+              </drmd:quantity>
+              <drmd:quantity refType="basic_measuredValue">
+                <dcc:name>
+                  <dcc:content lang="en">Chrysen</dcc:content>
+                </dcc:name>
+                <si:real>
+                  <si:label>Chrysen</si:label>
+                  <si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
+                  <si:value>2.87</si:value>
+                  <si:unit>µg/kg</si:unit>
+                  <si:measurementUncertaintyUnivariate>
+                    <si:expandedMU>
+                      <si:valueExpandedMU>0.31</si:valueExpandedMU>
+                      <si:coverageFactor>2</si:coverageFactor>
+                    </si:expandedMU>
+                  </si:measurementUncertaintyUnivariate>
+                </si:real>
+              </drmd:quantity>
+              <drmd:quantity refType="basic_measuredValue">
+                <dcc:name>
+                  <dcc:content lang="en">Benzo(b)fluoranthen</dcc:content>
+                </dcc:name>
+                <si:real>
+                  <si:label>Benzo(b)fluoranthen</si:label>
+                  <si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
+                  <si:value>1.3</si:value>
+                  <si:unit>µg/kg</si:unit>
+                  <si:measurementUncertaintyUnivariate>
+                    <si:expandedMU>
+                      <si:valueExpandedMU>0.14</si:valueExpandedMU>
+                      <si:coverageFactor>2</si:coverageFactor>
+                    </si:expandedMU>
+                  </si:measurementUncertaintyUnivariate>
+                </si:real>
+              </drmd:quantity>
+              <drmd:quantity refType="basic_measuredValue">
+                <dcc:name>
+                  <dcc:content lang="en">Benzo(a)pyren</dcc:content>
+                </dcc:name>
+                <si:real>
+                  <si:label>Benzo(a)pyren</si:label>
+                  <si:quantityTypeQUDT>MassFraction</si:quantityTypeQUDT>
+                  <si:value>1.44</si:value>
+                  <si:unit>µg/kg</si:unit>
+                  <si:measurementUncertaintyUnivariate>
+                    <si:expandedMU>
+                      <si:valueExpandedMU>0.09</si:valueExpandedMU>
+                      <si:coverageFactor>2</si:coverageFactor>
+                    </si:expandedMU>
+                  </si:measurementUncertaintyUnivariate>
+                </si:real>
+              </drmd:quantity>
+            </drmd:list>
+          </drmd:data>
+        </drmd:result>
+      </drmd:results>
+    </drmd:materialProperties>
+  </drmd:materialPropertiesList>
+  <drmd:statements>
+    <drmd:intendedUse>
+      <dcc:name>
+        <dcc:content>Intended Use</dcc:content>
+      </dcc:name>
+      <dcc:content>The CRM is intended for checking the amount of boredom in students.</dcc:content>
+    </drmd:intendedUse>
+    <drmd:commutability>
+      <dcc:name>
+        <dcc:content>Commutability</dcc:content>
+      </dcc:name>
+    </drmd:commutability>
+    <drmd:storageInformation>
+      <dcc:name>
+        <dcc:content>Storage Information</dcc:content>
+      </dcc:name>
+    </drmd:storageInformation>
+    <drmd:instructionsForHandlingAndUse>
+      <dcc:name>
+        <dcc:content>instructionsForHandlingAndUse</dcc:content>
+      </dcc:name>
+    </drmd:instructionsForHandlingAndUse>
+  </drmd:statements>
+</drmd:digitalReferenceMaterialDocument>
