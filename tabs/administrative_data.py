@@ -153,8 +153,7 @@ def render_administrative_data():
                 specific_date = st.date_input(
                     "Valid Until Date", 
                     value=st.session_state.get("specific_time", date.today()),
-                    min_value=date(1900, 1, 1),
-                    # No max_value = unlimited future date selection
+                    max_value=date.max,
                     key=f"specific_time_v{data_version}"
                 )
                 st.session_state.specific_time = specific_date

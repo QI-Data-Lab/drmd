@@ -12,7 +12,7 @@ venv:
 
 install: venv
 	$(PIP) install --upgrade pip
-	$(PIP) install -r webapp/requirements.txt
+	$(PIP) install -r requirements.txt
 
 normalize: install
 	$(PY) scripts/normalize_v0_2_examples.py v0.3.0/xml/*.xml
@@ -33,7 +33,7 @@ check: normalize validate html test
 
 # Run Streamlit app (headless). Use Ctrl+C to stop when running interactively.
 app: install
-	$(VENV)/bin/streamlit run webapp/app.py --server.headless true --server.port 8501
+	$(VENV)/bin/streamlit run app.py --server.headless true --server.port 8501
 
 .PHONY: docker-build docker-run
 docker-build:
