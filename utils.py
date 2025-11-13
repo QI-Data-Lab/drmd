@@ -287,13 +287,11 @@ def load_xml_into_state(xml_bytes: bytes):
         else:
             st.session_state.title_option = ALLOWED_TITLES[0]
 
-        uid_elem = root.find(".//drmd:uniqueIdentifier", ns)
-        if uid_elem is not None and uid_elem.text:
-            st.session_state.persistent_id = uid_elem.text.strip()
-            st.session_state.persistent_id_value = uid_elem.text.strip()
+        uidelem = root.find(".//drmd:uniqueIdentifier", ns)
+        if uidelem is not None and uidelem.text:
+            st.session_state.uniqueIdentifier = uidelem.text.strip()
         else:
-            st.session_state.persistent_id = ""
-            st.session_state.persistent_id_value = ""
+            st.session_state.uniqueIdentifier = ""
 
         # =========================================================================
         # STEP 3: Load Validity
@@ -848,10 +846,22 @@ def add_if_valid(parent, tag, value, ns):
             return None
     except Exception:
         pass
-    if str(value).strip() == "":
+    
+    # Convert to string first
+    value_str = str(value)
+    
+    # Sanitize the string to remove illegal XML chars
+    sanitized_str = sanitize_xml_string(value_str)
+
+    # Strip whitespace
+    stripped_str = sanitized_str.strip()
+
+    # Check if empty *after* all processing
+    if stripped_str == "":
         return None
+        
     elem = ET.SubElement(parent, f"{{{ns}}}{tag}")
-    elem.text = str(value).strip()
+    elem.text = stripped_str
     return elem
 
 def export_identifier_list(parent, tag, id_list, ns_drmd):
@@ -870,13 +880,18 @@ def export_identifier_list(parent, tag, id_list, ns_drmd):
     for ident in (id_list or []):
         if not isinstance(ident, dict):
             continue
-        scheme = (ident.get("scheme") or "").strip()
-        value = (ident.get("value") or "").strip()
-        link = (ident.get("link") or "").strip()
+        
+        # --- FIX: Sanitize all values before checking them ---
+        scheme = sanitize_xml_string(ident.get("scheme") or "").strip()
+        value = sanitize_xml_string(ident.get("value") or "").strip()
+        link = sanitize_xml_string(ident.get("link") or "").strip()
+        
         if scheme and value:
             valid.append({"scheme": scheme, "value": value, "link": link})
+            
     if not valid:
         return None
+        
     outer = ET.SubElement(parent, f"{{{ns_drmd}}}{tag}")
     for ident in valid:
         ident_elem = ET.SubElement(outer, f"{{{ns_drmd}}}{singular}")
@@ -885,3 +900,313 @@ def export_identifier_list(parent, tag, id_list, ns_drmd):
         if ident["link"]:
             ET.SubElement(ident_elem, f"{{{ns_drmd}}}link").text = ident["link"]
     return outer
+
+# -----------------------------------------------------------------------------
+# NEW FUNCTIONS ADDED FROM PROMPT
+# -----------------------------------------------------------------------------
+
+def build_xml_from_session():
+    """
+    Build complete DRMD XML from session state.
+    Returns XML as string.
+    """
+    ns_drmd = "https://example.org/drmd"
+    ns_dcc = "https://ptb.de/dcc"
+    ns_si = "https://ptb.de/si"
+    ns_ds = "http://www.w3.org/2000/09/xmldsig#"
+    
+    # Register namespaces
+    ET.register_namespace('drmd', ns_drmd)
+    ET.register_namespace('dcc', ns_dcc)
+    ET.register_namespace('si', ns_si)
+    ET.register_namespace('ds', ns_ds)
+    ET.register_namespace('xsi', "http://www.w3.org/2001/XMLSchema-instance")
+    
+    # Create root element
+    schema_version = st.session_state.get("schemaVersion", "0.3.0") # Use a reasonable default
+    root = ET.Element(
+        f"{{{ns_drmd}}}digitalReferenceMaterialDocument",
+        attrib={
+            "schemaVersion": schema_version,
+            "{http://www.w3.org/2001/XMLSchema-instance}schemaLocation": 
+                f"{ns_drmd} https://example.org/drmd/drmd.xsd" # This URL might need updating
+        }
+    )
+    
+    # Build administrative data
+    admin_data = ET.SubElement(root, f"{{{ns_drmd}}}administrativeData")
+    
+    # Core data
+    core_data = ET.SubElement(admin_data, f"{{{ns_drmd}}}coreData")
+    
+    add_if_valid(core_data, "titleOfTheDocument", st.session_state.get("title_option", "referenceMaterialCertificate"), ns_drmd)
+    add_if_valid(core_data, "uniqueIdentifier", st.session_state.get("uniqueIdentifier"), ns_drmd)
+    
+    # Add validity section
+    validity_elem = ET.SubElement(core_data, f"{{{ns_drmd}}}validity")
+    validity_type = st.session_state.get("validity_type", "Until Revoked")
+    
+    if validity_type == "Until Revoked":
+        ET.SubElement(validity_elem, f"{{{ns_drmd}}}untilRevoked").text = "true"
+    elif validity_type == "Specific Time":
+        spec_time_elem = ET.SubElement(validity_elem, f"{{{ns_drmd}}}specificTime")
+        spec_time_elem.text = st.session_state.get("specific_time", date.today()).isoformat()
+    elif validity_type == "Time After Dispatch":
+        tad_elem = ET.SubElement(validity_elem, f"{{{ns_drmd}}}timeAfterDispatch")
+        add_if_valid(tad_elem, "dispatchDate", st.session_state.get("date_of_issue", date.today()).isoformat(), ns_drmd)
+        
+        # Build period string PnYnM
+        years = st.session_state.get("duration_y", 0)
+        months = st.session_state.get("duration_m", 0)
+        period_str = "P"
+        if years > 0:
+            period_str += f"{years}Y"
+        if months > 0:
+            period_str += f"{months}M"
+        if period_str == "P": # Default if no duration
+             period_str = st.session_state.get("raw_validity_period", "P1Y") # Fallback
+        
+        add_if_valid(tad_elem, "period", period_str, ns_drmd)
+
+    # Document Identifiers
+    doc_ids = st.session_state.get("documentIdentifiers", [])
+    export_identifier_list(core_data, "documentIdentifiers", doc_ids, ns_drmd)
+
+    # Producer information
+    producers = st.session_state.get("producers", [])
+    for prod in producers:
+        producer_elem = ET.SubElement(admin_data, f"{{{ns_drmd}}}referenceMaterialProducer")
+        
+        name_elem = ET.SubElement(producer_elem, f"{{{ns_drmd}}}name")
+        add_if_valid(name_elem, "dcc:content", prod.get("producerName"), ns_dcc)
+        
+        contact_elem = ET.SubElement(producer_elem, f"{{{ns_drmd}}}contact")
+        add_if_valid(contact_elem, "dcc:eMail", prod.get("producerEmail"), ns_dcc)
+        add_if_valid(contact_elem, "dcc:phone", prod.get("producerPhone"), ns_dcc)
+        add_if_valid(contact_elem, "dcc:fax", prod.get("producerFax"), ns_dcc)
+        
+        # Location
+        if any([prod.get(k) for k in ["producerStreet", "producerStreetNo", "producerPostCode", "producerCity", "producerCountryCode"]]):
+            loc_elem = ET.SubElement(contact_elem, f"{{{ns_dcc}}}location")
+            add_if_valid(loc_elem, "dcc:street", prod.get("producerStreet"), ns_dcc)
+            add_if_valid(loc_elem, "dcc:streetNo", prod.get("producerStreetNo"), ns_dcc)
+            add_if_valid(loc_elem, "dcc:postCode", prod.get("producerPostCode"), ns_dcc)
+            add_if_valid(loc_elem, "dcc:city", prod.get("producerCity"), ns_dcc)
+            add_if_valid(loc_elem, "dcc:countryCode", prod.get("producerCountryCode"), ns_dcc)
+
+        # Organization Identifiers
+        export_identifier_list(producer_elem, "organizationIdentifiers", prod.get("organizationIdentifiers", []), ns_drmd)
+
+    # Responsible Persons
+    resp_persons = st.session_state.get("responsible_persons", [])
+    if resp_persons:
+        resp_persons_elem = ET.SubElement(admin_data, f"{{{ns_drmd}}}respPersons")
+        for rp in resp_persons:
+            rp_elem = ET.SubElement(resp_persons_elem, f"{{{ns_dcc}}}respPerson")
+            
+            person_elem = ET.SubElement(rp_elem, f"{{{ns_dcc}}}person")
+            name_elem = ET.SubElement(person_elem, f"{{{ns_dcc}}}name")
+            add_if_valid(name_elem, "dcc:content", rp.get("personName"), ns_dcc)
+            
+            desc_elem = ET.SubElement(rp_elem, f"{{{ns_dcc}}}description")
+            add_if_valid(desc_elem, "dcc:content", rp.get("description"), ns_dcc)
+            
+            add_if_valid(rp_elem, "dcc:role", rp.get("role"), ns_dcc)
+            
+            if rp.get("mainSigner"):
+                ET.SubElement(rp_elem, f"{{{ns_dcc}}}mainSigner").text = "true"
+            # Add other crypt flags if needed
+            if rp.get("cryptElectronicSignature"):
+                ET.SubElement(rp_elem, f"{{{ns_dcc}}}cryptElectronicSignature").text = "true"
+
+
+    # Add materials section
+    materials_list_elem = ET.SubElement(root, f"{{{ns_drmd}}}materials")
+    for mat in st.session_state.get("materials", []):
+        material_elem = ET.SubElement(materials_list_elem, f"{{{ns_drmd}}}material")
+        material_elem.set("isCertified", "true" if mat.get("isCertified") else "false")
+
+        name_elem = ET.SubElement(material_elem, f"{{{ns_drmd}}}name")
+        add_if_valid(name_elem, "dcc:content", mat.get("name"), ns_dcc)
+        
+        desc_elem = ET.SubElement(material_elem, f"{{{ns_drmd}}}description")
+        add_if_valid(desc_elem, "dcc:content", mat.get("description"), ns_dcc)
+
+        # Helper to parse "value unit" strings
+        def add_item_quantity(parent, tag, value_str):
+            if not value_str or pd.isna(value_str):
+                return
+            parts = str(value_str).split(maxsplit=1)
+            value = parts[0]
+            unit = parts[1] if len(parts) > 1 else ""
+            
+            elem = ET.SubElement(parent, f"{{{ns_drmd}}}{tag}")
+            iq_elem = ET.SubElement(elem, f"{{{ns_dcc}}}itemQuantity")
+            real_list_elem = ET.SubElement(iq_elem, f"{{{ns_si}}}realListXMLList")
+            add_if_valid(real_list_elem, "si:valueXMLList", value, ns_si)
+            # --- FIX: Sanitize the unit string manually ---
+            sanitized_unit = sanitize_xml_string(unit)
+            ET.SubElement(real_list_elem, f"{{{ns_si}}}unitXMLList").text = sanitized_unit
+
+        add_item_quantity(material_elem, "minimumSampleSize", mat.get("minimumSampleSize"))
+        add_item_quantity(material_elem, "itemQuantities", mat.get("itemQuantities"))
+
+        export_identifier_list(material_elem, "materialIdentifiers", mat.get("materialIdentifiers", []), ns_drmd)
+    
+    # Add properties section
+    props_list = ET.SubElement(root, f"{{{ns_drmd}}}materialPropertiesList")
+    for mp in st.session_state.get("materialProperties", []):
+        mp_elem = ET.SubElement(props_list, f"{{{ns_drmd}}}materialProperties")
+        mp_elem.set("isCertified", "true" if mp.get("isCertified") else "false")
+        
+        # ******** THIS IS THE FIX ********
+        # Sanitize the ID before setting it as an attribute
+        mp_id = mp.get("id")
+        if mp_id:
+            # Use the existing sanitize_xml_string helper
+            sanitized_id = sanitize_xml_string(str(mp_id)).strip() 
+            if sanitized_id:
+                mp_elem.set("id", sanitized_id)
+        # ******** END OF FIX ********
+        
+        name_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}name")
+        add_if_valid(name_elem, "dcc:content", mp.get("name"), ns_dcc)
+        
+        desc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}description")
+        add_if_valid(desc_elem, "dcc:content", mp.get("description"), ns_dcc)
+        
+        if mp.get("procedures"):
+            proc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}procedures")
+            method_elem = ET.SubElement(proc_elem, f"{{{ns_dcc}}}usedMethod")
+            # Simple split, assuming "Name: Description" format
+            proc_parts = mp.get("procedures", ":").split(":", 1)
+            proc_name = proc_parts[0].strip()
+            proc_desc = proc_parts[1].strip() if len(proc_parts) > 1 else ""
+            
+            proc_name_elem = ET.SubElement(method_elem, f"{{{ns_dcc}}}name")
+            add_if_valid(proc_name_elem, "dcc:content", proc_name, ns_dcc)
+            proc_desc_elem = ET.SubElement(method_elem, f"{{{ns_dcc}}}description")
+            add_if_valid(proc_desc_elem, "dcc:content", proc_desc, ns_dcc)
+
+        # Results
+        results = mp.get("results", [])
+        if results:
+            results_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}results")
+            for res in results:
+                res_elem = ET.SubElement(results_elem, f"{{{ns_drmd}}}result")
+                
+                res_name_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}name")
+                add_if_valid(res_name_elem, "dcc:content", res.get("result_name"), ns_dcc)
+                
+                res_desc_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}description")
+                add_if_valid(res_desc_elem, "dcc:content", res.get("description"), ns_dcc)
+
+                # Quantities DataFrame
+                df = res.get("quantities")
+                if isinstance(df, pd.DataFrame) and not df.empty:
+                    data_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}data")
+                    list_elem = ET.SubElement(data_elem, f"{{{ns_drmd}}}list")
+                    
+                    for idx, row in df.iterrows():
+                        quant_elem = ET.SubElement(list_elem, f"{{{ns_drmd}}}quantity")
+                        
+                        q_name_elem = ET.SubElement(quant_elem, f"{{{ns_dcc}}}name")
+                        add_if_valid(q_name_elem, "dcc:content", row.get("Name"), ns_dcc)
+
+                        # Real value
+                        real_elem = ET.SubElement(quant_elem, f"{{{ns_si}}}real")
+                        add_if_valid(real_elem, "si:value", row.get("Value"), ns_si)
+                        add_if_valid(real_elem, "si:unit", row.get("Unit"), ns_si)
+                        
+                        # Uncertainty
+                        if pd.notna(row.get("Uncertainty")):
+                            mu_elem = ET.SubElement(real_elem, f"{{{ns_si}}}measurementUncertaintyUnivariate")
+                            exp_mu_elem = ET.SubElement(mu_elem, f"{{{ns_si}}}expandedMU")
+                            add_if_valid(exp_mu_elem, "si:valueExpandedMU", row.get("Uncertainty"), ns_si)
+                            add_if_valid(exp_mu_elem, "si:coverageFactor", row.get("Coverage Factor"), ns_si)
+                            add_if_valid(exp_mu_elem, "si:coverageProbability", row.get("Coverage Probability"), ns_si)
+                            add_if_valid(exp_mu_elem, "si:distribution", row.get("Distribution"), ns_si)
+
+                        # Property Identifiers from DataFrame
+                        ids = []
+                        if row.get("Identifier Scheme") and row.get("Identifier Value"):
+                            ids.append({
+                                "scheme": row.get("Identifier Scheme"),
+                                "value": row.get("Identifier Value"),
+                                "link": row.get("Identifier Link")
+                            })
+                        # Check for other identifiers stored in the 'identifiers' list
+                        if "identifiers" in res and idx < len(res["identifiers"]):
+                            for i_d in res["identifiers"][idx][1:]: # Skip first one (already in df)
+                                ids.append(i_d)
+                        
+                        export_identifier_list(quant_elem, "propertyIdentifiers", ids, ns_drmd)
+
+    # Add statements section
+    statements = ET.SubElement(root, f"{{{ns_drmd}}}statements")
+    
+    # Official Statements
+    for tag, data in st.session_state.get("official_statements", {}).items():
+        if data.get("content"):
+            statement_elem = ET.SubElement(statements, f"{{{ns_drmd}}}{tag}")
+            
+            name_elem = ET.SubElement(statement_elem, f"{{{ns_dcc}}}name")
+            add_if_valid(name_elem, "dcc:content", data.get("name"), ns_dcc)
+            
+            # Handle multiline content
+            for line in data.get("content", "").splitlines():
+                add_if_valid(statement_elem, "dcc:content", line, ns_dcc)
+
+    # Custom Statements
+    for data in st.session_state.get("custom_statements", []):
+         if data.get("content"):
+            statement_elem = ET.SubElement(statements, f"{{{ns_drmd}}}statement") # Note: 'statement' tag
+            
+            name_elem = ET.SubElement(statement_elem, f"{{{ns_dcc}}}name")
+            add_if_valid(name_elem, "dcc:content", data.get("name"), ns_dcc)
+            
+            # Handle multiline content
+            for line in data.get("content", "").splitlines():
+                add_if_valid(statement_lem, "dcc:content", line, ns_dcc)
+    
+    # Convert to string
+    xml_string = ET.tostring(root, encoding='unicode', method='xml')
+    
+    # Pretty print
+    dom = minidom.parseString(xml_string)
+    return dom.toprettyxml(indent="  ")
+
+def add_signature_metadata_to_producer(producer_elem, signature_info):
+    """Add cryptographic metadata to producer element"""
+    ns_drmd = "httpss://example.org/drmd"
+    
+    seal = ET.SubElement(producer_elem, f"{{{ns_drmd}}}cryptElectronicSeal")
+    seal.text = "true" if signature_info.get('seal', False) else "false"
+    
+    sig = ET.SubElement(producer_elem, f"{{{ns_drmd}}}cryptElectronicSignature")
+    sig.text = "true"
+    
+    timestamp = ET.SubElement(producer_elem, f"{{{ns_drmd}}}cryptElectronicTimeStamp")
+    timestamp.text = "true" if signature_info.get('timestamp', False) else "false"
+
+def create_did_document(drmd_identifier, producer_name):
+    """
+    Create a DID document for DRMD issuer.
+    Follows W3C DID specification.
+    """
+    did_doc = {
+        "@context": ["httpss://www.w3.org/ns/did/v1"],
+        "id": f"did:web:{producer_name.lower().replace(' ', '-')}",
+        "verificationMethod": [{
+            "id": f"did:web:{producer_name.lower().replace(' ', '-')}#keys-1",
+            "type": "RsaVerificationKey2018",
+            "controller": f"did:web:{producer_name.lower().replace(' ', '-')}",
+            "publicKeyPem": "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
+        }],
+        "service": [{
+            "id": f"did:web:{producer_name.lower().replace(' ', '-')}#drmd-service",
+            "type": "DRMDVerificationService",
+            "serviceEndpoint": f"httpss://{producer_name.lower()}/verify"
+        }]
+    }
+    return did_doc

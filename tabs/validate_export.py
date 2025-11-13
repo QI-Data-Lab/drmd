@@ -56,7 +56,7 @@ def render_validate_export():
         # coreData: title, uniqueIdentifier, documentIdentifiers, validity.
         core_data = ET.SubElement(admin_data, f"{{{ns_drmd}}}coreData")
         ET.SubElement(core_data, f"{{{ns_drmd}}}titleOfTheDocument").text = sanitize_xml_string(st.session_state.title_option)
-        ET.SubElement(core_data, f"{{{ns_drmd}}}uniqueIdentifier").text = sanitize_xml_string(st.session_state.persistent_id_value)
+        ET.SubElement(core_data, f"{{{ns_drmd}}}uniqueIdentifier").text = sanitize_xml_string(st.session_state.uniqueIdentifier)
         if st.session_state.documentIdentifiers:
             export_identifier_list(core_data, "documentIdentifiers", st.session_state.documentIdentifiers, ns_drmd)
         # Validity (simplified example)

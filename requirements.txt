@@ -4,3 +4,6 @@ rdflib
 xmlschema
 lxml
 pint
+signxml
+cryptography
+lxml

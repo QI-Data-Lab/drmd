@@ -1,4 +1,3 @@
-# tabs/administrative_data.py - FIXED VERSION
 import streamlit as st
 import re
 import random
@@ -35,21 +34,48 @@ def render_administrative_data():
                 st.session_state.title_option = selected_title
         
         with col2:
-            st.text_input(
+            # --- FIX START ---
+            # This logic ensures a UUID is always present in the session state.
+            
+            # 1. Ensure a UUID is always present on load
+            if not st.session_state.get("uniqueIdentifier"):
+                st.session_state.uniqueIdentifier = f"{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
+            
+            # 2. Get the guaranteed value from the session state
+            current_uid = st.session_state.uniqueIdentifier
+
+            # 3. Create the text input widget
+            new_uid_from_input = st.text_input(
                 "Unique Identifier",
-                value=st.session_state.get("persistent_id_value", ""),
-                placeholder="Auto-generated on export",
-                disabled=True,
+                value=current_uid, # Bind directly to the guaranteed value
+                placeholder="Click button to generate",
+                disabled=False,
                 help="A UUID automatically assigned to this document.",
-                key=f"uid_display_v{data_version}"
+                key=f"uid_input_v{data_version}"
             )
-        
+            
+            # 4. Validate the user's change
+            if new_uid_from_input != current_uid:
+                if not new_uid_from_input:
+                    # User tried to delete it
+                    st.warning("Unique Identifier cannot be empty.")
+                    # Revert the change by re-assigning the old value to the session state
+                    st.session_state.uniqueIdentifier = current_uid
+                    st.rerun() # Force a rerun to show the restored value
+                else:
+                    # User changed it to a new, non-empty value
+                    st.session_state.uniqueIdentifier = new_uid_from_input
+            # --- FIX END ---
+
         with col3:
+            st.markdown("##") # Add vertical space
             if st.button("🔄", help="Generate new UUID", key=f"gen_uuid_v{data_version}"):
                 new_uuid = f"{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
-                st.session_state.persistent_id = new_uuid
-                st.session_state.persistent_id_value = new_uuid
+                st.session_state.uniqueIdentifier = new_uuid
+                st.session_state.data_version = st.session_state.get("data_version", 0) + 1
                 st.rerun()
+
+
 
         # Document Identifiers
         st.markdown("#### Document Identifiers")

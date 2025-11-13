@@ -12,6 +12,7 @@
     <xs:import namespace="https://ptb.de/si" schemaLocation="../../imports/SI_Format.xsd"/>
     <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="../../imports/xmldsig-core-schema.xsd"/>
 
+
     <xs:element name="digitalReferenceMaterialDocument" type="drmd:digitalReferenceMaterialDocumentType">
         <xs:annotation>
             <xs:documentation>The root element for a Digital Reference Material Document (DRMD). It encapsulates all information about a reference material, digitally representing a physical certificate.</xs:documentation>
