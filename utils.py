@@ -1,38 +1,36 @@
 import re, math, uuid, base64, functools, traceback, io
 from datetime import date
-from xml.dom import minidom
 import xml.etree.ElementTree as ET
 import random
 import re
 
 import pandas as pd
 import streamlit as st
-# Optional dependency: xmlschema (used for deep validation & diagnostics). Gracefully degrade if absent.
+
 try:
-    import xmlschema  # type: ignore
-except ImportError:  # pragma: no cover - allows lightweight tests without xmlschema installed
-    xmlschema = None  # sentinel
+    import xmlschema  
+except ImportError:  
+    xmlschema = None 
 from rdflib import Graph, Namespace
 from pathlib import Path as _Path
 import os as _os
-import pint  # <-- FIX: Added pint import
+import pint  
 
-# pretty‑print / XSLT (used in Export tab later)
+
 try:
     from lxml import etree
 except ImportError:
     st.error("lxml is required. Please install it via pip install lxml.")
 
-ureg = pint.UnitRegistry()  # <-- FIX: Added pint UnitRegistry
+ureg = pint.UnitRegistry()  
 
 # -----------------------------------------------------------------------------
-# Helpers & constants
-# <-- FIX: Corrected default paths to point to subfolders
-_APP_DIR = _Path(__file__).parent 
+
+_APP_DIR = _Path(__file__).parent  
 DEFAULT_XSD_PATH = _os.environ.get("DRMD_XSD_PATH", str(_APP_DIR / "v0.3.0" / "xsd" / "drmd.xsd"))
 DEFAULT_XSL_PATH = _os.environ.get("DRMD_XSL_PATH", str(_APP_DIR / "v0.3.0" / "xsl" / "drmd.xsl"))
 DS_NS = "http://www.w3.org/2000/09/xmldsig#"
-ALLOWED_TITLES = ["referenceMaterialCertificate", "productInformationSheet"]  # default first
+ALLOWED_TITLES = ["referenceMaterialCertificate", "productInformationSheet"]  
 INIT_ID = {"scheme": "", "value": "", "link": ""}
 DEFAULT_PRODUCER = {
     "producerName": "",
@@ -65,7 +63,7 @@ OFFICIAL_STMPL = {
 }
 
 # -----------------------------------------------------------------------------
-# Misc helpers
+
 
 @st.cache_resource
 def get_default_ui_settings():
@@ -95,15 +93,13 @@ def sanitize_xml_string(text: str) -> str:
     """Removes illegal XML characters from a string."""
     if not isinstance(text, str):
         text = str(text)
-    # XML 1.0 spec defines the valid character range.
-    # This regex removes any character outside that range, except for common whitespace.
     illegal_xml_chars_re = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f\ufffe\uffff]')
     return illegal_xml_chars_re.sub('', text)
 
 def xs_duration_hint() -> str:
-    return "Enter a valid xs:duration – e.g. P1Y6M means 1 year 6 months"
+    return "Enter a valid xs:duration – e.g. P1Y6M means 1 year 6 months"
 
-# Data‑editor wrapper
+
 
 def data_editor_df(df: pd.DataFrame, key: str, **kwargs) -> pd.DataFrame:
     try:
@@ -116,7 +112,7 @@ def data_editor_df(df: pd.DataFrame, key: str, **kwargs) -> pd.DataFrame:
                 updated.at[int(row_idx), col] = new_val
     return updated
 
-# Helpers to support both drmd:* and dcc:* variants in examples
+
 def _find_one(elem, ns, *paths):
     for xp in paths:
         found = elem.find(xp, ns)
@@ -131,12 +127,10 @@ def _findall_first(elem, ns, *paths):
             return lst
     return []
 
-# QUDT cache (Properties tab later)
+
 @st.cache_data
 def load_qudt():
-    # Resolve QUDT TTL path robustly: env override, else alongside this file
     _env_path = _os.environ.get("QUDT_TTL_PATH")
-    # <-- FIX: Corrected path to look in 'imports' subfolder
     _default_path = _Path(__file__).parent / "imports" / "qudt.ttl"
     _ttl_path = _env_path or str(_default_path)
     g = Graph(); g.parse(_ttl_path, format="turtle")
@@ -148,7 +142,6 @@ def load_qudt():
     return res
 qudt_quantities = load_qudt()
 
-# Factories used later (Properties tab)
 
 def create_empty_materialProperties():
     return {
@@ -178,19 +171,15 @@ def create_empty_result():
 
 def convert_to_dsi(value_str: str, unit_str: str) -> str:
     """Converts a value and unit to its base SI representation."""
-    # More robust check for empty/invalid inputs from the data editor
     if pd.isna(value_str) or pd.isna(unit_str) or not str(value_str).strip() or not str(unit_str).strip():
         return ""
 
     try:
-        # Handle both comma and period as decimal separators
         cleaned_value = float(str(value_str).replace(',', '.'))
 
         quantity = ureg.Quantity(cleaned_value, unit_str)
         base_quantity = quantity.to_base_units()
 
-        # --- FIX ---
-        # Explicitly handle dimensionless quantities
         if base_quantity.dimensionless:
             return f"{base_quantity.magnitude:.6g} (dimensionless)"
         else:
@@ -249,7 +238,6 @@ def inject_highlighting_code():
 
 # -----------------------------------------------------------------------------
 # XML → session‑state loader (comprehensive - loads all tabs and fields)
-# <-- FIX: This is the fully corrected function from the previous steps
 # -----------------------------------------------------------------------------
 def load_xml_into_state(xml_bytes: bytes):
     """
@@ -266,7 +254,6 @@ def load_xml_into_state(xml_bytes: bytes):
         ns_match = re.match(r'\{(.*?)\}', root.tag)
         ns_drmd = ns_match.group(1) if ns_match else "https://example.org/drmd"
         
-        # Define all namespaces upfront
         ns = {
             "drmd": ns_drmd,
             "dcc": "https://ptb.de/dcc",
@@ -344,7 +331,6 @@ def load_xml_into_state(xml_bytes: bytes):
                 "link": link_elem.text.strip() if link_elem is not None and link_elem.text else ""
             })
         
-        # Fallback to legacy identification structure
         if not dids:
             legacy_ident = root.find(".//drmd:identifications/drmd:identification", ns)
             if legacy_ident is not None:
@@ -441,7 +427,6 @@ def load_xml_into_state(xml_bytes: bytes):
             print(f"DEBUG: Found {len(rp_elems)} responsible person(s)")
             
             if len(rp_elems) == 0:
-                # Debug: Check if respPersons parent exists
                 resp_parent = admin_data.find("drmd:respPersons", ns)
                 if resp_parent is not None:
                     print(f"DEBUG: Found respPersons parent, children: {[child.tag for child in resp_parent]}")
@@ -489,7 +474,6 @@ def load_xml_into_state(xml_bytes: bytes):
         else:
             print("DEBUG: administrativeData element NOT FOUND!")
 
-        # CRITICAL: Always replace session state (no merge)
         st.session_state.producers = prods if prods else [DEFAULT_PRODUCER.copy()]
         st.session_state.responsible_persons = rps if rps else [DEFAULT_PERSON.copy()]
         
@@ -770,14 +754,14 @@ def load_xml_into_state(xml_bytes: bytes):
         # =========================================================================
         st.session_state.template_loaded = True
 
-        # CRITICAL FIX: Increment version counter to force widget refresh
+
         if "data_version" not in st.session_state:
             st.session_state.data_version = 0
         st.session_state.data_version += 1
 
         st.sidebar.success("✅ XML template loaded successfully!")
 
-        # CRITICAL: Trigger rerun to rebind all widgets
+
         st.rerun()
 
     except Exception as e:
@@ -791,8 +775,8 @@ def load_xml_into_state(xml_bytes: bytes):
 SESSION_DEFAULTS = {
     "documentIdentifiers": [INIT_ID.copy()],
     "materials": [{"uuid": str(uuid.uuid4()), "name": "", "description": "", "materialClass": "",
-                    "minimumSampleSize": "", "itemQuantities": "", "isCertified": False,
-                    "materialIdentifiers": [INIT_ID.copy()]}],
+                   "minimumSampleSize": "", "itemQuantities": "", "isCertified": False,
+                   "materialIdentifiers": [INIT_ID.copy()]}],
     "materialProperties": [
         {
             "uuid": str(uuid.uuid4()), "id": "",
@@ -836,7 +820,7 @@ SESSION_DEFAULTS = {
 
 def add_if_valid(parent, tag, value, ns):
     """Adds a subelement with tag to parent if value is not None, empty, or NaN.
-       Returns the new element or None.
+        Returns the new element or None.
     """
     if value is None:
         return None
@@ -881,7 +865,7 @@ def export_identifier_list(parent, tag, id_list, ns_drmd):
         if not isinstance(ident, dict):
             continue
         
-        # --- FIX: Sanitize all values before checking them ---
+
         scheme = sanitize_xml_string(ident.get("scheme") or "").strip()
         value = sanitize_xml_string(ident.get("value") or "").strip()
         link = sanitize_xml_string(ident.get("link") or "").strip()
@@ -978,21 +962,21 @@ def build_xml_from_session():
         producer_elem = ET.SubElement(admin_data, f"{{{ns_drmd}}}referenceMaterialProducer")
         
         name_elem = ET.SubElement(producer_elem, f"{{{ns_drmd}}}name")
-        add_if_valid(name_elem, "dcc:content", prod.get("producerName"), ns_dcc)
+        add_if_valid(name_elem, "content", prod.get("producerName"), ns_dcc)
         
         contact_elem = ET.SubElement(producer_elem, f"{{{ns_drmd}}}contact")
-        add_if_valid(contact_elem, "dcc:eMail", prod.get("producerEmail"), ns_dcc)
-        add_if_valid(contact_elem, "dcc:phone", prod.get("producerPhone"), ns_dcc)
-        add_if_valid(contact_elem, "dcc:fax", prod.get("producerFax"), ns_dcc)
+        add_if_valid(contact_elem, "eMail", prod.get("producerEmail"), ns_dcc)
+        add_if_valid(contact_elem, "phone", prod.get("producerPhone"), ns_dcc)
+        add_if_valid(contact_elem, "fax", prod.get("producerFax"), ns_dcc)
         
         # Location
         if any([prod.get(k) for k in ["producerStreet", "producerStreetNo", "producerPostCode", "producerCity", "producerCountryCode"]]):
             loc_elem = ET.SubElement(contact_elem, f"{{{ns_dcc}}}location")
-            add_if_valid(loc_elem, "dcc:street", prod.get("producerStreet"), ns_dcc)
-            add_if_valid(loc_elem, "dcc:streetNo", prod.get("producerStreetNo"), ns_dcc)
-            add_if_valid(loc_elem, "dcc:postCode", prod.get("producerPostCode"), ns_dcc)
-            add_if_valid(loc_elem, "dcc:city", prod.get("producerCity"), ns_dcc)
-            add_if_valid(loc_elem, "dcc:countryCode", prod.get("producerCountryCode"), ns_dcc)
+            add_if_valid(loc_elem, "street", prod.get("producerStreet"), ns_dcc)
+            add_if_valid(loc_elem, "streetNo", prod.get("producerStreetNo"), ns_dcc)
+            add_if_valid(loc_elem, "postCode", prod.get("producerPostCode"), ns_dcc)
+            add_if_valid(loc_elem, "city", prod.get("producerCity"), ns_dcc)
+            add_if_valid(loc_elem, "countryCode", prod.get("producerCountryCode"), ns_dcc)
 
         # Organization Identifiers
         export_identifier_list(producer_elem, "organizationIdentifiers", prod.get("organizationIdentifiers", []), ns_drmd)
@@ -1006,12 +990,12 @@ def build_xml_from_session():
             
             person_elem = ET.SubElement(rp_elem, f"{{{ns_dcc}}}person")
             name_elem = ET.SubElement(person_elem, f"{{{ns_dcc}}}name")
-            add_if_valid(name_elem, "dcc:content", rp.get("personName"), ns_dcc)
+            add_if_valid(name_elem, "content", rp.get("personName"), ns_dcc)
             
             desc_elem = ET.SubElement(rp_elem, f"{{{ns_dcc}}}description")
-            add_if_valid(desc_elem, "dcc:content", rp.get("description"), ns_dcc)
+            add_if_valid(desc_elem, "content", rp.get("description"), ns_dcc)
             
-            add_if_valid(rp_elem, "dcc:role", rp.get("role"), ns_dcc)
+            add_if_valid(rp_elem, "role", rp.get("role"), ns_dcc)
             
             if rp.get("mainSigner"):
                 ET.SubElement(rp_elem, f"{{{ns_dcc}}}mainSigner").text = "true"
@@ -1027,10 +1011,10 @@ def build_xml_from_session():
         material_elem.set("isCertified", "true" if mat.get("isCertified") else "false")
 
         name_elem = ET.SubElement(material_elem, f"{{{ns_drmd}}}name")
-        add_if_valid(name_elem, "dcc:content", mat.get("name"), ns_dcc)
+        add_if_valid(name_elem, "content", mat.get("name"), ns_dcc)
         
         desc_elem = ET.SubElement(material_elem, f"{{{ns_drmd}}}description")
-        add_if_valid(desc_elem, "dcc:content", mat.get("description"), ns_dcc)
+        add_if_valid(desc_elem, "content", mat.get("description"), ns_dcc)
 
         # Helper to parse "value unit" strings
         def add_item_quantity(parent, tag, value_str):
@@ -1043,8 +1027,7 @@ def build_xml_from_session():
             elem = ET.SubElement(parent, f"{{{ns_drmd}}}{tag}")
             iq_elem = ET.SubElement(elem, f"{{{ns_dcc}}}itemQuantity")
             real_list_elem = ET.SubElement(iq_elem, f"{{{ns_si}}}realListXMLList")
-            add_if_valid(real_list_elem, "si:valueXMLList", value, ns_si)
-            # --- FIX: Sanitize the unit string manually ---
+            add_if_valid(real_list_elem, "valueXMLList", value, ns_si)
             sanitized_unit = sanitize_xml_string(unit)
             ET.SubElement(real_list_elem, f"{{{ns_si}}}unitXMLList").text = sanitized_unit
 
@@ -1059,21 +1042,17 @@ def build_xml_from_session():
         mp_elem = ET.SubElement(props_list, f"{{{ns_drmd}}}materialProperties")
         mp_elem.set("isCertified", "true" if mp.get("isCertified") else "false")
         
-        # ******** THIS IS THE FIX ********
-        # Sanitize the ID before setting it as an attribute
         mp_id = mp.get("id")
         if mp_id:
-            # Use the existing sanitize_xml_string helper
             sanitized_id = sanitize_xml_string(str(mp_id)).strip() 
             if sanitized_id:
                 mp_elem.set("id", sanitized_id)
-        # ******** END OF FIX ********
         
         name_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}name")
-        add_if_valid(name_elem, "dcc:content", mp.get("name"), ns_dcc)
+        add_if_valid(name_elem, "content", mp.get("name"), ns_dcc)
         
         desc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}description")
-        add_if_valid(desc_elem, "dcc:content", mp.get("description"), ns_dcc)
+        add_if_valid(desc_elem, "content", mp.get("description"), ns_dcc)
         
         if mp.get("procedures"):
             proc_elem = ET.SubElement(mp_elem, f"{{{ns_drmd}}}procedures")
@@ -1084,9 +1063,9 @@ def build_xml_from_session():
             proc_desc = proc_parts[1].strip() if len(proc_parts) > 1 else ""
             
             proc_name_elem = ET.SubElement(method_elem, f"{{{ns_dcc}}}name")
-            add_if_valid(proc_name_elem, "dcc:content", proc_name, ns_dcc)
+            add_if_valid(proc_name_elem, "content", proc_name, ns_dcc)
             proc_desc_elem = ET.SubElement(method_elem, f"{{{ns_dcc}}}description")
-            add_if_valid(proc_desc_elem, "dcc:content", proc_desc, ns_dcc)
+            add_if_valid(proc_desc_elem, "content", proc_desc, ns_dcc)
 
         # Results
         results = mp.get("results", [])
@@ -1096,10 +1075,10 @@ def build_xml_from_session():
                 res_elem = ET.SubElement(results_elem, f"{{{ns_drmd}}}result")
                 
                 res_name_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}name")
-                add_if_valid(res_name_elem, "dcc:content", res.get("result_name"), ns_dcc)
+                add_if_valid(res_name_elem, "content", res.get("result_name"), ns_dcc)
                 
                 res_desc_elem = ET.SubElement(res_elem, f"{{{ns_drmd}}}description")
-                add_if_valid(res_desc_elem, "dcc:content", res.get("description"), ns_dcc)
+                add_if_valid(res_desc_elem, "content", res.get("description"), ns_dcc)
 
                 # Quantities DataFrame
                 df = res.get("quantities")
@@ -1111,21 +1090,21 @@ def build_xml_from_session():
                         quant_elem = ET.SubElement(list_elem, f"{{{ns_drmd}}}quantity")
                         
                         q_name_elem = ET.SubElement(quant_elem, f"{{{ns_dcc}}}name")
-                        add_if_valid(q_name_elem, "dcc:content", row.get("Name"), ns_dcc)
+                        add_if_valid(q_name_elem, "content", row.get("Name"), ns_dcc)
 
                         # Real value
                         real_elem = ET.SubElement(quant_elem, f"{{{ns_si}}}real")
-                        add_if_valid(real_elem, "si:value", row.get("Value"), ns_si)
-                        add_if_valid(real_elem, "si:unit", row.get("Unit"), ns_si)
+                        add_if_valid(real_elem, "value", row.get("Value"), ns_si)
+                        add_if_valid(real_elem, "unit", row.get("Unit"), ns_si)
                         
                         # Uncertainty
                         if pd.notna(row.get("Uncertainty")):
                             mu_elem = ET.SubElement(real_elem, f"{{{ns_si}}}measurementUncertaintyUnivariate")
                             exp_mu_elem = ET.SubElement(mu_elem, f"{{{ns_si}}}expandedMU")
-                            add_if_valid(exp_mu_elem, "si:valueExpandedMU", row.get("Uncertainty"), ns_si)
-                            add_if_valid(exp_mu_elem, "si:coverageFactor", row.get("Coverage Factor"), ns_si)
-                            add_if_valid(exp_mu_elem, "si:coverageProbability", row.get("Coverage Probability"), ns_si)
-                            add_if_valid(exp_mu_elem, "si:distribution", row.get("Distribution"), ns_si)
+                            add_if_valid(exp_mu_elem, "valueExpandedMU", row.get("Uncertainty"), ns_si)
+                            add_if_valid(exp_mu_elem, "coverageFactor", row.get("Coverage Factor"), ns_si)
+                            add_if_valid(exp_mu_elem, "coverageProbability", row.get("Coverage Probability"), ns_si)
+                            add_if_valid(exp_mu_elem, "distribution", row.get("Distribution"), ns_si)
 
                         # Property Identifiers from DataFrame
                         ids = []
@@ -1151,11 +1130,11 @@ def build_xml_from_session():
             statement_elem = ET.SubElement(statements, f"{{{ns_drmd}}}{tag}")
             
             name_elem = ET.SubElement(statement_elem, f"{{{ns_dcc}}}name")
-            add_if_valid(name_elem, "dcc:content", data.get("name"), ns_dcc)
+            add_if_valid(name_elem, "content", data.get("name"), ns_dcc)
             
             # Handle multiline content
             for line in data.get("content", "").splitlines():
-                add_if_valid(statement_elem, "dcc:content", line, ns_dcc)
+                add_if_valid(statement_elem, "content", line, ns_dcc)
 
     # Custom Statements
     for data in st.session_state.get("custom_statements", []):
@@ -1163,18 +1142,38 @@ def build_xml_from_session():
             statement_elem = ET.SubElement(statements, f"{{{ns_drmd}}}statement") # Note: 'statement' tag
             
             name_elem = ET.SubElement(statement_elem, f"{{{ns_dcc}}}name")
-            add_if_valid(name_elem, "dcc:content", data.get("name"), ns_dcc)
+            add_if_valid(name_elem, "content", data.get("name"), ns_dcc)
             
             # Handle multiline content
             for line in data.get("content", "").splitlines():
-                add_if_valid(statement_lem, "dcc:content", line, ns_dcc)
+                add_if_valid(statement_elem, "content", line, ns_dcc)
     
-    # Convert to string
-    xml_string = ET.tostring(root, encoding='unicode', method='xml')
+
+    # 1. Serialize from ElementTree to bytes, ensuring utf-8
+    xml_bytes = ET.tostring(root, encoding='utf-8', method='xml')
     
-    # Pretty print
-    dom = minidom.parseString(xml_string)
-    return dom.toprettyxml(indent="  ")
+    try:
+        # 2. Parse the byte string with lxml's robust parser
+        lxml_root = etree.fromstring(xml_bytes)
+        
+        # 3. Serialize back to a string with lxml's pretty_print
+        pretty_xml_string = etree.tostring(
+            lxml_root, 
+            pretty_print=True, 
+            encoding='utf-8', 
+            xml_declaration=True
+        ).decode('utf-8')
+        
+        return pretty_xml_string
+
+    except etree.XMLSyntaxError as e:
+        st.error(f"A critical error occurred during XML pretty-printing with lxml: {e}")
+        # Fallback to the raw, non-pretty string if lxml fails
+        return xml_bytes.decode('utf-8')
+    except Exception as e:
+        st.error(f"An unexpected error occurred during XML pretty-printing: {e}")
+        return xml_bytes.decode('utf-8')
+
 
 def add_signature_metadata_to_producer(producer_elem, signature_info):
     """Add cryptographic metadata to producer element"""

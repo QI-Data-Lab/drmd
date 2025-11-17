@@ -57,18 +57,15 @@ def render_administrative_data():
             # 4. Validate the user's change
             if new_uid_from_input != current_uid:
                 if not new_uid_from_input:
-                    # User tried to delete it
                     st.warning("Unique Identifier cannot be empty.")
-                    # Revert the change by re-assigning the old value to the session state
                     st.session_state.uniqueIdentifier = current_uid
-                    st.rerun() # Force a rerun to show the restored value
+                    st.rerun() 
                 else:
-                    # User changed it to a new, non-empty value
                     st.session_state.uniqueIdentifier = new_uid_from_input
-            # --- FIX END ---
+
 
         with col3:
-            st.markdown("##") # Add vertical space
+            st.write(" ") 
             if st.button("🔄", help="Generate new UUID", key=f"gen_uuid_v{data_version}"):
                 new_uuid = f"{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
                 st.session_state.uniqueIdentifier = new_uuid

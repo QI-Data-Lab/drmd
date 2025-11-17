@@ -1,10 +1,8 @@
-# tabs/materials.py
 import streamlit as st
 import uuid
 from utils import INIT_ID
 
 def render_materials():
-    # same content as rev2 for Materials
     for i, mat in enumerate(st.session_state.materials):
         with st.expander(f"Material {i+1}", expanded=True):
             c1, c2 = st.columns(2)
